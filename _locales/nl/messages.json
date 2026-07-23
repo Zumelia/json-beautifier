@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Maak JSON direct leesbaar in je browser — snelle json beautifier, formatter en viewer. Klap in, zoek en kopieer waarden.",
+    "description": "Extension short description"
+  }
+}

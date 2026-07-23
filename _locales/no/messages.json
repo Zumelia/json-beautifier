@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Gjør JSON lesbar umiddelbart i nettleseren — rask json beautifier, formatter og viser. Fold sammen, søk og kopier verdier.",
+    "description": "Extension short description"
+  }
+}

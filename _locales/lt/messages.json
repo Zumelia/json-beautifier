@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Akimirksniu sutvarkykite JSON naršyklėje — greitas json beautifier, formatuotojas ir peržiūra. Suskleisti, ieškoti, kopijuoti.",
+    "description": "Extension short description"
+  }
+}

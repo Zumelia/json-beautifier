@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Làm đẹp JSON ngay trong trình duyệt — json beautifier nhanh, định dạng và xem. Thu gọn, tìm kiếm, sao chép mọi giá trị.",
+    "description": "Extension short description"
+  }
+}

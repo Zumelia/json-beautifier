@@ -1,0 +1,15 @@
+{
+  "name": "json-beautifier",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/harness.mjs && node test/background.test.mjs && node test/reinject.test.mjs && node test/popup.test.mjs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "JSON Beautifier \u2014 Chrome MV3 extension: beautify, collapse, search and copy JSON locally.",
+  "dependencies": {
+    "jsdom": "^22.1.0"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "JSON'u tarayıcıda anında güzelleştirin — hızlı json beautifier, formatter ve görüntüleyici. Daralt, ara ve değer kopyala.",
+    "description": "Extension short description"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "עיצוב JSON מיידי בדפדפן — json beautifier מהיר לעריכה ותצוגה. קיפול, חיפוש והעתקת כל ערך.",
+    "description": "Extension short description"
+  }
+}

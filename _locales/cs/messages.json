@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Okamžitě zformátuje JSON v prohlížeči — rychlý json beautifier, formátovač a prohlížeč. Sbalte, hledejte, kopírujte.",
+    "description": "Extension short description"
+  }
+}

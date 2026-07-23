@@ -1,0 +1,72 @@
+:root {
+  --bg: #fff;
+  --fg: #1b2426;
+  --mut: #6b7a7b;
+  --line: #e5eae9;
+  --accent: #0e7a6e;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1416;
+    --fg: #e4ebea;
+    --mut: #8fa3a1;
+    --line: #232d2f;
+    --accent: #34c99e;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  width: 260px;
+  margin: 0;
+  padding: 14px 16px 16px;
+  font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+h1 {
+  margin: 0;
+  font-size: 18px;
+  letter-spacing: -0.02em;
+}
+h1 b {
+  color: var(--accent);
+}
+.tag {
+  margin: 2px 0 14px;
+  color: var(--mut);
+  font-size: 11px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 0;
+  border-top: 1px solid var(--line);
+}
+.row span {
+  color: var(--fg);
+}
+select,
+input[type="checkbox"] {
+  font: inherit;
+  accent-color: var(--accent);
+}
+select {
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: var(--bg);
+  color: var(--fg);
+}
+.foot {
+  margin: 12px 0 0;
+  color: var(--mut);
+  font-size: 11px;
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+}
+a {
+  color: var(--accent);
+}

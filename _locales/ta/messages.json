@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "உலாவியில் JSON-ஐ உடனே அழகாக்குங்கள் — வேகமான json beautifier, வடிவமைப்பான் மற்றும் காட்சி. மடக்கு, தேடு, நகலெடு.",
+    "description": "Extension short description"
+  }
+}

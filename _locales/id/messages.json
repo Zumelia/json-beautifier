@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Rapikan JSON seketika di browser — json beautifier cepat, formatter dan viewer. Lipat, cari, dan salin nilai apa pun.",
+    "description": "Extension short description"
+  }
+}

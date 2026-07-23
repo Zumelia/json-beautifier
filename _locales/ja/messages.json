@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON 整形 - JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "ブラウザで JSON を即座に整形 — 高速な json beautifier・フォーマッタ・ビューア。折りたたみ、検索、値のコピーも簡単。",
+    "description": "Extension short description"
+  }
+}

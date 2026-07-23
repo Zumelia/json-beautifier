@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Acumirklī sakārtojiet JSON pārlūkā — ātrs json beautifier, formatētājs un skatītājs. Sakļaujiet, meklējiet, kopējiet.",
+    "description": "Extension short description"
+  }
+}

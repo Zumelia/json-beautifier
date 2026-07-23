@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "JSON azonnali formázása a böngészőben — gyors json beautifier, formázó és néző. Összecsukás, keresés, értékek másolása.",
+    "description": "Extension short description"
+  }
+}

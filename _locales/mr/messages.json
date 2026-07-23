@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "ब्राउझरमध्ये JSON लगेच सुंदर करा — वेगवान json beautifier, फॉरमॅटर आणि व्ह्यूअर. संकुचित करा, शोधा, कॉपी करा.",
+    "description": "Extension short description"
+  }
+}

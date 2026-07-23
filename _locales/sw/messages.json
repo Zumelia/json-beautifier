@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Pendezesha JSON papo hapo kwenye kivinjari — json beautifier ya haraka, fomata na kionyeshi. Kunja, tafuta, nakili thamani.",
+    "description": "Extension short description"
+  }
+}

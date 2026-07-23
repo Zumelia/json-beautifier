@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "จัดรูปแบบ JSON ทันทีในเบราว์เซอร์ — json beautifier เร็ว ทั้งฟอร์แมตเตอร์และวิวเวอร์ พับ ค้นหา คัดลอกทุกค่า",
+    "description": "Extension short description"
+  }
+}

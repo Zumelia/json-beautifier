@@ -1,0 +1,269 @@
+/* JSONeat viewer — injected only when a JSON document is detected.
+   Themed via [data-jsoneat="light|dark"] on <html>; both first-class. */
+
+:root[data-jsoneat] {
+  /* Жёлоб вертикальной прокрутки резервируется всегда: переключение
+     Raw/Format на коротких документах не меняет ширину страницы,
+     кнопки тулбара не дёргаются. */
+  scrollbar-gutter: stable;
+
+  --jn-bg: #ffffff;
+  --jn-fg: #1b2426;
+  --jn-mut: #6b7a7b;
+  --jn-line: #e5eae9;
+  --jn-key: #0b6e8f;
+  --jn-string: #1a7f4b;
+  --jn-number: #9a4a17;
+  --jn-bool: #8a2be2;
+  --jn-null: #999;
+  --jn-bracket: #5a6a6b;
+  --jn-accent: #0e7a6e;
+  --jn-hit: #fff2a8;
+  --jn-hit-fg: #1b2426;
+  --jn-toolbar: #f6f8f8;
+}
+:root[data-jsoneat="dark"] {
+  --jn-bg: #0f1416;
+  --jn-fg: #e4ebea;
+  --jn-mut: #8fa3a1;
+  --jn-line: #232d2f;
+  --jn-key: #56c5e8;
+  --jn-string: #5dbb86;
+  --jn-number: #e0975a;
+  --jn-bool: #c58af0;
+  --jn-null: #7a8a89;
+  --jn-bracket: #93a5a3;
+  --jn-accent: #34c99e;
+  --jn-hit: #5a5320;
+  --jn-hit-fg: #fff;
+  --jn-toolbar: #161d20;
+}
+
+#jsoneat-root {
+  all: initial;
+  display: block;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+    "Liberation Mono", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--jn-fg);
+  background: var(--jn-bg);
+  min-height: 100vh;
+}
+#jsoneat-root * {
+  box-sizing: border-box;
+}
+
+.jsoneat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  background: var(--jn-toolbar);
+  border-bottom: 1px solid var(--jn-line);
+  flex-wrap: wrap;
+}
+.jsoneat-brand {
+  font-weight: 700;
+  color: var(--jn-accent);
+  letter-spacing: -0.02em;
+  margin-right: 4px;
+}
+.jsoneat-settings {
+  min-width: 34px;
+  text-align: center;
+}
+.jsoneat-search {
+  flex: 1;
+  min-width: 140px;
+  padding: 5px 9px;
+  border: 1px solid var(--jn-line);
+  border-radius: 6px;
+  background: var(--jn-bg);
+  color: var(--jn-fg);
+  font: inherit;
+}
+.jsoneat-search:focus {
+  outline: 2px solid var(--jn-accent);
+  outline-offset: -1px;
+}
+.jsoneat-btn {
+  padding: 5px 10px;
+  border: 1px solid var(--jn-line);
+  border-radius: 6px;
+  background: var(--jn-bg);
+  color: var(--jn-fg);
+  font: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.jsoneat-btn:hover {
+  border-color: var(--jn-accent);
+  color: var(--jn-accent);
+}
+.jsoneat-theme {
+  min-width: 34px;
+  text-align: center;
+}
+
+.jsoneat-treeview {
+  padding: 8px 0 40vh;
+  overflow-x: auto;
+}
+.jsoneat-line {
+  display: block;
+  white-space: pre;
+  padding: 1px 8px 1px 0;
+  cursor: default;
+  border-left: 2px solid transparent;
+}
+.jsoneat-node.jsoneat-t-object > .jsoneat-line,
+.jsoneat-node.jsoneat-t-array > .jsoneat-line {
+  cursor: pointer;
+}
+.jsoneat-line:hover {
+  background: color-mix(in srgb, var(--jn-accent) 8%, transparent);
+}
+.jsoneat-twisty {
+  display: inline-block;
+  width: 1em;
+  color: var(--jn-mut);
+  user-select: none;
+}
+.jsoneat-twisty.jsoneat-leaf {
+  visibility: hidden;
+}
+.jsoneat-key {
+  color: var(--jn-key);
+  cursor: pointer;
+}
+.jsoneat-key:hover {
+  text-decoration: underline;
+}
+.jsoneat-colon {
+  color: var(--jn-mut);
+}
+.jsoneat-bracket {
+  color: var(--jn-bracket);
+}
+.jsoneat-summary {
+  color: var(--jn-mut);
+  font-style: italic;
+}
+.jsoneat-closepreview {
+  display: none;
+}
+.jsoneat-collapsed > .jsoneat-line .jsoneat-summary {
+  display: inline;
+}
+.jsoneat-collapsed > .jsoneat-line .jsoneat-closepreview {
+  display: inline;
+}
+.jsoneat-node:not(.jsoneat-collapsed) > .jsoneat-line .jsoneat-summary {
+  display: none;
+}
+.jsoneat-node:not(.jsoneat-collapsed) > .jsoneat-line .jsoneat-closepreview {
+  display: none;
+}
+
+.jsoneat-value {
+  cursor: pointer;
+}
+.jsoneat-v-string {
+  color: var(--jn-string);
+}
+.jsoneat-v-string::before,
+.jsoneat-v-string::after {
+  content: '"';
+  color: var(--jn-string);
+  opacity: 0.7;
+}
+.jsoneat-v-number {
+  color: var(--jn-number);
+}
+.jsoneat-v-boolean {
+  color: var(--jn-bool);
+}
+.jsoneat-v-null {
+  color: var(--jn-null);
+  font-style: italic;
+}
+.jsoneat-value:hover {
+  text-decoration: underline;
+}
+
+.jsoneat-copied {
+  background: var(--jn-accent) !important;
+  color: #fff !important;
+  border-radius: 3px;
+}
+.jsoneat-hit {
+  background: var(--jn-hit);
+  color: var(--jn-hit-fg);
+  border-left: 2px solid var(--jn-accent);
+}
+
+.jsoneat-raw {
+  margin: 0;
+  padding: 12px 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--jn-fg);
+  background: var(--jn-bg);
+  font: inherit;
+}
+.jsoneat-notice {
+  padding: 10px 14px;
+  color: var(--jn-mut);
+  background: color-mix(in srgb, var(--jn-accent) 6%, transparent);
+  border-bottom: 1px solid var(--jn-line);
+}
+.jsoneat-error {
+  margin: 14px;
+  padding: 12px 14px;
+  border: 1px solid color-mix(in srgb, #c0392b 40%, var(--jn-line));
+  border-radius: 8px;
+  background: color-mix(in srgb, #c0392b 8%, transparent);
+}
+.jsoneat-error-title {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.jsoneat-error-msg {
+  color: #c0392b;
+}
+.jsoneat-error-ctx {
+  margin-top: 8px;
+  padding: 6px 8px;
+  background: var(--jn-bg);
+  border-radius: 4px;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+/* Scoped to our subtree: the stylesheet now loads on every page (declarative
+   content_scripts CSS to bypass page CSP), so no rule may touch other pages. */
+@media (prefers-reduced-motion: reduce) {
+  #jsoneat-root * {
+    scroll-behavior: auto !important;
+  }
+}
+
+.jsoneat-more {
+  color: var(--jn-accent);
+  cursor: pointer;
+  padding: 2px 8px;
+  user-select: none;
+}
+.jsoneat-more:hover {
+  text-decoration: underline;
+}
+
+/* Very long scalar strings wrap instead of forcing one giant unbroken line. */
+.jsoneat-v-string {
+  white-space: pre-wrap;
+  word-break: break-word;
+}

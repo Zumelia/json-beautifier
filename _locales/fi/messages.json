@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Muotoile JSON heti selaimessa — nopea json beautifier, muotoilija ja katselin. Supista, hae ja kopioi mikä tahansa arvo.",
+    "description": "Extension short description"
+  }
+}

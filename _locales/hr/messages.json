@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Odmah uljepšajte JSON u pregledniku — brz json beautifier, formatter i preglednik. Sažmite, pretražite, kopirajte.",
+    "description": "Extension short description"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "在瀏覽器中即時美化 JSON — 快速的 json beautifier、格式化與檢視工具。支援摺疊、搜尋與複製任意值。",
+    "description": "Extension short description"
+  }
+}

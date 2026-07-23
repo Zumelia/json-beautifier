@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Formatează JSON instant în browser — json beautifier rapid, formator și vizualizator. Restrânge, caută și copiază valori.",
+    "description": "Extension short description"
+  }
+}

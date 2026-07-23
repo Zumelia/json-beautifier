@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "బ్రౌజర్‌లో JSONను వెంటనే అందంగా మార్చండి — వేగవంతమైన json beautifier, ఫార్మాటర్ మరియు వ్యూయర్. కుదించండి, వెతకండి, కాపీ చేయండి.",
+    "description": "Extension short description"
+  }
+}

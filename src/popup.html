@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <h1>JSON <b>Beautifier</b></h1>
+    <p class="tag">Local · open-source · no ads, no telemetry</p>
+
+    <label class="row">
+      <span>Theme</span>
+      <select id="theme">
+        <option value="auto">Auto (system)</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </label>
+
+    <label class="row">
+      <span>Indent</span>
+      <select id="indent">
+        <option value="2">2 spaces</option>
+        <option value="4">4 spaces</option>
+        <option value="1">1 space</option>
+      </select>
+    </label>
+
+    <label class="row">
+      <span>Auto-expand depth</span>
+      <select id="expandDepth">
+        <option value="1">1 level</option>
+        <option value="2">2 levels</option>
+        <option value="3">3 levels</option>
+        <option value="0">Collapsed</option>
+      </select>
+    </label>
+
+    <label class="row">
+      <span>Sort object keys</span>
+      <input type="checkbox" id="sortKeys" />
+    </label>
+
+    <p class="foot">
+      Changes apply immediately to open JSON tabs.<br>
+      <a href="https://jsonbeautifier.dev/" target="_blank" rel="noopener">jsonbeautifier.dev</a>
+    </p>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Μορφοποιήστε JSON άμεσα στον περιηγητή — γρήγορος json beautifier και προβολέας. Σύμπτυξη, αναζήτηση, αντιγραφή τιμών.",
+    "description": "Extension short description"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Vormindage JSON brauseris hetkega — kiire json beautifier, vormindaja ja vaatur. Ahendage, otsige, kopeerige väärtusi.",
+    "description": "Extension short description"
+  }
+}

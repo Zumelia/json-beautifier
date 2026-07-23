@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Formatuj JSON od razu w przeglądarce — szybki json beautifier, formatter i podgląd. Zwijaj, szukaj i kopiuj wartości.",
+    "description": "Extension short description"
+  }
+}

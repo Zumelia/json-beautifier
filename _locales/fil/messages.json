@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Ayusin ang JSON agad sa browser — mabilis na json beautifier, formatter at viewer. I-collapse, maghanap, kopyahin ang value.",
+    "description": "Extension short description"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "ബ്രൗസറിൽ JSON ഉടൻ മനോഹരമാക്കുക — വേഗതയേറിയ json beautifier, ഫോർമാറ്റർ, വ്യൂവർ. ചുരുക്കുക, തിരയുക, പകർത്തുക.",
+    "description": "Extension short description"
+  }
+}

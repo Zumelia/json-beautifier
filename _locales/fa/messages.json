@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "JSON را فوراً در مرورگر زیبا کنید — json beautifier سریع برای قالب‌بندی و نمایش. جمع کردن، جستجو و کپی هر مقدار.",
+    "description": "Extension short description"
+  }
+}

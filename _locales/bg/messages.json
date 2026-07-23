@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "Незабавно форматира JSON в браузъра — бърз json beautifier, форматор и визуализатор. Свивайте, търсете, копирайте.",
+    "description": "Extension short description"
+  }
+}

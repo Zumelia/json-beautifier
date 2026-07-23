@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "브라우저에서 JSON을 즉시 정리 — 빠른 json beautifier, 포매터 및 뷰어. 접기, 검색, 값 복사까지 한 번에.",
+    "description": "Extension short description"
+  }
+}

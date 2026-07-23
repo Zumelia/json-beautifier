@@ -1,0 +1,10 @@
+{
+  "appName": {
+    "message": "JSON Beautifier",
+    "description": "Extension name"
+  },
+  "shortDesc": {
+    "message": "JSON በአሳሽ ውስጥ ወዲያውኑ አሳምሩ — ፈጣን json beautifier፣ ፎርማተር እና መመልከቻ። ሰብስቡ፣ ፈልጉ፣ ማንኛውንም እሴት ቅዱ።",
+    "description": "Extension short description"
+  }
+}
