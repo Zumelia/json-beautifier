@@ -10,7 +10,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, resolve } from "node:path";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const SRC = readFileSync(resolve(__dirname, "../src/background.js"), "utf8");
+const SRC = readFileSync(resolve(__dirname, "../extension-chrome/src/background.js"), "utf8");
 
 let pass = 0, fail = 0;
 const results = [];

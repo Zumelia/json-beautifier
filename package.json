@@ -1,14 +1,25 @@
 {
   "name": "json-beautifier",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
+  "description": "JSON Beautifier — monorepo: shared core, browser extensions and the jsonbeautifier.dev site.",
+  "homepage": "https://jsonbeautifier.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zumelia/json-beautifier.git"
+  },
+  "author": "Zumelia",
+  "license": "MIT",
   "scripts": {
     "test": "node test/harness.mjs && node test/background.test.mjs && node test/reinject.test.mjs && node test/popup.test.mjs"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "JSON Beautifier \u2014 Chrome MV3 extension: beautify, collapse, search and copy JSON locally.",
+  "keywords": [
+    "json",
+    "beautifier",
+    "formatter",
+    "viewer",
+    "browser-extension"
+  ],
   "dependencies": {
     "jsdom": "^22.1.0"
   }

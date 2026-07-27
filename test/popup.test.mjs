@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const POPUP = readFileSync(path.join(__dirname, "../src/popup.js"), "utf8");
+const POPUP = readFileSync(path.join(__dirname, "../extension-chrome/src/popup.js"), "utf8");
 
 let pass = 0, fail = 0;
 const results = [];

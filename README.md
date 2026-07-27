@@ -31,16 +31,15 @@ the boring, trustworthy version.
 ## Install (unpacked, for development)
 
 1. `chrome://extensions` → toggle **Developer mode** (top-right).
-2. **Load unpacked** → select the `jsoneat/` folder.
+2. **Load unpacked** → select the `extension-chrome/` folder.
 3. Open any raw JSON URL (e.g. an API endpoint) — it formats automatically.
 4. Click the toolbar icon for settings (theme, indent, auto-expand depth, sort keys).
 
 ## Develop & test
 
 ```bash
-cd jsoneat
-npm install          # jsdom for the test harness
-node test/harness.mjs
+npm install    # jsdom, for the test harness
+npm test       # runs the full suite
 ```
 
 The harness loads `content.js` into a simulated Chrome document and asserts the
@@ -50,19 +49,39 @@ reusable regression harness** — every other utility in the portfolio gets its 
 version, because "breaks after a Chrome update" is the #1 complaint across all of
 them.
 
-## Project layout
+Build the store package:
+
+```bash
+./scripts/build-chrome.sh
+```
+
+## Repository layout
+
+This is a monorepo. Everything in it is MIT-licensed.
 
 ```
-jsoneat/
-├── manifest.json        # MV3
-├── src/
-│   ├── content.js       # detector + viewer (early-exits fast on non-JSON)
-│   ├── viewer.css       # injected on activation only; light+dark
-│   ├── popup.html/.js/.css   # settings
-├── icons/               # 16/32/48/128
-└── test/harness.mjs     # jsdom regression tests
+.
+├── core/                # shared JSON engine — no chrome.*, no DOM hijacking (planned)
+├── extension-chrome/    # the Chrome MV3 extension — this is what ships today
+│   ├── manifest.json
+│   ├── src/
+│   │   ├── content.js   # detector + viewer (early-exits fast on non-JSON)
+│   │   ├── viewer.css   # light + dark
+│   │   ├── background.js
+│   │   └── popup.html/.js/.css
+│   ├── icons/           # 16/32/48/128
+│   └── _locales/        # 52 locales
+├── extension-firefox/   # Firefox build (planned)
+├── web/                 # jsonbeautifier.dev — landing + online tools (planned)
+├── scripts/             # build helpers
+└── test/                # jsdom regression tests
 ```
+
+`core/` exists so the engine cannot drift between the extensions and the website: all of
+them are thin wrappers around the same file. See `core/README.md`.
 
 ## License
 
-MIT (open-source is a trust signal in this niche and a feature, not a giveaway).
+MIT — see [LICENSE](LICENSE). Open source is a trust signal in this niche and a feature,
+not a giveaway: every claim in the privacy section above can be checked by reading the
+source.

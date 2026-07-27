@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const CONTENT = readFileSync(path.join(__dirname, "../src/content.js"), "utf8");
+const CONTENT = readFileSync(path.join(__dirname, "../extension-chrome/src/content.js"), "utf8");
 
 let pass = 0, fail = 0;
 const results = [];
