@@ -25,19 +25,49 @@ Load it in Firefox with `about:debugging` → This Firefox → Load Temporary Ad
   settings page in a tab. That fallback also covers Chrome below 127, where the
   method does not exist at all.
 
-## Open question before this ships
+## Verified in a real Firefox (153, headless, 2026-07-27)
 
-**Host permissions are optional by default in Firefox MV3.** The user grants site
-access explicitly through the extensions button. Until this is checked against a
-real Firefox, we do not know whether the declared content script runs on first
-install or waits for that grant — and that decides whether the product's core
-promise ("open a JSON URL and it is already formatted") holds out of the box on
-Firefox.
+What works: the package installs as a temporary add-on, the event page starts,
+content scripts run, `chrome.storage` works, and the viewer builds correctly —
+tree present, keys rendered, page body replaced by our root element. Host
+permissions came back granted (`origins: http://*/*, https://*/*, file:///*`),
+so the optional-permission worry did not materialise on this install path. A
+store install may still differ.
 
-Whatever the answer turns out to be, the AMO listing has to describe what
-actually happens on Firefox rather than reuse the Chrome copy. If a grant is
-required, the add-on needs its own onboarding step that asks for it.
+`web-ext lint --self-hosted`: **0 errors, 0 warnings.**
 
-**This build has not been run in a real Firefox yet.** It is written, it packages
-cleanly, and the shared code is covered by the test suite — but "loads and works
-in Firefox" is not yet verified.
+## The blocker: Firefox ships its own JSON viewer
+
+Firefox has a built-in JSON viewer (`devtools.jsonview.enabled`, **on by
+default**) that takes over every `application/json` document. It is a privileged
+page, and **extension content scripts do not run in it at all**. Measured
+directly: with the pref at its default, a JSON page produced no content-script
+execution whatsoever; the same page with `devtools.jsonview.enabled=false`
+rendered our tree perfectly.
+
+So on a default Firefox this add-on is invisible on exactly the pages it exists
+for. This is a product problem, not a bug in the code.
+
+### What has been tried
+
+Rewriting `Content-Type: application/json` → `text/plain` from a blocking
+`webRequest.onHeadersReceived` listener, so the document never reaches the
+built-in viewer. The listener **registers** — `webRequestBlocking` is still
+supported in Firefox MV3, and the permission is granted — but it never fired for
+the JSON main-frame request, so the page still went to the built-in viewer.
+Unresolved; would need more digging before it can be called a solution.
+
+### Remaining options
+
+1. Make the header rewrite actually work (needs investigation), or intercept the
+   body with `webRequest.filterResponseData` (Firefox-only). Both cost heavier
+   permissions and a worse install-consent screen, which cuts against this
+   product's "minimal permissions" pitch.
+2. Ship anyway and tell users to turn off the built-in viewer in `about:config`.
+   Honest, but a poor first run. Extensions cannot flip that pref themselves —
+   it is not exposed to WebExtensions.
+3. Do not ship on Firefox. Unlike Chrome, Firefox already gives users a
+   competent JSON viewer, so the gap this product fills is much smaller there.
+
+Until one of those is settled, the Firefox badge on the website stays honest as
+"Coming soon".
