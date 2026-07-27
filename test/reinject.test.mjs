@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const CORE = readFileSync(path.join(__dirname, "../core/core.js"), "utf8");
 const CONTENT = readFileSync(path.join(__dirname, "../extension-chrome/src/content.js"), "utf8");
 
 let pass = 0, fail = 0;
@@ -45,6 +46,7 @@ function makeJsonDoc() {
   window.navigator.clipboard = { writeText: (t) => (window.__copied.push(t), Promise.resolve()) };
   if (!window.matchMedia) window.matchMedia = () => ({ matches: false, addEventListener() {} });
   window.getComputedStyle = window.getComputedStyle || (() => ({}));
+  window.eval(CORE); // ядро грузится один раз, как первый файл в content_scripts
   return { window, doc };
 }
 
@@ -84,6 +86,7 @@ const flush = () => new Promise((r) => setTimeout(r, 0));
   Object.defineProperty(window.document, "contentType", { value: "text/html", configurable: true });
   window.chrome = { runtime: { getURL: (p)=>p, lastError:null, id:"t" },
     storage: { local: { get:(d,cb)=>cb(d), set(){} } } };
+  window.eval(CORE);
   window.eval(CONTENT);
   await flush();
   window.eval(CONTENT);

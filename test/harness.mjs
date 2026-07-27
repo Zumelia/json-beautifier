@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const CORE = readFileSync(path.join(__dirname, "../core/core.js"), "utf8");
 const CONTENT = readFileSync(path.join(__dirname, "../extension-chrome/src/content.js"), "utf8");
 
 let pass = 0, fail = 0;
@@ -54,6 +55,7 @@ function makeDoc({ contentType, bodyHTML, bodyText, store: initStore }) {
 
 async function run(ctx) {
   const { window } = ctx;
+  window.eval(CORE); // ядро — как первый файл в content_scripts
   window.eval(CONTENT);
   // render() is deferred to a microtask; flush micro + one macro task.
   await new Promise((r) => setTimeout(r, 0));

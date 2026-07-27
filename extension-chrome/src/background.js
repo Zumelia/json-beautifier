@@ -1,4 +1,8 @@
-/* JSON Beautifier — service worker.
+/* JSON Beautifier — background.
+ *
+ * Runs as an MV3 service worker in Chrome and as an event page in Firefox
+ * (Firefox MV3 has no service_worker). The code is the same in both; only the
+ * manifest differs — see extension-firefox/.
  *
  * Закрывает три требования курса одной связкой:
  *   2.6  контент-скрипт обязан отработать во вкладках, открытых ДО установки,
@@ -43,7 +47,8 @@ async function reinjectExistingTabs() {
       });
       await chrome.scripting.executeScript({
         target: { tabId: tab.id },
-        files: ["src/content.js"],
+        // Ядро первым: content.js без globalThis.JSONBeautifierCore молча выходит.
+        files: ["src/core.js", "src/content.js"],
       });
       injected++;
     } catch (e) {
@@ -71,16 +76,35 @@ chrome.runtime.onInstalled.addListener((details) => {
   }
 });
 
-// Приёмник сообщений. «open-settings» приходит по клику на название в
-// тулбаре вьювера — открываем попап (chrome.action.openPopup, Chrome 127+).
-// Любое сообщение заодно будит SW → top-level ниже делает реинжект.
-chrome.runtime.onMessage.addListener((msg) => {
-  if (msg && msg.type === "open-settings") {
+/*
+ * Открыть настройки. Основной путь — chrome.action.openPopup() (Chrome 127+).
+ * Он есть не везде: в Chrome до 127 метода нет вовсе, а в Firefox он требует
+ * пользовательского жеста, которого у нас нет — клик случился в контент-скрипте,
+ * а вызов происходит здесь. Поэтому любой отказ ведёт к запасному варианту:
+ * та же страница настроек, открытая обычной вкладкой. Кнопка-шестерёнка
+ * обязана срабатывать всегда, иначе она читается как сломанная.
+ */
+function openSettings() {
+  const openTab = () => {
     try {
-      const p = chrome.action.openPopup();
-      if (p && p.catch) p.catch(() => {});
+      chrome.tabs.create({ url: chrome.runtime.getURL("src/popup.html") });
     } catch (_) {}
+  };
+  let p;
+  try {
+    if (!chrome.action || typeof chrome.action.openPopup !== "function") return openTab();
+    p = chrome.action.openPopup();
+  } catch (_) {
+    return openTab();
   }
+  if (p && typeof p.catch === "function") p.catch(openTab);
+}
+
+// Приёмник сообщений. «open-settings» приходит по клику на шестерёнку в
+// тулбаре вьювера. Любое сообщение заодно будит SW → top-level ниже делает
+// реинжект.
+chrome.runtime.onMessage.addListener((msg) => {
+  if (msg && msg.type === "open-settings") openSettings();
 });
 
 // Реинжект — на КАЖДОМ старте service worker'а, не только на install.

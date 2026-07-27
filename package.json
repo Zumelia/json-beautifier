@@ -11,7 +11,10 @@
   "author": "Zumelia",
   "license": "MIT",
   "scripts": {
-    "test": "node test/harness.mjs && node test/background.test.mjs && node test/reinject.test.mjs && node test/popup.test.mjs"
+    "test": "node test/core.test.mjs && node test/harness.mjs && node test/background.test.mjs && node test/reinject.test.mjs && node test/popup.test.mjs && node test/sync.test.mjs",
+    "sync": "./scripts/sync-core.sh",
+    "build:chrome": "./scripts/build-chrome.sh",
+    "build:firefox": "./scripts/build-firefox.sh"
   },
   "keywords": [
     "json",

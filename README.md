@@ -42,17 +42,20 @@ npm install    # jsdom, for the test harness
 npm test       # runs the full suite
 ```
 
-The harness loads `content.js` into a simulated Chrome document and asserts the
-behaviours that matter for this niche: valid/invalid JSON, non-JSON pages left
-untouched, big-file lazy rendering, XSS-safety, copy-to-clipboard. **This is the
-reusable regression harness** — every other utility in the portfolio gets its own
-version, because "breaks after a Chrome update" is the #1 complaint across all of
-them.
+`test/core.test.mjs` exercises the engine directly — parsing, error positions,
+pretty-printing, minifying, the tree, search. The rest run the extension as a
+whole: the harness loads `core.js` + `content.js` into a simulated Chrome
+document and asserts the behaviours that matter for this niche — valid/invalid
+JSON, non-JSON pages left untouched, big-file lazy rendering, XSS-safety,
+copy-to-clipboard. **This is the reusable regression harness** — every other
+utility in the portfolio gets its own version, because "breaks after a Chrome
+update" is the #1 complaint across all of them.
 
-Build the store package:
+Build the store packages:
 
 ```bash
-./scripts/build-chrome.sh
+npm run build:chrome     # → json-beautifier-<version>.zip
+npm run build:firefox    # → json-beautifier-firefox-<version>.zip
 ```
 
 ## Repository layout
@@ -61,21 +64,27 @@ This is a monorepo. Everything in it is MIT-licensed.
 
 ```
 .
-├── core/                # shared JSON engine — no chrome.*, no DOM hijacking (planned)
+├── core/
+│   └── core.js          # the engine: parse, print, minify, tree, search
 ├── extension-chrome/    # the Chrome MV3 extension — this is what ships today
 │   ├── manifest.json
 │   ├── src/
-│   │   ├── content.js   # detector + viewer (early-exits fast on non-JSON)
+│   │   ├── core.js      # generated copy of core/core.js (npm run sync)
+│   │   ├── content.js   # detector + viewer shell (early-exits on non-JSON)
 │   │   ├── viewer.css   # light + dark
 │   │   ├── background.js
 │   │   └── popup.html/.js/.css
 │   ├── icons/           # 16/32/48/128
 │   └── _locales/        # 52 locales
-├── extension-firefox/   # Firefox build (planned)
+├── extension-firefox/   # manifest overlay — the rest comes from extension-chrome/
 ├── web/                 # jsonbeautifier.dev — landing + online tools (planned)
-├── scripts/             # build helpers
+├── scripts/             # sync + build helpers
 └── test/                # jsdom regression tests
 ```
+
+The Firefox add-on is the Chrome tree plus a manifest overlay (`npm run
+build:firefox` assembles it), so there is exactly one copy of the extension code
+for both browsers.
 
 `core/` exists so the engine cannot drift between the extensions and the website: all of
 them are thin wrappers around the same file. See `core/README.md`.

@@ -10,6 +10,9 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+# Never ship a stale copy of the engine.
+./scripts/sync-core.sh >/dev/null
+
 VERSION=$(grep -o '"version"[[:space:]]*:[[:space:]]*"[^"]*"' extension-chrome/manifest.json \
   | head -1 | sed 's/.*"\([0-9][0-9.]*\)".*/\1/')
 

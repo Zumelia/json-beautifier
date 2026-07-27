@@ -21,18 +21,28 @@ const check = (name, ok, detail = "") => {
 const flush = () => new Promise((r) => setTimeout(r, 5));
 
 /** Поднимает изолированный фейковый chrome и выполняет background.js. */
-function boot({ tabs = [], failOn = () => false } = {}) {
+function boot({ tabs = [], failOn = () => false, openPopup = "ok" } = {}) {
   const calls = { uninstallURL: null, created: [], css: [], scripts: [], queried: null,
                   onMessage: false, msgHandler: null, popupOpened: false };
   let onInstalled = null;
+  // openPopup: "ok" — как в Chrome 127+; "reject" — как в Firefox без жеста;
+  // "missing" — как в Chrome до 127, где метода нет вовсе.
+  const action =
+    openPopup === "missing"
+      ? {}
+      : { openPopup: () => {
+            calls.popupOpened = true;
+            return openPopup === "reject" ? Promise.reject(new Error("no user gesture")) : Promise.resolve();
+          } };
   const chrome = {
     runtime: {
       onInstalled: { addListener: (fn) => { onInstalled = fn; } },
       onMessage: { addListener: (fn) => { calls.onMessage = true; calls.msgHandler = fn; } },
       setUninstallURL: (u) => { calls.uninstallURL = u; },
+      getURL: (p) => "ext://test/" + p,
       OnInstalledReason: { INSTALL: "install", UPDATE: "update" },
     },
-    action: { openPopup: () => { calls.popupOpened = true; return Promise.resolve(); } },
+    action,
     tabs: {
       query: async (q) => { calls.queried = q; return tabs; },
       create: (o) => { calls.created.push(o.url); },
@@ -61,6 +71,9 @@ function boot({ tabs = [], failOn = () => false } = {}) {
     calls.scripts.length === 3, `инжектов: ${calls.scripts.length}`);
   check("старт SW: CSS прокинут до скрипта",
     calls.css.length === 3 && calls.css[0][1] === "src/viewer.css");
+  check("старт SW: ядро инжектится ПЕРЕД контент-скриптом",
+    JSON.stringify(calls.scripts[0]?.slice(1)) === JSON.stringify(["src/core.js", "src/content.js"]),
+    JSON.stringify(calls.scripts[0]));
   check("старт SW: запрошены только http/https вкладки",
     JSON.stringify(calls.queried?.url) === JSON.stringify(["http://*/*", "https://*/*"]),
     JSON.stringify(calls.queried));
@@ -118,6 +131,29 @@ function boot({ tabs = [], failOn = () => false } = {}) {
   calls.popupOpened = false;
   calls.msgHandler({ type: "something-else" });
   check("чужие сообщения попап не открывают", calls.popupOpened === false);
+}
+
+// ---- 7. настройки открываются даже там, где openPopup недоступен ----------
+// Chrome до 127 метода не имеет вовсе; Firefox требует пользовательского жеста,
+// которого у нас нет — клик был в контент-скрипте. Шестерёнка обязана работать
+// в обоих случаях, иначе выглядит сломанной.
+{
+  const { calls } = boot({ tabs: [], openPopup: "missing" });
+  await flush();
+  calls.msgHandler({ type: "open-settings" });
+  await flush();
+  check("openPopup отсутствует: настройки открыты обычной вкладкой",
+    calls.created.length === 1 && String(calls.created[0]).includes("popup.html"),
+    JSON.stringify(calls.created));
+}
+{
+  const { calls } = boot({ tabs: [], openPopup: "reject" });
+  await flush();
+  calls.msgHandler({ type: "open-settings" });
+  await flush();
+  check("openPopup отклонён (Firefox без жеста): сработал запасной путь",
+    calls.created.length === 1 && String(calls.created[0]).includes("popup.html"),
+    JSON.stringify(calls.created));
 }
 
 console.log("");

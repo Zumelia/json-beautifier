@@ -60,7 +60,8 @@ function injectIntoOpenTabs() {
             () => {
               void chrome.runtime.lastError; // chrome:// и т.п. — пропускаем
               chrome.scripting.executeScript(
-                { target: { tabId: t.id }, files: ["src/content.js"] },
+                // Ядро первым: content.js без него молча выходит.
+                { target: { tabId: t.id }, files: ["src/core.js", "src/content.js"] },
                 () => void chrome.runtime.lastError
               );
             }
