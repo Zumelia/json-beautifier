@@ -314,6 +314,21 @@ async function run(ctx) {
   bar.lastElementChild.dispatchEvent(new window.Event("click", { bubbles: true }));
   check("шестерёнка: отправлен open-settings",
     (window.__sent || []).some((m) => m && m.type === "open-settings"));
+  check("шестерёнка: SVG-иконка 18px, не текстовый глиф",
+    !!bar.lastElementChild.querySelector('svg[width="18"]'));
+
+  // тема — двухшаговый переключатель (баг v0.2.6: «пустой» клик через auto)
+  const themeBtn = doc.querySelector(".jsoneat-theme");
+  const attr = () => doc.documentElement.getAttribute("data-jsoneat");
+  const before20 = attr();
+  themeBtn.dispatchEvent(new window.Event("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 5));
+  const after1 = attr();
+  themeBtn.dispatchEvent(new window.Event("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 5));
+  check("тема: каждый клик видимо меняет тему (light⇄dark, без пустого шага)",
+    before20 === "light" && after1 === "dark" && attr() === "light",
+    `${before20}→${after1}→${attr()}`);
 
   // collapse/expand — один toggle
   const ex = doc.querySelector(".jsoneat-exptoggle");

@@ -234,8 +234,10 @@
     bar.appendChild(themeBtn);
 
     // Шестерёнка — самая правая, открывает попап настроек
-    // (chrome.action.openPopup через SW, Chrome 127+).
-    const gear = btn("⚙", () => {
+    // (chrome.action.openPopup через SW, Chrome 127+). Текстовый глиф «⚙»
+    // был нечитаемо мелким (фидбек Кирилла) — теперь контурный SVG 18px.
+    // Иконка: Tabler Icons "settings" (MIT, tabler.io/icons).
+    const gear = btn("", () => {
       try {
         chrome?.runtime?.sendMessage?.({ type: "open-settings" }, () => {
           void chrome.runtime.lastError;
@@ -244,6 +246,12 @@
     });
     gear.classList.add("jsoneat-settings");
     gear.title = "Settings";
+    gear.setAttribute("aria-label", "Settings");
+    gear.innerHTML =
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" ' +
+      'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' +
+      '<path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z"/>' +
+      '<path d="M9 12a3 3 0 1 0 6 0a3 3 0 1 0 -6 0"/></svg>';
     bar.appendChild(gear);
     return bar;
   }
@@ -587,8 +595,11 @@
     return themeAttr() === "dark" ? "☾" : "☀";
   }
   function cycleTheme(button) {
-    const order = ["auto", "light", "dark"];
-    settings.theme = order[(order.indexOf(settings.theme) + 1) % order.length];
+    // Кнопка — простой видимый переключатель: всегда ПРОТИВОПОЛОЖНАЯ тема.
+    // Старый трёхшаговый цикл auto→light→dark давал «пустой» клик: шаг в auto
+    // визуально совпадал с текущей системной темой (баг Кирилла в v0.2.6).
+    // Режим auto по-прежнему доступен в попапе настроек.
+    settings.theme = themeAttr() === "dark" ? "light" : "dark";
     try {
       chrome?.storage?.local?.set({ theme: settings.theme });
     } catch {}

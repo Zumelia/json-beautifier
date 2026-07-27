@@ -73,8 +73,14 @@
   margin-right: 4px;
 }
 .jsoneat-settings {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 8px;
   min-width: 34px;
-  text-align: center;
+}
+.jsoneat-settings svg {
+  display: block;
 }
 .jsoneat-search {
   flex: 1;
