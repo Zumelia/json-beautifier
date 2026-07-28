@@ -16,18 +16,20 @@
   // Контекст, который человеку не нужно вводить руками, а нам полезен при
   // разборе: с какой страницы пришёл, какой браузер, какая версия расширения.
   const params = new URLSearchParams(location.search);
+  // Имена полей человеческие, потому что Formspree подставляет их в письмо как
+  // подписи: «Extension version» читается, «ext_version» — нет.
   const set = (name, value) => {
     const el = form.querySelector(`[name="${name}"]`);
     if (el && !el.value) el.value = value;
   };
-  set("page_url", document.referrer || location.href);
-  set("browser", navigator.userAgent);
-  if (params.get("v")) set("ext_version", params.get("v"));
+  set("Page", document.referrer || location.href);
+  set("Browser", navigator.userAgent);
+  if (params.get("v")) set("Extension version", params.get("v"));
 
   // Оценка приходит из виджета на сайте: /feedback/?stars=2
   const stars = parseInt(params.get("stars") || "", 10);
   if (stars >= 1 && stars <= 5) {
-    set("stars", String(stars));
+    set("Rating", String(stars) + " of 5");
     const badge = document.getElementById("stars-badge");
     if (badge) {
       badge.textContent = "★".repeat(stars) + "☆".repeat(5 - stars);

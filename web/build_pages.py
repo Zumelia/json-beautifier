@@ -84,7 +84,7 @@ def radios():
     for i, r in enumerate(REASONS):
         req = " required" if i == 0 else ""
         rows.append(
-            '        <label class="row-opt"><input type="radio" name="reason" '
+            '        <label class="row-opt"><input type="radio" name="Reason" '
             f'value="{html.escape(r)}"{req}> {html.escape(r)}</label>'
         )
     return "\n".join(rows)
@@ -152,10 +152,10 @@ UNINSTALL = f"""  <section class="wrap section" style="max-width:780px">
       unless you ask for one.</p>
 
     <form class="form" data-form action="{FORMSPREE}" method="post" style="margin-top:28px">
-      <input type="hidden" name="_subject" value="uninstall reason">
-      <input type="hidden" name="page_url" value="">
-      <input type="hidden" name="browser" value="">
-      <input type="hidden" name="ext_version" value="">
+      <input type="hidden" name="_subject" value="jsonbeautifier.dev: Uninstall">
+      <input type="hidden" name="Page" value="">
+      <input type="hidden" name="Browser" value="">
+      <input type="hidden" name="Extension version" value="">
 
       <fieldset class="opts-list form-row">
         <legend class="form-legend">Why did you remove it?</legend>
@@ -164,7 +164,7 @@ UNINSTALL = f"""  <section class="wrap section" style="max-width:780px">
 
       <div class="form-row">
         <label for="u-comment">Anything else? <span class="opt-note">optional</span></label>
-        <textarea id="u-comment" name="comment" rows="4" class="field" placeholder="What went wrong?"></textarea>
+        <textarea id="u-comment" name="Comment" rows="4" class="field" placeholder="What went wrong?"></textarea>
       </div>
 
       <div class="form-row">
@@ -195,22 +195,22 @@ FEEDBACK = f"""  <section class="wrap section" style="max-width:780px">
     <p id="stars-badge" hidden style="font-size:28px;color:var(--sun);margin:12px 0 0"></p>
 
     <form class="form" data-form action="{FORMSPREE}" method="post" style="margin-top:28px">
-      <input type="hidden" name="_subject" value="user feedback">
-      <input type="hidden" name="page_url" value="">
-      <input type="hidden" name="browser" value="">
-      <input type="hidden" name="ext_version" value="">
-      <input type="hidden" name="stars" value="">
+      <input type="hidden" name="_subject" value="jsonbeautifier.dev: Feedback">
+      <input type="hidden" name="Page" value="">
+      <input type="hidden" name="Browser" value="">
+      <input type="hidden" name="Extension version" value="">
+      <input type="hidden" name="Rating" value="">
 
       <div class="form-row">
         <label for="f-type">What is it?</label>
-        <select id="f-type" name="type" class="field">
+        <select id="f-type" name="Type" class="field">
 {options()}
         </select>
       </div>
 
       <div class="form-row">
         <label for="f-msg">What happened?</label>
-        <textarea id="f-msg" name="message" rows="6" class="field" required
+        <textarea id="f-msg" name="Message" rows="6" class="field" required
           placeholder="What you did, what you expected, what happened instead. A URL helps if the page is public."></textarea>
       </div>
 
@@ -220,7 +220,7 @@ FEEDBACK = f"""  <section class="wrap section" style="max-width:780px">
       </div>
 
       <div class="form-row">
-        <label class="row-check"><input type="checkbox" name="may_reply" value="yes"> You may reply to me</label>
+        <label class="row-check"><input type="checkbox" name="May we reply" value="yes"> You may reply to me</label>
       </div>
 
       <div class="form-foot">
@@ -313,6 +313,52 @@ def changelog_body():
     )
 
 
+SAMPLES = """  <section class="wrap section" style="max-width:860px">
+    <h1>Sample JSON files</h1>
+    <p class="lead">Open any of these to see what the extension does with a real response.
+      All the data is invented — no third-party APIs, no real people. Copy it, break it, use
+      it in your own tests.</p>
+
+    <div class="grid-3" style="margin-top:38px">
+      <div class="card">
+        <span class="num">37 KB · one line</span>
+        <h3><a href="/samples/orders.json">orders.json</a></h3>
+        <p>A nested API response: objects six levels deep, an array of 140 log events,
+          hyphenated header keys, Japanese and accented text, escapes, empty structures and
+          every scalar type.</p>
+        <p style="margin-top:12px"><b>Minified, exactly as a real endpoint would send it</b> —
+          which is the point: this is what JSON looks like before anything formats it.</p>
+      </div>
+      <div class="card">
+        <span class="num">2.3 MB · one line</span>
+        <h3><a href="/samples/large.json">large.json</a></h3>
+        <p>Twelve thousand records. Shows that a large document stays scrollable and
+          collapsible instead of freezing the tab.</p>
+        <p style="margin-top:12px">In raw view a line this long is force-wrapped — a browser
+          cannot draw a line millions of pixels wide.</p>
+      </div>
+      <div class="card">
+        <span class="num">327 B</span>
+        <h3><a href="/samples/broken.json">broken.json</a></h3>
+        <p>Deliberately invalid: a comma is missing on line 7.</p>
+        <p style="margin-top:12px">A viewer should tell you where the problem is — line,
+          column and the offending character — not show you a blank page.</p>
+      </div>
+    </div>
+
+    <p class="note-strip" style="margin-top:28px">Without the extension these open as raw
+      text, which is the honest before-and-after. With it, the first two become trees and the
+      third becomes a readable error.</p>
+
+    <div class="final" style="margin-top:40px">
+      <h2>See the difference</h2>
+      <p class="lead" style="margin-inline:auto;max-width:46ch">Install it, then open the
+        first file again. Nothing to press.</p>
+      <p style="margin-top:22px"><a class="btn" data-cta-slot="samples" href="#">Add to Chrome — free</a></p>
+    </div>
+  </section>"""
+
+
 NOT_FOUND = """  <section class="wrap section" style="max-width:760px">
     <p class="eyebrow">Error 404</p>
     <h1>This page doesn't exist</h1>
@@ -393,6 +439,9 @@ def main():
         ("feedback", shell("feedback/", "Tell us what's broken — JSON Beautifier",
                            "Report a bug or ask for a feature. Read by the person who wrote the code.",
                            FEEDBACK, noindex=True, scripts=FORM_JS)),
+        ("samples", shell("samples/", "Sample JSON files for testing — JSON Beautifier",
+                          "Free sample JSON endpoints: a nested API response, a 2.3 MB one, and one that is deliberately broken. All invented data.",
+                          SAMPLES)),
         ("changelog", shell("changelog/", "Changelog — JSON Beautifier",
                             "Every release of JSON Beautifier: what was added, what changed, what was fixed.",
                             changelog_body())),

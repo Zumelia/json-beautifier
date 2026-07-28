@@ -4,69 +4,141 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Sample JSON files for testing — JSON Beautifier</title>
-<meta name="description" content="Free sample JSON endpoints for testing a JSON viewer or formatter: a nested API response, a 2 MB file, and one that is deliberately broken.">
+<meta name="description" content="Free sample JSON endpoints: a nested API response, a 2.3 MB one, and one that is deliberately broken. All invented data.">
 <link rel="canonical" href="https://jsonbeautifier.dev/samples/">
-<style>
-  :root{
-    --bg:#f6f8f8; --card:#fff; --fg:#1b2426; --mut:#6b7a7b;
-    --line:#e5eae9; --accent:#0e7a6e;
-  }
-  @media (prefers-color-scheme:dark){
-    :root{ --bg:#0f1416; --card:#161d20; --fg:#e4ebea; --mut:#8fa3a1;
-           --line:#232d2f; --accent:#34c99e; }
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--fg);
-       font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-       display:flex;justify-content:center;padding:56px 20px 72px}
-  .wrap{width:100%;max-width:680px}
-  h1{font-size:30px;line-height:1.2;margin:0 0 12px;letter-spacing:-.02em}
-  .lead{font-size:17px;color:var(--mut);margin:0 0 32px}
-  .s{background:var(--card);border:1px solid var(--line);border-radius:12px;
-     padding:18px;margin:0 0 14px}
-  .s h2{margin:0 0 4px;font-size:16px}
-  .s h2 a{color:var(--accent);text-decoration:none}
-  .s h2 a:hover{text-decoration:underline}
-  .s p{margin:0;font-size:14px;color:var(--mut)}
-  .meta{font-size:12.5px;color:var(--mut);margin-top:8px}
-  footer{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);
-         color:var(--mut);font-size:13px}
-  footer a{color:var(--mut)}
-</style>
+<meta name="robots" content="index,follow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/assets/fonts.css?v=80febac9">
+<link rel="stylesheet" href="/assets/site.css?v=b7c16250">
 </head>
 <body>
-<div class="wrap">
-  <h1>Sample JSON files</h1>
-  <p class="lead">Open any of these in your browser to see what JSON Beautifier does with a
-     real response. All the data is invented — no third-party APIs, no real people.</p>
+<a class="skip" href="#main">Skip to content</a>
 
-  <div class="s">
-    <h2><a href="/samples/orders.json">orders.json</a></h2>
-    <p>A nested API response: objects six levels deep, an array of 140 log events,
-       hyphenated header keys, Japanese and accented text, escapes, empty structures and
-       every scalar type. Minified, exactly as a real endpoint would send it — which is
-       the point: this is what JSON looks like before anything formats it. Open it first.</p>
-    <p class="meta">25 KB · one line</p>
+<header class="hdr">
+  <div class="wrap">
+    <div class="hdr-in">
+      <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+      <nav class="nav" aria-label="Main">
+        <a href="/json-formatter/">Formatter</a>
+        <a href="/json-validator/">Validator</a>
+        <a href="/json-minifier/">Minifier</a>
+        <a href="/docs/">Docs</a>
+        <a href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+      <span class="spacer"></span>
+      <button class="icon-btn" data-theme-toggle aria-label="Switch theme">☾</button>
+      <button class="icon-btn burger" data-menu-toggle aria-expanded="false" aria-controls="sheet" aria-label="Menu">☰</button>
+      <a class="btn btn-sm" data-cta-slot="header" target="_blank" rel="noopener" href="#">Add to Chrome</a>
+    </div>
   </div>
+</header>
 
-  <div class="s">
-    <h2><a href="/samples/large.json">large.json</a></h2>
-    <p>Twelve thousand records, about 2 MB, also minified. Shows that a large document
-       stays scrollable and collapsible instead of freezing the tab.</p>
-    <p class="meta">2.3 MB · one line</p>
+<div class="sheet" id="sheet" hidden>
+  <div class="wrap">
+    <div class="sheet-head">
+      <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+      <span class="spacer"></span>
+      <button class="icon-btn" data-menu-toggle aria-label="Close">✕</button>
+    </div>
+    <a class="item" href="/">JSON Beautifier <small>Format &amp; read</small></a>
+    <a class="item" href="/json-formatter/">JSON Formatter <small>Indent styles</small></a>
+    <a class="item" href="/json-validator/">JSON Validator <small>Errors with line &amp; column</small></a>
+    <a class="item" href="/json-minifier/">JSON Minifier <small>Strip whitespace</small></a>
+    <a class="item" href="/docs/">Docs <small>Settings, shortcuts, troubleshooting</small></a>
+    <a class="item" href="/changelog/">Changelog <small>What shipped when</small></a>
+    <a class="item" href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub <small>MIT source</small></a>
+    <p><a class="btn" data-cta-slot="mobile-menu" target="_blank" rel="noopener" href="#">Add to Chrome — free</a></p>
   </div>
-
-  <div class="s">
-    <h2><a href="/samples/broken.json">broken.json</a></h2>
-    <p>Deliberately invalid — a comma is missing on line 7. A JSON viewer should tell you
-       where the problem is, not show you a blank page.</p>
-    <p class="meta">327 B</p>
-  </div>
-
-  <footer>
-    <a href="/">JSON Beautifier</a> · <a href="/docs/">Documentation</a><br>
-    Sample data is public domain — copy it, break it, use it in your own tests.
-  </footer>
 </div>
+
+<main id="main">
+  <section class="wrap section" style="max-width:860px">
+    <h1>Sample JSON files</h1>
+    <p class="lead">Open any of these to see what the extension does with a real response.
+      All the data is invented — no third-party APIs, no real people. Copy it, break it, use
+      it in your own tests.</p>
+
+    <div class="grid-3" style="margin-top:38px">
+      <div class="card">
+        <span class="num">37 KB · one line</span>
+        <h3><a href="/samples/orders.json">orders.json</a></h3>
+        <p>A nested API response: objects six levels deep, an array of 140 log events,
+          hyphenated header keys, Japanese and accented text, escapes, empty structures and
+          every scalar type.</p>
+        <p style="margin-top:12px"><b>Minified, exactly as a real endpoint would send it</b> —
+          which is the point: this is what JSON looks like before anything formats it.</p>
+      </div>
+      <div class="card">
+        <span class="num">2.3 MB · one line</span>
+        <h3><a href="/samples/large.json">large.json</a></h3>
+        <p>Twelve thousand records. Shows that a large document stays scrollable and
+          collapsible instead of freezing the tab.</p>
+        <p style="margin-top:12px">In raw view a line this long is force-wrapped — a browser
+          cannot draw a line millions of pixels wide.</p>
+      </div>
+      <div class="card">
+        <span class="num">327 B</span>
+        <h3><a href="/samples/broken.json">broken.json</a></h3>
+        <p>Deliberately invalid: a comma is missing on line 7.</p>
+        <p style="margin-top:12px">A viewer should tell you where the problem is — line,
+          column and the offending character — not show you a blank page.</p>
+      </div>
+    </div>
+
+    <p class="note-strip" style="margin-top:28px">Without the extension these open as raw
+      text, which is the honest before-and-after. With it, the first two become trees and the
+      third becomes a readable error.</p>
+
+    <div class="final" style="margin-top:40px">
+      <h2>See the difference</h2>
+      <p class="lead" style="margin-inline:auto;max-width:46ch">Install it, then open the
+        first file again. Nothing to press.</p>
+      <p style="margin-top:22px"><a class="btn" data-cta-slot="samples" href="#">Add to Chrome — free</a></p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cols">
+      <div>
+        <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+        <p style="color:var(--muted);font-size:14.5px;max-width:30ch">A JSON viewer that stays
+          out of the way and off the network.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a data-cta-slot="footer" target="_blank" rel="noopener" href="#">Chrome extension</a></li>
+        <li><a data-cta-slot="footer" target="_blank" rel="noopener" href="#">Edge · via CWS</a></li>
+        <li><a data-cta-slot="footer" target="_blank" rel="noopener" href="#">Opera · via CWS</a></li>
+        <li><a href="/changelog/">Changelog</a></li>
+      </ul></div>
+      <div><h4>Tools</h4><ul>
+        <li><a href="/">JSON Beautifier</a></li>
+        <li><a href="/json-formatter/">JSON Formatter</a></li>
+        <li><a href="/json-validator/">JSON Validator</a></li>
+        <li><a href="/json-minifier/">JSON Minifier</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/feedback/">Contact</a></li>
+      </ul></div>
+      <div><h4>Resources</h4><ul>
+        <li><a href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/samples/">Samples</a></li>
+        <li><a href="/rate/">Rate us</a></li>
+      </ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 <a href="https://zumelia.com" rel="noopener" target="_blank">Zumelia</a> · MIT licensed</span>
+      <span class="spacer"></span>
+      <button class="mini" data-theme-toggle aria-label="Switch theme">☾</button>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/site-config.js?v=7413362f"></script>
+<script src="/assets/site.js?v=cdd01cb9" defer></script>
+
 </body>
 </html>
