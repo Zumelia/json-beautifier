@@ -85,19 +85,20 @@ chrome.runtime.onInstalled.addListener((details) => {
  * обязана срабатывать всегда, иначе она читается как сломанная.
  */
 function openSettings() {
-  const openTab = () => {
+  // Запасной путь ТОЛЬКО когда метода нет вовсе (Chrome до 127). Если метод
+  // есть, но отклонился — почти всегда это «попап уже открыт»: пользователь
+  // нажал шестерёнку второй раз. Открывать в этом случае popup.html отдельной
+  // вкладкой неправильно, и Кирилл это поймал 2026-07-28. Молча ничего не делаем.
+  if (!chrome.action || typeof chrome.action.openPopup !== "function") {
     try {
       chrome.tabs.create({ url: chrome.runtime.getURL("src/popup.html") });
     } catch (_) {}
-  };
-  let p;
-  try {
-    if (!chrome.action || typeof chrome.action.openPopup !== "function") return openTab();
-    p = chrome.action.openPopup();
-  } catch (_) {
-    return openTab();
+    return;
   }
-  if (p && typeof p.catch === "function") p.catch(openTab);
+  try {
+    const p = chrome.action.openPopup();
+    if (p && typeof p.catch === "function") p.catch(() => {});
+  } catch (_) {}
 }
 
 // Приёмник сообщений. «open-settings» приходит по клику на шестерёнку в

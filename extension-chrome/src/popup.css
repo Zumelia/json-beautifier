@@ -5,6 +5,7 @@
   --line: #e5eae9;
   --accent: #0e7a6e;
 }
+/* Тема «auto» — по системе. */
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #0f1416;
@@ -13,6 +14,33 @@
     --line: #232d2f;
     --accent: #34c99e;
   }
+}
+/* Явно выбранная тема должна перебивать системную: иначе при системной светлой
+   и выбранной тёмной вьювер уходит в тёмное, а попап остаётся белым (замечание
+   Кирилла 2026-07-28). Атрибут ставит popup.js по сохранённой настройке;
+   специфичность [data-jb-theme] выше, чем у голого :root, поэтому порядок
+   относительно медиазапроса значения не имеет. */
+:root[data-jb-theme="light"] {
+  --bg: #fff;
+  --fg: #1b2426;
+  --mut: #6b7a7b;
+  --line: #e5eae9;
+  --accent: #0e7a6e;
+}
+:root[data-jb-theme="dark"] {
+  --bg: #0f1416;
+  --fg: #e4ebea;
+  --mut: #8fa3a1;
+  --line: #232d2f;
+  --accent: #34c99e;
+}
+/* Родные контролы (выпадающие списки, галки) иначе рисуются светлыми поверх
+   тёмного фона. */
+:root[data-jb-theme="dark"] {
+  color-scheme: dark;
+}
+:root[data-jb-theme="light"] {
+  color-scheme: light;
 }
 * {
   box-sizing: border-box;

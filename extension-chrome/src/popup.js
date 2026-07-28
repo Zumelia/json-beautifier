@@ -1,7 +1,16 @@
 "use strict";
-const DEFAULTS = { theme: "auto", indent: 2, expandDepth: 2, sortKeys: false };
+const DEFAULTS = { theme: "auto", indent: 2, expandDepth: 2, sortKeys: false, lineNumbers: true };
 
 const $ = (id) => document.getElementById(id);
+
+/* Попап должен слушаться выбранной темы, а не только системной: при системной
+   светлой и выбранной тёмной вьювер уходил в тёмное, а попап оставался белым.
+   При "auto" атрибут снимаем и работает медиазапрос в popup.css. */
+function applyTheme(theme) {
+  const root = document.documentElement;
+  if (theme === "light" || theme === "dark") root.setAttribute("data-jb-theme", theme);
+  else root.removeAttribute("data-jb-theme");
+}
 
 function load() {
   chrome.storage.local.get(DEFAULTS, (got) => {
@@ -10,6 +19,8 @@ function load() {
     $("indent").value = String(s.indent);
     $("expandDepth").value = String(s.expandDepth);
     $("sortKeys").checked = !!s.sortKeys;
+    if ($("lineNumbers")) $("lineNumbers").checked = s.lineNumbers !== false;
+    applyTheme(s.theme);
   });
 }
 
@@ -19,7 +30,9 @@ function save() {
     indent: parseInt($("indent").value, 10),
     expandDepth: parseInt($("expandDepth").value, 10),
     sortKeys: $("sortKeys").checked,
+    lineNumbers: $("lineNumbers") ? $("lineNumbers").checked : true,
   };
+  applyTheme(s.theme);
   chrome.storage.local.set(s);
   // Живое применение: рассылаем во все вкладки, где вьювер уже построен.
   // Вкладки без нашего контент-скрипта ответят ошибкой — глушим её.
@@ -37,9 +50,10 @@ function save() {
 
 document.addEventListener("DOMContentLoaded", () => {
   load();
-  ["theme", "indent", "expandDepth", "sortKeys"].forEach((id) =>
-    $(id).addEventListener("change", save)
-  );
+  ["theme", "indent", "expandDepth", "sortKeys", "lineNumbers"].forEach((id) => {
+    const node = $(id);
+    if (node) node.addEventListener("change", save);
+  });
   // Инжект в открытые вкладки — НАПРЯМУЮ из попапа, не через service worker.
   // Тест Кирилла (v0.2.3) показал: цепочка «пинг будит SW → SW реинжектит»
   // на практике не срабатывает после включения расширения. У попапа есть

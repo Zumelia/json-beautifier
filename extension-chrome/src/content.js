@@ -105,12 +105,13 @@
   }
 
   // ---- 2. Settings -------------------------------------------------------
-  const DEFAULTS = { theme: "auto", indent: 2, expandDepth: 2, sortKeys: false };
+  const DEFAULTS = { theme: "auto", indent: 2, expandDepth: 2, sortKeys: false, lineNumbers: true };
   let settings = { ...DEFAULTS };
 
   let rendered = false;
   let rawEl = null;
   let treeHandle = null;
+  let enableTreeControls = null; // ставится тулбаром, когда управление временно отключено
 
   const applyAfterSettings = () => queueMicrotask(render);
 
@@ -158,6 +159,7 @@
             if (res.ok) {
               data = res.data;
               treeHandle = core.renderTree(root, data, treeOptions());
+              if (enableTreeControls) enableTreeControls();
             } else {
               showParseError(root, res.error, trimmed);
             }
@@ -229,6 +231,28 @@
     rawToggle.setAttribute("aria-pressed", "false");
     bar.appendChild(rawToggle);
 
+    // Документ не разобрался — дерева нет, значит поиску, сворачиванию и
+    // переключателю Raw ⇄ Format работать не с чем. Оставить их живыми значит
+    // предложить действия, которые ничего не делают (или, как выяснилось,
+    // прячут единственное, что показано).
+    if (parseError || oversize) {
+      const why = parseError
+        ? "Not available: this document didn’t parse"
+        : "Not available yet: press Format to build the tree";
+      for (const node of [search, expToggle, rawToggle]) {
+        node.disabled = true;
+        node.title = why;
+      }
+      // Большой документ ещё может стать деревом по кнопке Format — тогда
+      // управление снова включается.
+      if (oversize) enableTreeControls = () => {
+        for (const node of [search, expToggle, rawToggle]) {
+          node.disabled = false;
+          node.removeAttribute("title");
+        }
+      };
+    }
+
     // Тема — справа (вернули по фидбеку v0.2.4).
     const themeBtn = btn(themeIcon(), () => cycleTheme(themeBtn));
     themeBtn.classList.add("jsoneat-theme");
@@ -260,6 +284,10 @@
 
   // ---- Raw toggle --------------------------------------------------------
   function toggleRaw(rawText, button) {
+    // Без дерева прятать raw нельзя: на экране не останется ничего. Кнопка в
+    // таких состояниях ещё и визуально отключена, но синтетический клик её
+    // обходит, поэтому защита стоит в самом обработчике.
+    if (!treeHandle) return;
     const root = document.getElementById("jsoneat-root");
     const tree = treeHandle && treeHandle.element;
     if (!rawEl) {
@@ -277,58 +305,70 @@
     }
   }
 
-  // Выше этого порога жёлоб с номерами не строим: у 25-мегабайтного файла это
-  // миллионы строк, и одна только строка с номерами весит мегабайты.
-  const RAW_GUTTER_MAX_LINES = 100000;
-  const RAW_LINE_HEIGHT = 20; // держать синхронно с line-height в viewer.css
-  const RAW_PAD_TOP = 12; // padding-top .jsoneat-raw, оттуда же
-
-  function lineHeightOf(node) {
-    try {
-      const v = parseFloat(getComputedStyle(node).lineHeight);
-      if (v > 0) return v;
-    } catch (_) {}
-    return RAW_LINE_HEIGHT;
-  }
-
   /*
-   * Raw-режим: колонка номеров + текст. Номера нужны не для красоты — без них
-   * невозможно соотнести «ошибка в строке 200» с тем, что видно на экране.
-   * Возвращённый элемент умеет _gotoLine(n): подсвечивает строку и прокручивает
-   * к ней страницу.
+   * Raw-режим.
+   *
+   * Каждая строка — своя строка разметки: номер в несжимаемой колонке слева,
+   * текст справа с переносом. Так номер остаётся привязан к своей логической
+   * строке даже когда та переносится на несколько экранных — как в редакторах.
+   *
+   * Почему не одна <pre> с общим жёлобом номеров (как было в первой версии):
+   * тогда ради выравнивания приходится запрещать перенос, а реальный raw-JSON
+   * почти всегда минифицирован — одна строка на мегабайты. Без переноса браузер
+   * должен нарисовать строку шириной в миллионы пикселей и не рисует ничего.
+   * Перенос здесь важнее выравнивания, и такая вёрстка даёт и то и другое.
+   *
+   * Порог по числу строк нужен, потому что разметка стоит три узла на строку.
+   * Выше порога — обычный <pre> с переносом и без номеров.
    */
+  const RAW_NUMBERED_MAX_LINES = 20000;
+
   function buildRaw(rawText) {
     const wrap = el("div", "jsoneat-rawwrap");
-    const lineCount = rawText.split("\n").length;
+    const lines = rawText.split("\n");
+    const numbered =
+      settings.lineNumbers !== false && lines.length > 1 && lines.length <= RAW_NUMBERED_MAX_LINES;
 
-    if (lineCount <= RAW_GUTTER_MAX_LINES) {
-      const gutter = el("pre", "jsoneat-gutter");
-      gutter.setAttribute("aria-hidden", "true");
-      let s = "";
-      for (let i = 1; i <= lineCount; i++) s += (i > 1 ? "\n" : "") + i;
-      gutter.textContent = s;
-      wrap.appendChild(gutter);
+    if (!numbered) {
+      const plain = el("div", "jsoneat-raw jsoneat-raw-plain");
+      plain.textContent = rawText;
+      wrap.appendChild(plain);
+      if (lines.length > RAW_NUMBERED_MAX_LINES) {
+        wrap.appendChild(
+          el("div", "jsoneat-rawnote",
+             `Line numbers are off above ${RAW_NUMBERED_MAX_LINES.toLocaleString("en-US")} lines.`)
+        );
+      }
+      wrap._numbered = false;
+      wrap._gotoLine = () => {};
+      return wrap;
     }
 
-    const pre = el("pre", "jsoneat-raw");
-    pre.textContent = rawText;
-    wrap.appendChild(pre);
+    const body = el("div", "jsoneat-raw");
+    const frag = document.createDocumentFragment();
+    const rows = [];
+    for (let i = 0; i < lines.length; i++) {
+      const row = el("div", "jsoneat-rawrow");
+      // Номер — отдельный элемент с user-select:none, поэтому в буфер при
+      // выделении текста мышью он не попадает.
+      row.appendChild(el("span", "jsoneat-rawnum", String(i + 1)));
+      row.appendChild(el("span", "jsoneat-rawline", lines[i]));
+      frag.appendChild(row);
+      rows.push(row);
+    }
+    body.appendChild(frag);
+    wrap.appendChild(body);
 
-    const mark = el("div", "jsoneat-rawmark");
-    mark.style.display = "none";
-    wrap.appendChild(mark);
-
+    wrap._numbered = true;
     wrap._gotoLine = (n) => {
-      if (!n || n < 1 || n > lineCount) return;
-      const lh = lineHeightOf(pre);
-      const top = RAW_PAD_TOP + (n - 1) * lh;
-      mark.style.display = "";
-      mark.style.height = lh + "px";
-      mark.style.top = top + "px";
+      if (!n || n < 1 || n > rows.length) return;
+      const prev = wrap.querySelector(".jsoneat-rawrow-hit");
+      if (prev) prev.classList.remove("jsoneat-rawrow-hit");
+      const row = rows[n - 1];
+      row.classList.add("jsoneat-rawrow-hit");
       try {
-        const rect = wrap.getBoundingClientRect();
-        const y = (window.scrollY || 0) + rect.top + top - Math.round((window.innerHeight || 600) / 3);
-        window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+        if (typeof row.scrollIntoView === "function")
+          row.scrollIntoView({ block: "center", behavior: "smooth" });
       } catch (_) {
         /* прокрутка не критична — подсветка уже стоит */
       }
@@ -381,15 +421,16 @@
     box.appendChild(el("div", "jsoneat-error-msg", err.message));
 
     const raw = buildRaw(rawText);
+    let jumpBtn = null;
 
     if (err.line != null) {
       // Ошибка может быть на 200-й строке, далеко за пределами экрана, а само
       // сообщение всегда наверху — поэтому к строке нужен переход, а не только
       // её номер.
-      const jump = btn(`Line ${err.line}, column ${err.column} →`, () => raw._gotoLine(err.line));
-      jump.classList.add("jsoneat-error-jump");
-      jump.title = "Scroll to the line and highlight it";
-      box.appendChild(jump);
+      jumpBtn = btn(`Line ${err.line}, column ${err.column} →`, () => raw._gotoLine(err.line));
+      jumpBtn.classList.add("jsoneat-error-jump");
+      jumpBtn.title = "Scroll to the line and highlight it";
+      box.appendChild(jumpBtn);
       box.appendChild(codeFrame(err));
     } else if (err.context) {
       box.appendChild(el("div", "jsoneat-error-ctx", err.context));
@@ -398,6 +439,10 @@
     root.appendChild(box);
     root.appendChild(raw);
     rawEl = raw; // чтобы кнопка Raw в тулбаре не создала второй экземпляр
+    if (!raw._numbered && jumpBtn) {
+      // Номеров нет — прыгать не к чему, честнее убрать кнопку.
+      jumpBtn.remove();
+    }
   }
 
   // ---- Theme --------------------------------------------------------------
@@ -438,6 +483,16 @@
       // Перестраиваем только когда дерево реально построено: в raw-режиме
       // больших файлов и на parse-ошибках перестраивать нечего.
       if (root && data !== undefined && treeHandle) rebuildTree(root);
+
+      // Raw пересобираем отдельно: он живёт независимо от дерева и в нём
+      // меняется нумерация строк.
+      if (root && rawEl) {
+        const wasVisible = rawEl.style.display !== "none";
+        const fresh = buildRaw(trimmed);
+        if (!wasVisible) fresh.style.display = "none";
+        rawEl.replaceWith(fresh);
+        rawEl = fresh;
+      }
     });
   } catch {
     /* runtime недоступен (файл открыт вне расширения) — не критично */

@@ -147,13 +147,15 @@ function boot({ tabs = [], failOn = () => false, openPopup = "ok" } = {}) {
     JSON.stringify(calls.created));
 }
 {
+  // А вот отказ УЖЕ СУЩЕСТВУЮЩЕГО метода — почти всегда «попап уже открыт»:
+  // пользователь нажал шестерёнку второй раз. Открывать в этом случае
+  // popup.html отдельной вкладкой неправильно (поймано Кириллом 2026-07-28).
   const { calls } = boot({ tabs: [], openPopup: "reject" });
   await flush();
   calls.msgHandler({ type: "open-settings" });
   await flush();
-  check("openPopup отклонён (Firefox без жеста): сработал запасной путь",
-    calls.created.length === 1 && String(calls.created[0]).includes("popup.html"),
-    JSON.stringify(calls.created));
+  check("openPopup отклонён (попап уже открыт): вкладка НЕ открывается",
+    calls.created.length === 0, JSON.stringify(calls.created));
 }
 
 console.log("");

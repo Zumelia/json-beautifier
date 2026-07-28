@@ -25,6 +25,7 @@ function boot({ tabs = [] } = {}) {
     <select id="indent"><option value="2">2</option><option value="4">4</option></select>
     <select id="expandDepth"><option value="2">2</option></select>
     <input type="checkbox" id="sortKeys">
+    <input type="checkbox" id="lineNumbers">
   </body></html>`, { runScripts: "dangerously" });
   const { window } = dom;
   const calls = { css: [], scripts: [], stored: null, msgs: [] };
@@ -85,6 +86,41 @@ function boot({ tabs = [] } = {}) {
     !!live && live.settings?.theme === "dark",
     JSON.stringify(live));
   check("попап: настройки сохранены в storage", calls.stored?.theme === "dark");
+}
+
+// ---- 4. Попап слушается ВЫБРАННОЙ темы, а не только системной -------------
+// При системной светлой и выбранной тёмной вьювер уходил в тёмное, а попап
+// оставался белым (замечание Кирилла 2026-07-28).
+{
+  const { window, calls } = boot({ tabs: [{ id: 5 }] });
+  await flush();
+  const root = window.document.documentElement;
+  check("тема auto: атрибут не выставлен, работает медиазапрос",
+    !root.hasAttribute("data-jb-theme"), root.getAttribute("data-jb-theme"));
+
+  const themeSel = window.document.getElementById("theme");
+  themeSel.value = "dark";
+  themeSel.dispatchEvent(new window.Event("change"));
+  await flush();
+  check("выбрана тёмная: попап помечен data-jb-theme=dark",
+    root.getAttribute("data-jb-theme") === "dark", root.getAttribute("data-jb-theme"));
+  check("выбранная тема ушла и во вкладки",
+    calls.msgs.some((m) => m && m.settings && m.settings.theme === "dark"));
+}
+
+// ---- 5. Нумерация строк — новая настройка ---------------------------------
+{
+  const { window, calls } = boot({ tabs: [{ id: 5 }] });
+  await flush();
+  const box = window.document.getElementById("lineNumbers");
+  check("нумерация включена по умолчанию", box.checked === true);
+  box.checked = false;
+  box.dispatchEvent(new window.Event("change"));
+  await flush();
+  check("выключение сохраняется", calls.stored?.lineNumbers === false,
+    JSON.stringify(calls.stored));
+  check("и рассылается в открытые вкладки",
+    calls.msgs.some((m) => m && m.settings && m.settings.lineNumbers === false));
 }
 
 console.log("");

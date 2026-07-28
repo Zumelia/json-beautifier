@@ -106,6 +106,16 @@
   cursor: pointer;
   white-space: nowrap;
 }
+/* Недоступно, когда документ не разобрался: дерева нет, действовать не над чем. */
+.jsoneat-btn:disabled,
+.jsoneat-search:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.jsoneat-btn:disabled:hover {
+  border-color: var(--jn-line);
+  color: var(--jn-fg);
+}
 .jsoneat-btn:hover {
   border-color: var(--jn-accent);
   color: var(--jn-accent);
@@ -212,53 +222,54 @@
   border-left: 2px solid var(--jn-accent);
 }
 
-/* Raw-режим с колонкой номеров.
-   Перенос строк убран намеренно: с pre-wrap номера разъезжаются с содержимым
-   на первой же длинной строке. Вместо переноса — горизонтальная прокрутка,
-   а жёлоб с номерами липнет к левому краю, чтобы не уезжать вместе с текстом. */
+/* Raw-режим.
+   Строка разметки на строку файла: номер слева, текст справа с переносом.
+   Перенос обязателен — минифицированный JSON это одна строка на мегабайты,
+   и без переноса браузеру пришлось бы рисовать её шириной в миллионы пикселей.
+   Номер привязан к своей логической строке и не съезжает при переносе. */
 .jsoneat-rawwrap {
   position: relative;
-  display: flex;
-  align-items: flex-start;
-  overflow-x: auto;
+  padding: 12px 0;
   background: var(--jn-bg);
-}
-.jsoneat-gutter {
-  position: sticky;
-  left: 0;
-  z-index: 1;
-  flex: 0 0 auto;
-  margin: 0;
-  padding: 12px 10px 12px 14px;
-  text-align: right;
-  color: var(--jn-mut);
-  background: var(--jn-bg);
-  border-right: 1px solid var(--jn-line);
-  white-space: pre;
-  font: inherit;
-  line-height: 20px;
-  user-select: none;
-  -webkit-user-select: none;
 }
 .jsoneat-raw {
-  flex: 1 0 auto;
   margin: 0;
-  padding: 12px 14px;
-  white-space: pre;
   color: var(--jn-fg);
   background: var(--jn-bg);
   font: inherit;
-  line-height: 20px;
 }
-.jsoneat-rawmark {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  min-width: 100%;
-  pointer-events: none;
-  background: color-mix(in srgb, #c0392b 16%, transparent);
-  border-top: 1px solid color-mix(in srgb, #c0392b 45%, transparent);
-  border-bottom: 1px solid color-mix(in srgb, #c0392b 45%, transparent);
+.jsoneat-raw-plain {
+  padding: 0 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.jsoneat-rawrow {
+  display: flex;
+  align-items: flex-start;
+}
+.jsoneat-rawnum {
+  flex: 0 0 auto;
+  min-width: 3.5em;
+  padding: 0 10px 0 14px;
+  text-align: right;
+  color: var(--jn-mut);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.jsoneat-rawline {
+  flex: 1 1 auto;
+  padding-right: 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.jsoneat-rawrow-hit {
+  background: color-mix(in srgb, #c0392b 14%, transparent);
+  box-shadow: inset 2px 0 0 #c0392b;
+}
+.jsoneat-rawnote {
+  padding: 8px 14px 0;
+  color: var(--jn-mut);
+  font-size: 0.9em;
 }
 .jsoneat-notice {
   padding: 10px 14px;

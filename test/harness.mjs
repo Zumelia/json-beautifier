@@ -382,14 +382,63 @@ async function run(ctx) {
     !!ctx && ctx.textContent.includes('"d": 3') && ctx.textContent.includes("^"),
     JSON.stringify(ctx?.textContent || "").slice(0, 90));
 
-  // Переход подсвечивает строку и не роняет страницу
-  const mark = doc.querySelector(".jsoneat-rawmark");
-  check("ошибка: подсветка строки изначально скрыта", mark && mark.style.display === "none");
+  // Переход подсвечивает нужную строку
+  check("ошибка: до перехода ничего не подсвечено", !doc.querySelector(".jsoneat-rawrow-hit"));
   jump.dispatchEvent(new window.Event("click", { bubbles: true }));
   await new Promise((r) => setTimeout(r, 5));
-  check("ошибка: после перехода подсветка показана и позиционирована",
-    mark.style.display !== "none" && /px$/.test(mark.style.top),
-    `display=${mark.style.display} top=${mark.style.top}`);
+  const hit = doc.querySelector(".jsoneat-rawrow-hit");
+  check("ошибка: после перехода подсвечена именно 5-я строка",
+    !!hit && hit.querySelector(".jsoneat-rawnum")?.textContent === "5",
+    hit ? hit.textContent.slice(0, 40) : "нет подсветки");
+
+  // Кнопка Raw при нераспарсенном документе не должна прятать единственное,
+  // что показано (баг, найденный Кириллом 2026-07-28).
+  const rawToggle = doc.querySelector(".jsoneat-rawtoggle");
+  check("ошибка: переключатель Raw отключён — переключать не на что",
+    rawToggle.disabled === true);
+  check("ошибка: поиск и сворачивание тоже отключены",
+    doc.querySelector(".jsoneat-search").disabled === true &&
+    doc.querySelector(".jsoneat-exptoggle").disabled === true);
+  rawToggle.dispatchEvent(new window.Event("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 5));
+  check("ошибка: raw остался на экране после клика по отключённой кнопке",
+    doc.querySelector(".jsoneat-rawwrap").style.display !== "none");
+}
+
+// ---- Case 21b: минифицированный JSON — перенос обязателен ------------------
+// Реальный raw-JSON почти всегда в одну строку. Запрет переноса ради ровных
+// номеров означал бы строку шириной в миллионы пикселей, которую браузер
+// просто не рисует (баг, найденный Кириллом на large.json 2026-07-28).
+{
+  const rows = Array.from({ length: 300 }, (_, i) => `{"id":${i},"t":"x"}`).join(",");
+  const min = `{"rows":[${rows}]}`;
+  const { window, doc } = await run(makeDoc({
+    contentType: "application/json", bodyHTML: `<pre>${min}</pre>`,
+  }));
+  doc.querySelector(".jsoneat-rawtoggle").dispatchEvent(new window.Event("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 5));
+
+  const raw = doc.querySelector(".jsoneat-raw");
+  check("минифицированный: содержимое raw на месте целиком",
+    !!raw && raw.textContent.length === min.length,
+    `${raw ? raw.textContent.length : 0} из ${min.length}`);
+  check("минифицированный: одна строка → нумерации нет",
+    doc.querySelectorAll(".jsoneat-rawnum").length === 0);
+  check("минифицированный: используется вариант с переносом",
+    !!doc.querySelector(".jsoneat-raw-plain"));
+}
+
+// ---- Case 21c: нумерацию можно выключить настройкой ------------------------
+{
+  const src = '{\n  "a": 1,\n  "b": 2\n}';
+  const { window, doc } = await run(makeDoc({
+    contentType: "application/json", bodyHTML: `<pre>${src}</pre>`,
+    store: { lineNumbers: false },
+  }));
+  doc.querySelector(".jsoneat-rawtoggle").dispatchEvent(new window.Event("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 5));
+  check("настройка lineNumbers=false выключает нумерацию",
+    doc.querySelectorAll(".jsoneat-rawnum").length === 0 && !!doc.querySelector(".jsoneat-raw"));
 }
 
 // ---- Case 22: raw-режим — колонка номеров строк ----------------------------
@@ -401,13 +450,12 @@ async function run(ctx) {
   doc.querySelector(".jsoneat-rawtoggle").dispatchEvent(new window.Event("click", { bubbles: true }));
   await new Promise((r) => setTimeout(r, 5));
 
-  const gutter = doc.querySelector(".jsoneat-gutter");
-  check("raw: колонка номеров построена", !!gutter);
-  check("raw: номеров ровно столько же, сколько строк",
-    gutter?.textContent === "1\n2\n3\n4", JSON.stringify(gutter?.textContent));
-  check("raw: жёлоб скрыт от скринридеров", gutter?.getAttribute("aria-hidden") === "true");
-  check("raw: сам текст не переносится (иначе номера разъедутся)",
-    !!doc.querySelector(".jsoneat-raw"));
+  const nums = [...doc.querySelectorAll(".jsoneat-rawnum")].map((n) => n.textContent);
+  check("raw: номера строк построены", nums.length === 4, JSON.stringify(nums));
+  check("raw: нумерация сквозная и по порядку",
+    JSON.stringify(nums) === JSON.stringify(["1", "2", "3", "4"]), JSON.stringify(nums));
+  check("raw: текст строк сохранён дословно",
+    [...doc.querySelectorAll(".jsoneat-rawline")].map((n) => n.textContent).join("\n") === src);
   check("raw: второй экземпляр не создан",
     doc.querySelectorAll(".jsoneat-rawwrap").length === 1);
 }
