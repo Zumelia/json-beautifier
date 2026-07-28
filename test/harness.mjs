@@ -391,14 +391,17 @@ async function run(ctx) {
     !!hit && hit.querySelector(".jsoneat-rawnum")?.textContent === "5",
     hit ? hit.textContent.slice(0, 40) : "нет подсветки");
 
-  // Кнопка Raw при нераспарсенном документе не должна прятать единственное,
-  // что показано (баг, найденный Кириллом 2026-07-28).
+  // Управление, которому нужно дерево, при нераспарсенном документе не гасится,
+  // а убирается: погашенная кнопка читается как поломка, да ещё и врёт подписью
+  // «Collapse all», когда разворачивать нечего (замечание Кирилла 2026-07-28).
   const rawToggle = doc.querySelector(".jsoneat-rawtoggle");
-  check("ошибка: переключатель Raw отключён — переключать не на что",
-    rawToggle.disabled === true);
-  check("ошибка: поиск и сворачивание тоже отключены",
-    doc.querySelector(".jsoneat-search").disabled === true &&
-    doc.querySelector(".jsoneat-exptoggle").disabled === true);
+  const hidden = (n) => n.style.display === "none";
+  check("ошибка: переключатель Raw скрыт, а не погашен", hidden(rawToggle));
+  check("ошибка: поиск и сворачивание тоже скрыты",
+    hidden(doc.querySelector(".jsoneat-search")) && hidden(doc.querySelector(".jsoneat-exptoggle")));
+  check("ошибка: Copy JSON и настройки остаются доступны",
+    !hidden([...doc.querySelectorAll(".jsoneat-btn")].find((b) => b.textContent === "Copy JSON")) &&
+    !hidden(doc.querySelector(".jsoneat-settings")));
   rawToggle.dispatchEvent(new window.Event("click", { bubbles: true }));
   await new Promise((r) => setTimeout(r, 5));
   check("ошибка: raw остался на экране после клика по отключённой кнопке",

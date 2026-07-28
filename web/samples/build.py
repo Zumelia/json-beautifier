@@ -222,9 +222,15 @@ def build_large():
 
 def main():
     out = HERE
-    orders = json.dumps(build_orders(), ensure_ascii=False, indent=2) + "\n"
+    # МИНИФИЦИРОВАННО, и это принципиально. Настоящий API отдаёт ответ без
+    # отступов — именно поэтому кнопка Format имеет смысл. Отформатированный
+    # образец делает демонстрацию бессмысленной: Raw и Format выглядят одинаково.
+    # На эти грабли мы уже наступали с jsonplaceholder, который отдаёт JSON
+    # с сервера уже отформатированным, и наступили второй раз со своим файлом
+    # (поймано Кириллом 2026-07-28).
+    orders = json.dumps(build_orders(), ensure_ascii=False, separators=(",", ":")) + "\n"
     (out / "orders.json").write_text(orders, encoding="utf-8")
-    print(f"orders.json  {len(orders):>9,} B  {orders.count(chr(10)):>6} строк")
+    print(f"orders.json  {len(orders):>9,} B  в одну строку, как настоящий ответ API")
 
     broken = build_broken()
     (out / "broken.json").write_text(broken, encoding="utf-8")

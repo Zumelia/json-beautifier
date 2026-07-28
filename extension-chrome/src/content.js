@@ -236,22 +236,19 @@
     // переключателю Raw ⇄ Format работать не с чем. Оставить их живыми значит
     // предложить действия, которые ничего не делают (или, как выяснилось,
     // прячут единственное, что показано).
+    // Без дерева поиску, сворачиванию и переключателю Raw ⇄ Format работать не
+    // с чем. Прячем их целиком, а не гасим: погашенная кнопка выглядит поломкой
+    // и провоцирует вопрос «почему не нажимается», да ещё и врёт подписью —
+    // «Collapse all» при том, что разворачивать нечего (замечание Кирилла).
     if (parseError || oversize) {
-      const why = parseError
-        ? "Not available: this document didn’t parse"
-        : "Not available yet: press Format to build the tree";
-      for (const node of [search, expToggle, rawToggle]) {
-        node.disabled = true;
-        node.title = why;
-      }
+      for (const node of [search, expToggle, rawToggle]) node.style.display = "none";
       // Большой документ ещё может стать деревом по кнопке Format — тогда
-      // управление снова включается.
-      if (oversize) enableTreeControls = () => {
-        for (const node of [search, expToggle, rawToggle]) {
-          node.disabled = false;
-          node.removeAttribute("title");
-        }
-      };
+      // управление возвращается.
+      if (oversize) {
+        enableTreeControls = () => {
+          for (const node of [search, expToggle, rawToggle]) node.style.display = "";
+        };
+      }
     }
 
     // Тема — справа (вернули по фидбеку v0.2.4).
@@ -337,6 +334,11 @@
       !!(options && options.numbered) && lines.length > 1 && lines.length <= RAW_NUMBERED_MAX_LINES;
 
     if (!numbered) {
+      // Raw показывает исходник КАК ЕСТЬ: без переносов, без номеров, без любой
+      // другой обработки. Минифицированный ответ в одну строку и должен
+      // выглядеть одной строкой — это его настоящий вид, а читаемый вид даёт
+      // кнопка Format. Отсюда горизонтальная прокрутка вместо переноса.
+      wrap.classList.add("jsoneat-rawwrap-plain");
       const plain = el("div", "jsoneat-raw jsoneat-raw-plain");
       plain.textContent = rawText;
       wrap.appendChild(plain);
