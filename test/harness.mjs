@@ -428,20 +428,34 @@ async function run(ctx) {
     !!doc.querySelector(".jsoneat-raw-plain"));
 }
 
-// ---- Case 21c: нумерацию можно выключить настройкой ------------------------
+// ---- Case 21c: нумерация строк в ДЕРЕВЕ ------------------------------------
+// Уточнение Кирилла 2026-07-28: номера нужны в отформатированном виде, а не в
+// raw. Сама нумерация — CSS-счётчики (jsdom их не считает), поэтому здесь
+// проверяем контракт: дерево помечено классом, по которому работает CSS.
 {
-  const src = '{\n  "a": 1,\n  "b": 2\n}';
-  const { window, doc } = await run(makeDoc({
+  const src = '{"a": {"b": 1}}';
+  const on = await run(makeDoc({ contentType: "application/json", bodyHTML: `<pre>${src}</pre>` }));
+  check("дерево: нумерация включена по умолчанию",
+    on.doc.getElementById("jsoneat-tree").classList.contains("jsoneat-lines"));
+
+  const off = await run(makeDoc({
     contentType: "application/json", bodyHTML: `<pre>${src}</pre>`,
     store: { lineNumbers: false },
   }));
-  doc.querySelector(".jsoneat-rawtoggle").dispatchEvent(new window.Event("click", { bubbles: true }));
-  await new Promise((r) => setTimeout(r, 5));
-  check("настройка lineNumbers=false выключает нумерацию",
-    doc.querySelectorAll(".jsoneat-rawnum").length === 0 && !!doc.querySelector(".jsoneat-raw"));
+  check("дерево: настройка lineNumbers=false снимает нумерацию",
+    !off.doc.getElementById("jsoneat-tree").classList.contains("jsoneat-lines"));
+
+  // Живая смена настройки должна перестраивать дерево с новым режимом
+  off.window.__onMsg({ type: "jsoneat-settings",
+    settings: { theme: "auto", indent: 2, expandDepth: 2, sortKeys: false, lineNumbers: true } });
+  await new Promise((r) => setTimeout(r, 10));
+  check("дерево: нумерация включается живьём, без перезагрузки",
+    off.doc.getElementById("jsoneat-tree").classList.contains("jsoneat-lines"));
 }
 
-// ---- Case 22: raw-режим — колонка номеров строк ----------------------------
+// ---- Case 22: обычный raw-режим — БЕЗ номеров ------------------------------
+// Уточнение Кирилла 2026-07-28: в raw номера не нужны, там смотрят исходник как
+// есть. Номера живут в дереве; в raw они остаются только на экране ошибки.
 {
   const src = '{\n  "a": 1,\n  "b": 2\n}';
   const { window, doc } = await run(makeDoc({
@@ -450,12 +464,12 @@ async function run(ctx) {
   doc.querySelector(".jsoneat-rawtoggle").dispatchEvent(new window.Event("click", { bubbles: true }));
   await new Promise((r) => setTimeout(r, 5));
 
-  const nums = [...doc.querySelectorAll(".jsoneat-rawnum")].map((n) => n.textContent);
-  check("raw: номера строк построены", nums.length === 4, JSON.stringify(nums));
-  check("raw: нумерация сквозная и по порядку",
-    JSON.stringify(nums) === JSON.stringify(["1", "2", "3", "4"]), JSON.stringify(nums));
-  check("raw: текст строк сохранён дословно",
-    [...doc.querySelectorAll(".jsoneat-rawline")].map((n) => n.textContent).join("\n") === src);
+  check("raw: номеров нет — они живут в дереве",
+    doc.querySelectorAll(".jsoneat-rawnum").length === 0);
+  check("raw: исходный текст отдан дословно",
+    doc.querySelector(".jsoneat-raw")?.textContent === src);
+  check("raw: используется вариант с переносом строк",
+    !!doc.querySelector(".jsoneat-raw-plain"));
   check("raw: второй экземпляр не создан",
     doc.querySelectorAll(".jsoneat-rawwrap").length === 1);
 }

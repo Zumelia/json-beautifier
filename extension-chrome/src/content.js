@@ -133,6 +133,7 @@
     indent: settings.indent,
     expandDepth: settings.expandDepth,
     sortKeys: settings.sortKeys,
+    lineNumbers: settings.lineNumbers !== false,
     treeId: "jsoneat-tree",
   });
 
@@ -323,17 +324,23 @@
    */
   const RAW_NUMBERED_MAX_LINES = 20000;
 
-  function buildRaw(rawText) {
+  /*
+   * В обычном raw-режиме номера не нужны: там смотрят на исходный текст как он
+   * есть, а ориентируются по дереву. Единственное место, где они обязательны, —
+   * экран ошибки разбора: дерева там нет, и кнопке «Line N, column M» нужно к
+   * чему-то вести. Поэтому numbered — явный параметр, а не настройка.
+   */
+  function buildRaw(rawText, options) {
     const wrap = el("div", "jsoneat-rawwrap");
     const lines = rawText.split("\n");
     const numbered =
-      settings.lineNumbers !== false && lines.length > 1 && lines.length <= RAW_NUMBERED_MAX_LINES;
+      !!(options && options.numbered) && lines.length > 1 && lines.length <= RAW_NUMBERED_MAX_LINES;
 
     if (!numbered) {
       const plain = el("div", "jsoneat-raw jsoneat-raw-plain");
       plain.textContent = rawText;
       wrap.appendChild(plain);
-      if (lines.length > RAW_NUMBERED_MAX_LINES) {
+      if (options && options.numbered && lines.length > RAW_NUMBERED_MAX_LINES) {
         wrap.appendChild(
           el("div", "jsoneat-rawnote",
              `Line numbers are off above ${RAW_NUMBERED_MAX_LINES.toLocaleString("en-US")} lines.`)
@@ -420,7 +427,7 @@
     box.appendChild(el("div", "jsoneat-error-title", "This looks like JSON but doesn’t parse."));
     box.appendChild(el("div", "jsoneat-error-msg", err.message));
 
-    const raw = buildRaw(rawText);
+    const raw = buildRaw(rawText, { numbered: true });
     let jumpBtn = null;
 
     if (err.line != null) {
@@ -483,16 +490,6 @@
       // Перестраиваем только когда дерево реально построено: в raw-режиме
       // больших файлов и на parse-ошибках перестраивать нечего.
       if (root && data !== undefined && treeHandle) rebuildTree(root);
-
-      // Raw пересобираем отдельно: он живёт независимо от дерева и в нём
-      // меняется нумерация строк.
-      if (root && rawEl) {
-        const wasVisible = rawEl.style.display !== "none";
-        const fresh = buildRaw(trimmed);
-        if (!wasVisible) fresh.style.display = "none";
-        rawEl.replaceWith(fresh);
-        rawEl = fresh;
-      }
     });
   } catch {
     /* runtime недоступен (файл открыт вне расширения) — не критично */

@@ -222,6 +222,11 @@
 
     const tree = el("div", "jsoneat-treeview");
     if (opts.treeId) tree.id = opts.treeId;
+    // Нумерация строк дерева делается целиком на CSS-счётчиках (см. viewer.css):
+    // свёрнутые ветки стоят display:none, боксов не создают и счётчик не двигают,
+    // поэтому номера всегда совпадают с тем, что видно, и пересчёт при
+    // сворачивании достаётся бесплатно — без единой строчки JS.
+    if (opts.lineNumbers) tree.classList.add("jsoneat-lines");
     tree.appendChild(buildNode("$", data, 0, true));
     initialPass = false;
     if (container) container.appendChild(tree);

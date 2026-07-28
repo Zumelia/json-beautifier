@@ -136,6 +136,36 @@
   cursor: default;
   border-left: 2px solid transparent;
 }
+
+/* Нумерация строк дерева — на CSS-счётчиках, без JS.
+   Свёрнутая ветка стоит display:none, боксов не создаёт и счётчик не двигает,
+   поэтому номера всегда соответствуют видимым строкам, а пересчёт при
+   сворачивании и разворачивании происходит сам собой.
+   Номер лежит в левом отступе дерева и не выделяется мышью, так что при
+   копировании поддерева в буфер не попадает. */
+.jsoneat-treeview.jsoneat-lines {
+  counter-reset: jbline;
+  padding-left: 3.6em;
+}
+.jsoneat-lines .jsoneat-line {
+  position: relative;
+  counter-increment: jbline;
+}
+.jsoneat-lines .jsoneat-line::before {
+  content: counter(jbline);
+  position: absolute;
+  left: -3.6em;
+  width: 3em;
+  text-align: right;
+  color: var(--jn-mut);
+  opacity: 0.75;
+  user-select: none;
+  -webkit-user-select: none;
+  pointer-events: none;
+}
+.jsoneat-lines .jsoneat-more {
+  position: relative;
+}
 .jsoneat-node.jsoneat-t-object > .jsoneat-line,
 .jsoneat-node.jsoneat-t-array > .jsoneat-line {
   cursor: pointer;
