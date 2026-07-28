@@ -25,6 +25,7 @@ echo "3. выкладка"
 mkdir -p "$ROOT/assets"
 cp -R assets/. "$ROOT/assets/"
 cp index.html 404.html "$ROOT/"
+cp favicon.ico favicon.png apple-touch-icon.png "$ROOT/"
 for dir in */; do
   [ -f "$dir/index.html" ] || continue
   mkdir -p "$ROOT/$dir"

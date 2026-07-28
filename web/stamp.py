@@ -22,7 +22,18 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 ASSETS = HERE / "assets"
 
-REF = re.compile(r'(?P<attr>href|src)="(?P<path>/assets/[^"?]+)(?:\?v=[0-9a-f]+)?"')
+# Фавиконки лежат в корне, а не в /assets/: браузер запрашивает /favicon.ico
+# сам, без ссылки в разметке, поэтому переносить их некуда. Версия им нужна
+# ровно по той же причине, что и стилям, — иначе Cloudflare продолжит отдавать
+# прошлую иконку. Неявный запрос корня останется на старой ещё несколько часов,
+# и это единственное место, где мы с кэшем не спорим.
+ROOT_ASSETS = ("/favicon.ico", "/favicon.png", "/apple-touch-icon.png")
+
+REF = re.compile(
+    r'(?P<attr>href|src)="(?P<path>/assets/[^"?]+|'
+    + "|".join(re.escape(p) for p in ROOT_ASSETS)
+    + r')(?:\?v=[0-9a-f]+)?"'
+)
 
 
 def digest(rel_path):
@@ -32,15 +43,38 @@ def digest(rel_path):
     return hashlib.sha1(f.read_bytes()).hexdigest()[:8]
 
 
+def digest_path(web_path):
+    f = HERE / web_path.lstrip("/")
+    if not f.exists():
+        return None
+    return hashlib.sha1(f.read_bytes()).hexdigest()[:8]
+
+
+# og:image — абсолютный адрес в content=, а не относительный в href=, поэтому
+# отдельным выражением. Версия ему нужна не меньше: Cloudflare держит картинки
+# по месяцу, и превью ссылки продолжало бы показывать прошлую обложку у всех,
+# кто её уже разворачивал.
+OG_REF = re.compile(
+    r'content="(?P<origin>https://jsonbeautifier\.dev)(?P<path>/assets/[^"?]+)'
+    r'(?:\?v=[0-9a-f]+)?"'
+)
+
+
 def stamp(text):
     def sub(m):
-        rel = m.group("path")[len("/assets/") :]
-        h = digest(rel)
+        path = m.group("path")
+        h = digest_path(path)
         if not h:
             return m.group(0)
-        return f'{m.group("attr")}="/assets/{rel}?v={h}"'
+        return f'{m.group("attr")}="{path}?v={h}"'
 
-    return REF.sub(sub, text)
+    def og_sub(m):
+        h = digest_path(m.group("path"))
+        if not h:
+            return m.group(0)
+        return f'content="{m.group("origin")}{m.group("path")}?v={h}"'
+
+    return OG_REF.sub(og_sub, REF.sub(sub, text))
 
 
 def main():
