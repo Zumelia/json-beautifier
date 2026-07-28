@@ -66,6 +66,23 @@ const host = () => window.document.getElementById("host");
   check("parse: контекст с указателем", String(r.error.context).includes("▸"), r.error?.context);
 }
 
+// ---- 3b. parse: сообщение очищено от «at position N» -----------------------
+// Сырой текст V8 — «… in JSON at position 282 (line 7 column 5)». Смещение в
+// символах человеку не говорит ничего, строку и колонку мы показываем отдельно.
+{
+  const bad = '{\n  "id": "ord_8126"\n  "status": "pending"\n}';
+  const r = core.parse(bad);
+  check("сообщение: без «at position N»", !/at position/i.test(r.error.message), r.error.message);
+  check("сообщение: без «(line N column N)»", !/\(line \d+ column \d+\)/i.test(r.error.message),
+    r.error.message);
+  check("сообщение: без хвоста «in JSON»", !/\bin JSON$/i.test(r.error.message), r.error.message);
+  check("сообщение: смысл сохранён", r.error.message.length > 5, r.error.message);
+  check("сырое сообщение доступно отдельно", /at position/i.test(r.error.rawMessage || ""),
+    r.error.rawMessage);
+  check("отдана сама строка с ошибкой", r.error.lineText === '  "status": "pending"',
+    JSON.stringify(r.error.lineText));
+}
+
 // ---- 4. parse: ошибка без позиции не ломает разбор -------------------------
 {
   const r = core.parse("");

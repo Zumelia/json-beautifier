@@ -84,14 +84,41 @@
     return "…" + text.slice(start, pos) + "▸" + text.slice(pos, pos + 40) + "…";
   }
 
+  /*
+   * V8 отдаёт что-то вроде
+   *   Expected ',' or '}' after property value in JSON at position 282 (line 7 column 5)
+   * «position 282» человеку не говорит ничего: смещение в символах невозможно
+   * соотнести с тем, что он видит на экране. Полезная часть — первая половина
+   * фразы; строку и колонку мы показываем отдельно и делаем по ним переход.
+   */
+  function cleanMessage(raw) {
+    const cleaned = raw
+      .replace(/\s*at position\s+\d+/i, "")
+      .replace(/\s*\(line\s+\d+\s+column\s+\d+\)/i, "")
+      .replace(/\s+in JSON\s*$/i, "")
+      .trim();
+    return cleaned || raw;
+  }
+
   function describeError(err, text) {
-    const message = String(err && err.message ? err.message : err);
-    const pos = extractPos(message);
-    const out = { message, pos, line: null, column: null, context: null };
+    const rawMessage = String(err && err.message ? err.message : err);
+    const pos = extractPos(rawMessage);
+    const out = {
+      message: cleanMessage(rawMessage),
+      rawMessage,
+      pos,
+      line: null,
+      column: null,
+      lineText: null,
+      context: null,
+    };
     if (pos != null && typeof text === "string" && pos <= text.length) {
       const before = text.slice(0, pos);
+      const lineStart = before.lastIndexOf("\n") + 1;
+      const lineEnd = text.indexOf("\n", pos);
       out.line = before.split("\n").length;
-      out.column = pos - (before.lastIndexOf("\n") + 1) + 1;
+      out.column = pos - lineStart + 1;
+      out.lineText = text.slice(lineStart, lineEnd === -1 ? text.length : lineEnd);
       out.context = contextAround(text, pos);
     }
     return out;

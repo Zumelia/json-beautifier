@@ -212,14 +212,53 @@
   border-left: 2px solid var(--jn-accent);
 }
 
+/* Raw-режим с колонкой номеров.
+   Перенос строк убран намеренно: с pre-wrap номера разъезжаются с содержимым
+   на первой же длинной строке. Вместо переноса — горизонтальная прокрутка,
+   а жёлоб с номерами липнет к левому краю, чтобы не уезжать вместе с текстом. */
+.jsoneat-rawwrap {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  overflow-x: auto;
+  background: var(--jn-bg);
+}
+.jsoneat-gutter {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 12px 10px 12px 14px;
+  text-align: right;
+  color: var(--jn-mut);
+  background: var(--jn-bg);
+  border-right: 1px solid var(--jn-line);
+  white-space: pre;
+  font: inherit;
+  line-height: 20px;
+  user-select: none;
+  -webkit-user-select: none;
+}
 .jsoneat-raw {
+  flex: 1 0 auto;
   margin: 0;
   padding: 12px 14px;
-  white-space: pre-wrap;
-  word-break: break-word;
+  white-space: pre;
   color: var(--jn-fg);
   background: var(--jn-bg);
   font: inherit;
+  line-height: 20px;
+}
+.jsoneat-rawmark {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  min-width: 100%;
+  pointer-events: none;
+  background: color-mix(in srgb, #c0392b 16%, transparent);
+  border-top: 1px solid color-mix(in srgb, #c0392b 45%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, #c0392b 45%, transparent);
 }
 .jsoneat-notice {
   padding: 10px 14px;
@@ -241,6 +280,26 @@
 .jsoneat-error-msg {
   color: #c0392b;
 }
+/* Кнопка «Line 7, column 5 →»: ошибка может быть на 200-й строке, далеко за
+   пределами экрана, поэтому к ней нужен переход, а не только упоминание. */
+.jsoneat-error-jump {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 8px;
+  padding: 5px 10px;
+  font: inherit;
+  font-weight: 600;
+  color: var(--jn-fg);
+  background: var(--jn-bg);
+  border: 1px solid color-mix(in srgb, #c0392b 40%, var(--jn-line));
+  border-radius: 6px;
+  cursor: pointer;
+}
+.jsoneat-error-jump:hover {
+  background: color-mix(in srgb, #c0392b 10%, var(--jn-bg));
+}
+/* Фрагмент исходника: номер строки, сама строка и каретка точно под колонкой. */
 .jsoneat-error-ctx {
   margin-top: 8px;
   padding: 6px 8px;
@@ -248,6 +307,16 @@
   border-radius: 4px;
   overflow-x: auto;
   white-space: pre;
+  line-height: 1.5;
+}
+.jsoneat-error-ctx .jsoneat-ctx-num {
+  color: var(--jn-mut);
+  user-select: none;
+  -webkit-user-select: none;
+}
+.jsoneat-error-ctx .jsoneat-ctx-caret {
+  color: #c0392b;
+  font-weight: 700;
 }
 
 /* Scoped to our subtree: the stylesheet now loads on every page (declarative

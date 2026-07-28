@@ -360,6 +360,58 @@ async function run(ctx) {
     toggle.textContent === "Raw" && tree().style.display !== "none");
 }
 
+// ---- Case 21: экран ошибки — номер строки, переход и каретка ---------------
+// Жалоба Кирилла (2026-07-28): «position 282» читается неудобно, а ошибка может
+// быть на 200-й строке — сообщение наверху, сама ошибка далеко внизу за экраном.
+{
+  const bad = '{\n  "a": 1,\n  "b": {\n    "c": 2\n    "d": 3\n  }\n}';
+  const { window, doc } = await run(makeDoc({
+    contentType: "application/json", bodyHTML: `<pre>${bad}</pre>`,
+  }));
+
+  const msg = doc.querySelector(".jsoneat-error-msg")?.textContent || "";
+  check("ошибка: в тексте нет «at position N»", !/at position/i.test(msg), msg);
+
+  const jump = doc.querySelector(".jsoneat-error-jump");
+  check("ошибка: есть кнопка перехода к строке", !!jump, jump ? jump.textContent : "нет");
+  check("ошибка: кнопка называет строку и колонку",
+    /line\s*5,\s*column\s*\d+/i.test(jump?.textContent || ""), jump?.textContent);
+
+  const ctx = doc.querySelector(".jsoneat-error-ctx");
+  check("ошибка: показан фрагмент исходника с кареткой",
+    !!ctx && ctx.textContent.includes('"d": 3') && ctx.textContent.includes("^"),
+    JSON.stringify(ctx?.textContent || "").slice(0, 90));
+
+  // Переход подсвечивает строку и не роняет страницу
+  const mark = doc.querySelector(".jsoneat-rawmark");
+  check("ошибка: подсветка строки изначально скрыта", mark && mark.style.display === "none");
+  jump.dispatchEvent(new window.Event("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 5));
+  check("ошибка: после перехода подсветка показана и позиционирована",
+    mark.style.display !== "none" && /px$/.test(mark.style.top),
+    `display=${mark.style.display} top=${mark.style.top}`);
+}
+
+// ---- Case 22: raw-режим — колонка номеров строк ----------------------------
+{
+  const src = '{\n  "a": 1,\n  "b": 2\n}';
+  const { window, doc } = await run(makeDoc({
+    contentType: "application/json", bodyHTML: `<pre>${src}</pre>`,
+  }));
+  doc.querySelector(".jsoneat-rawtoggle").dispatchEvent(new window.Event("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 5));
+
+  const gutter = doc.querySelector(".jsoneat-gutter");
+  check("raw: колонка номеров построена", !!gutter);
+  check("raw: номеров ровно столько же, сколько строк",
+    gutter?.textContent === "1\n2\n3\n4", JSON.stringify(gutter?.textContent));
+  check("raw: жёлоб скрыт от скринридеров", gutter?.getAttribute("aria-hidden") === "true");
+  check("raw: сам текст не переносится (иначе номера разъедутся)",
+    !!doc.querySelector(".jsoneat-raw"));
+  check("raw: второй экземпляр не создан",
+    doc.querySelectorAll(".jsoneat-rawwrap").length === 1);
+}
+
 // ---- Report ---------------------------------------------------------------
 console.log("");
 for (const [m, name, d] of results) console.log(`  ${m} ${name}${d ? "  — " + d : ""}`);

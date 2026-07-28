@@ -153,7 +153,7 @@
             "). Showing raw text — click “Format” to build the tree.",
           () => {
             const res = core.parse(trimmed);
-            root.querySelectorAll(".jsoneat-notice, .jsoneat-raw").forEach((n) => n.remove());
+            root.querySelectorAll(".jsoneat-notice, .jsoneat-rawwrap").forEach((n) => n.remove());
             rawEl = null;
             if (res.ok) {
               data = res.data;
@@ -164,7 +164,8 @@
           }
         )
       );
-      root.appendChild(buildRaw(trimmed));
+      rawEl = buildRaw(trimmed);
+      root.appendChild(rawEl);
     } else if (parseError) {
       showParseError(root, parseError, trimmed);
     } else {
@@ -178,7 +179,7 @@
 
   function rebuildTree(root) {
     if (treeHandle) treeHandle.destroy();
-    root.querySelectorAll(".jsoneat-notice, .jsoneat-raw").forEach((n) => n.remove());
+    root.querySelectorAll(".jsoneat-notice, .jsoneat-rawwrap").forEach((n) => n.remove());
     rawEl = null;
     treeHandle = core.renderTree(root, data, treeOptions());
   }
@@ -276,11 +277,63 @@
     }
   }
 
+  // Выше этого порога жёлоб с номерами не строим: у 25-мегабайтного файла это
+  // миллионы строк, и одна только строка с номерами весит мегабайты.
+  const RAW_GUTTER_MAX_LINES = 100000;
+  const RAW_LINE_HEIGHT = 20; // держать синхронно с line-height в viewer.css
+  const RAW_PAD_TOP = 12; // padding-top .jsoneat-raw, оттуда же
+
+  function lineHeightOf(node) {
+    try {
+      const v = parseFloat(getComputedStyle(node).lineHeight);
+      if (v > 0) return v;
+    } catch (_) {}
+    return RAW_LINE_HEIGHT;
+  }
+
+  /*
+   * Raw-режим: колонка номеров + текст. Номера нужны не для красоты — без них
+   * невозможно соотнести «ошибка в строке 200» с тем, что видно на экране.
+   * Возвращённый элемент умеет _gotoLine(n): подсвечивает строку и прокручивает
+   * к ней страницу.
+   */
   function buildRaw(rawText) {
-    const pre = document.createElement("pre");
-    pre.className = "jsoneat-raw";
+    const wrap = el("div", "jsoneat-rawwrap");
+    const lineCount = rawText.split("\n").length;
+
+    if (lineCount <= RAW_GUTTER_MAX_LINES) {
+      const gutter = el("pre", "jsoneat-gutter");
+      gutter.setAttribute("aria-hidden", "true");
+      let s = "";
+      for (let i = 1; i <= lineCount; i++) s += (i > 1 ? "\n" : "") + i;
+      gutter.textContent = s;
+      wrap.appendChild(gutter);
+    }
+
+    const pre = el("pre", "jsoneat-raw");
     pre.textContent = rawText;
-    return pre;
+    wrap.appendChild(pre);
+
+    const mark = el("div", "jsoneat-rawmark");
+    mark.style.display = "none";
+    wrap.appendChild(mark);
+
+    wrap._gotoLine = (n) => {
+      if (!n || n < 1 || n > lineCount) return;
+      const lh = lineHeightOf(pre);
+      const top = RAW_PAD_TOP + (n - 1) * lh;
+      mark.style.display = "";
+      mark.style.height = lh + "px";
+      mark.style.top = top + "px";
+      try {
+        const rect = wrap.getBoundingClientRect();
+        const y = (window.scrollY || 0) + rect.top + top - Math.round((window.innerHeight || 600) / 3);
+        window.scrollTo({ top: Math.max(0, y), behavior: "smooth" });
+      } catch (_) {
+        /* прокрутка не критична — подсветка уже стоит */
+      }
+    };
+    return wrap;
   }
 
   function buildNotice(text, onAction) {
@@ -289,14 +342,62 @@
     return n;
   }
 
+  /*
+   * Фрагмент исходника с кареткой:
+   *     7 │     "id": "ord_8126"
+   *       │                     ^
+   * Длинные строки подрезаем вокруг позиции ошибки, табы заменяем пробелом
+   * один к одному — JSON.parse считает их за один символ, и каретка не съезжает.
+   */
+  function codeFrame(err) {
+    const MAX_WIDTH = 120;
+    let text = String(err.lineText || "").replace(/\t/g, " ");
+    let col = err.column;
+    if (text.length > MAX_WIDTH) {
+      const from = Math.max(0, col - Math.floor(MAX_WIDTH / 2));
+      const head = from > 0 ? "…" : "";
+      text = head + text.slice(from, from + MAX_WIDTH) + "…";
+      col = col - from + head.length;
+    }
+    const num = String(err.line);
+    const box = el("div", "jsoneat-error-ctx");
+
+    const src = document.createElement("div");
+    src.appendChild(el("span", "jsoneat-ctx-num", num + " │ "));
+    src.appendChild(document.createTextNode(text));
+
+    const caret = document.createElement("div");
+    caret.appendChild(el("span", "jsoneat-ctx-num", " ".repeat(num.length) + " │ "));
+    caret.appendChild(el("span", "jsoneat-ctx-caret", " ".repeat(Math.max(0, col - 1)) + "^"));
+
+    box.appendChild(src);
+    box.appendChild(caret);
+    return box;
+  }
+
   function showParseError(root, err, rawText) {
     const box = el("div", "jsoneat-error");
     box.appendChild(el("div", "jsoneat-error-title", "This looks like JSON but doesn’t parse."));
-    const where = err.line != null ? ` (line ${err.line}, column ${err.column})` : "";
-    box.appendChild(el("div", "jsoneat-error-msg", err.message + where));
-    if (err.context) box.appendChild(el("div", "jsoneat-error-ctx", err.context));
+    box.appendChild(el("div", "jsoneat-error-msg", err.message));
+
+    const raw = buildRaw(rawText);
+
+    if (err.line != null) {
+      // Ошибка может быть на 200-й строке, далеко за пределами экрана, а само
+      // сообщение всегда наверху — поэтому к строке нужен переход, а не только
+      // её номер.
+      const jump = btn(`Line ${err.line}, column ${err.column} →`, () => raw._gotoLine(err.line));
+      jump.classList.add("jsoneat-error-jump");
+      jump.title = "Scroll to the line and highlight it";
+      box.appendChild(jump);
+      box.appendChild(codeFrame(err));
+    } else if (err.context) {
+      box.appendChild(el("div", "jsoneat-error-ctx", err.context));
+    }
+
     root.appendChild(box);
-    root.appendChild(buildRaw(rawText));
+    root.appendChild(raw);
+    rawEl = raw; // чтобы кнопка Raw в тулбаре не создала второй экземпляр
   }
 
   // ---- Theme --------------------------------------------------------------
