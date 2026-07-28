@@ -16,6 +16,11 @@
 
   // Порог, за которым перестаём подсвечивать и нумеровать: подсветка стоит
   // элемент на токен, и на мегабайтном документе это перестаёт окупаться.
+  // «1 lines» — мелочь, которую видно всем и сразу, потому что однострочный
+  // минифицированный JSON как раз самый частый вход.
+  const plural = (n, word) =>
+    `${n.toLocaleString("en-US")} ${word}${n === 1 ? "" : "s"}`;
+
   const HIGHLIGHT_MAX_LINES = 5000;
   const WARN_BYTES = 5 * 1024 * 1024;
   const REFUSE_BYTES = 25 * 1024 * 1024;
@@ -176,7 +181,7 @@
         plain.style.padding = "0 16px";
         plain.textContent = text;
         out.appendChild(plain);
-        say(`${lines.length.toLocaleString("en-US")} lines — syntax highlighting is off above ${HIGHLIGHT_MAX_LINES.toLocaleString("en-US")}.`);
+        say(`${plural(lines.length, "line")} — syntax highlighting is off above ${HIGHLIGHT_MAX_LINES.toLocaleString("en-US")}.`);
         return;
       }
       const box = document.createElement("div");
@@ -287,7 +292,7 @@
         const p = document.createElement("p");
         p.className = "out-empty";
         p.style.color = "var(--ok)";
-        p.textContent = `Valid JSON · ${src.split("\n").length.toLocaleString("en-US")} lines · ${new Blob([src]).size.toLocaleString("en-US")} B`;
+        p.textContent = `Valid JSON · ${plural(src.split("\n").length, "line")} · ${new Blob([src]).size.toLocaleString("en-US")} B`;
         out.appendChild(p);
         status.textContent = "Valid";
         return bump();
@@ -306,7 +311,7 @@
 
       const text = core.prettyPrint(parsed.data, { indent: indent(), sortKeys: sortKeys() });
       highlight(text);
-      status.textContent = `Formatted · ${text.split("\n").length.toLocaleString("en-US")} lines`;
+      status.textContent = `Formatted · ${plural(text.split("\n").length, "line")}`;
       bump();
     }
 

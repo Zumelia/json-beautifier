@@ -273,7 +273,9 @@
           el(
             "span",
             "jsoneat-summary",
-            n === 0 ? "" : " " + n + (type === "array" ? " items " : " keys ")
+            // «1 keys» бросается в глаза: объект с одним ключом — не редкость,
+            // а самый обычный конверт вокруг полезной нагрузки.
+            n === 0 ? "" : " " + n + (type === "array" ? " item" : " key") + (n === 1 ? " " : "s ")
           )
         );
         line.appendChild(el("span", "jsoneat-bracket jsoneat-closepreview", closeCh));
