@@ -11,28 +11,54 @@
     .map((a) => document.getElementById(a.getAttribute("href").slice(1)))
     .filter(Boolean);
 
-  // Текущий раздел — через IntersectionObserver, а не через scroll-обработчик:
-  // тот считал бы позиции на каждом кадре прокрутки.
-  if (heads.length && "IntersectionObserver" in window) {
-    const seen = new Map();
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => seen.set(e.target.id, e.isIntersecting ? e.intersectionRatio : 0));
-        let best = null;
-        let bestVal = 0;
-        seen.forEach((v, id) => {
-          if (v > bestVal) {
-            bestVal = v;
-            best = id;
-          }
-        });
-        links.forEach((a) =>
-          a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + best))
-        );
-      },
-      { rootMargin: "-80px 0px -70% 0px", threshold: [0, 0.5, 1] }
-    );
-    heads.forEach((h) => io.observe(h));
+  /*
+   * Текущий раздел — это последний заголовок, который проехал над линией чтения,
+   * а не тот, что сейчас попадает в какую-то полосу.
+   *
+   * Первая версия висела на IntersectionObserver с узким rootMargin, и между
+   * заголовками в полосу не попадало ничего: подсветка гасла целиком и
+   * появлялась рывками. Проверка в браузере это и показала.
+   *
+   * Чтение позиций стоит недорого: заголовков десяток, и опрос ограничен
+   * requestAnimationFrame, то есть не чаще кадра и только во время прокрутки.
+   */
+  if (heads.length) {
+    const LINE = 100; // линия чтения от верха окна, ниже липкой шапки
+    const update = () => {
+      let current = heads[0];
+      for (const h of heads) {
+        if (h.getBoundingClientRect().top <= LINE) current = h;
+        else break;
+      }
+      links.forEach((a) =>
+        a.setAttribute("aria-current", String(a.getAttribute("href") === "#" + current.id))
+      );
+    };
+
+    /* Троттлинг по времени, а не через requestAnimationFrame. rAF выглядит
+       уместнее для визуального обновления, но в фоновой вкладке он не
+       выполняется вовсе — из-за этого поведение невозможно проверить
+       автоматически, а необнаружимая регрессия дороже пары миллисекунд.
+       Пересчёт десяти позиций раз в 80 мс во время прокрутки стоит пустяк. */
+    let last = 0;
+    let trailing = null;
+    const schedule = () => {
+      const now = Date.now();
+      clearTimeout(trailing);
+      if (now - last >= 80) {
+        last = now;
+        update();
+      }
+      // Хвостовой вызов, чтобы зафиксировать конечное положение прокрутки.
+      trailing = setTimeout(() => {
+        last = Date.now();
+        update();
+      }, 90);
+    };
+
+    addEventListener("scroll", schedule, { passive: true });
+    addEventListener("resize", schedule, { passive: true });
+    update();
   }
 
   // Клик по «#» копирует ссылку на раздел. Сама ссылка остаётся ссылкой:
