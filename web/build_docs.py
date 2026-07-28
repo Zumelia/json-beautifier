@@ -247,6 +247,10 @@ def page():
 <meta name="description" content="How JSON Beautifier works: the toolbar, settings, keyboard shortcuts, permissions, file limits and troubleshooting.">
 <link rel="canonical" href="https://jsonbeautifier.dev/docs/">
 <meta name="robots" content="index,follow">
+<meta property="og:title" content="JSON Beautifier — Documentation">
+<meta property="og:image" content="https://jsonbeautifier.dev/assets/og/default.png">
+<meta property="og:site_name" content="JSON Beautifier">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="/assets/site.css">

@@ -3,3 +3,4 @@ node_modules/
 listing/
 dist/
 web/samples/large.json
+web/.fonts-ttf/

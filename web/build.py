@@ -175,6 +175,11 @@ def page(slug, title, desc, h1, lead, default_tab, prose, faq, siblings):
 <meta property="og:url" content="https://jsonbeautifier.dev/{slug}/">
 <meta property="og:title" content="{html.escape(title)}">
 <meta property="og:description" content="{html.escape(desc)}">
+<meta property="og:image" content="https://jsonbeautifier.dev/assets/og/{slug.replace('json-', '')}.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:site_name" content="JSON Beautifier">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="/assets/site.css">

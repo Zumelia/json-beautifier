@@ -29,6 +29,11 @@ def shell(slug, title, desc, body, *, noindex=False, scripts=""):
 <meta name="description" content="{html.escape(desc)}">
 <link rel="canonical" href="https://jsonbeautifier.dev/{slug}">
 <meta name="robots" content="{robots}">
+<meta property="og:title" content="{html.escape(title)}">
+<meta property="og:description" content="{html.escape(desc)}">
+<meta property="og:image" content="https://jsonbeautifier.dev/assets/og/default.png">
+<meta property="og:site_name" content="JSON Beautifier">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="/assets/site.css">
