@@ -106,7 +106,8 @@
   cursor: pointer;
   white-space: nowrap;
 }
-/* Недоступно, когда документ не разобрался: дерева нет, действовать не над чем. */
+/* Недоступно, когда документ не разобрался: дерева нет, действовать не над чем.
+   У каждой такой кнопки в title написана своя причина. */
 .jsoneat-btn:disabled,
 .jsoneat-search:disabled {
   opacity: 0.45;
@@ -115,6 +116,13 @@
 .jsoneat-btn:disabled:hover {
   border-color: var(--jn-line);
   color: var(--jn-fg);
+}
+/* «Вы уже здесь», а не «нельзя»: Raw показан и другого вида нет. Нажатое
+   состояние читается иначе, чем просто погашенное. */
+.jsoneat-btn[aria-pressed="true"]:disabled {
+  opacity: 0.75;
+  background: color-mix(in srgb, var(--jn-accent) 12%, var(--jn-bg));
+  border-color: color-mix(in srgb, var(--jn-accent) 35%, var(--jn-line));
 }
 .jsoneat-btn:hover {
   border-color: var(--jn-accent);
@@ -277,6 +285,12 @@
 .jsoneat-raw-plain {
   padding: 0 14px;
   white-space: pre;
+}
+/* Запасной режим для строк, которые браузер не в состоянии нарисовать целиком. */
+.jsoneat-raw-wrapped {
+  padding: 0 14px;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 .jsoneat-rawrow {
   display: flex;

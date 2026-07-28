@@ -236,17 +236,35 @@
     // переключателю Raw ⇄ Format работать не с чем. Оставить их живыми значит
     // предложить действия, которые ничего не делают (или, как выяснилось,
     // прячут единственное, что показано).
-    // Без дерева поиску, сворачиванию и переключателю Raw ⇄ Format работать не
-    // с чем. Прячем их целиком, а не гасим: погашенная кнопка выглядит поломкой
-    // и провоцирует вопрос «почему не нажимается», да ещё и врёт подписью —
-    // «Collapse all» при том, что разворачивать нечего (замечание Кирилла).
+    // Без дерева поиску и сворачиванию работать не с чем, а переключать Raw ⇄
+    // Format не на что. Гасим — но не молча: у каждой кнопки своя причина в
+    // подсказке, иначе неактивное состояние читается как поломка.
+    //
+    // С Raw отдельная история. Исходник есть всегда, поэтому «недоступно» про
+    // него звучит неправдой (замечание Кирилла). Он и не недоступен — он уже
+    // показан, и это единственный возможный вид. Поэтому кнопка помечается как
+    // нажатая: не «нельзя», а «вы уже здесь».
     if (parseError || oversize) {
-      for (const node of [search, expToggle, rawToggle]) node.style.display = "none";
+      const why = parseError ? "this document didn’t parse" : "the tree isn’t built yet";
+      search.disabled = true;
+      search.title = `Search needs a parsed document — ${why}`;
+      expToggle.disabled = true;
+      expToggle.title = `Nothing to collapse — ${why}`;
+      rawToggle.disabled = true;
+      rawToggle.setAttribute("aria-pressed", "true");
+      rawToggle.title = parseError
+        ? "Already showing the source — there’s no formatted view, this document didn’t parse"
+        : "Already showing the source — press Format below to build the tree";
+
       // Большой документ ещё может стать деревом по кнопке Format — тогда
       // управление возвращается.
       if (oversize) {
         enableTreeControls = () => {
-          for (const node of [search, expToggle, rawToggle]) node.style.display = "";
+          for (const node of [search, expToggle, rawToggle]) {
+            node.disabled = false;
+            node.removeAttribute("title");
+          }
+          rawToggle.setAttribute("aria-pressed", "false");
         };
       }
     }
@@ -320,6 +338,10 @@
    * Выше порога — обычный <pre> с переносом и без номеров.
    */
   const RAW_NUMBERED_MAX_LINES = 20000;
+  // Выше этого числа символов в одной строке Chrome перестаёт её рисовать.
+  // Порог с большим запасом: строка в 20 000 символов — это уже ~150 000 пикселей,
+  // прокручивать такое бессмысленно, но нарисовать браузер её ещё может.
+  const RAW_NOWRAP_MAX_LINE_CHARS = 20000;
 
   /*
    * В обычном raw-режиме номера не нужны: там смотрят на исходный текст как он
@@ -336,12 +358,26 @@
     if (!numbered) {
       // Raw показывает исходник КАК ЕСТЬ: без переносов, без номеров, без любой
       // другой обработки. Минифицированный ответ в одну строку и должен
-      // выглядеть одной строкой — это его настоящий вид, а читаемый вид даёт
-      // кнопка Format. Отсюда горизонтальная прокрутка вместо переноса.
-      wrap.classList.add("jsoneat-rawwrap-plain");
-      const plain = el("div", "jsoneat-raw jsoneat-raw-plain");
+      // выглядеть одной строкой. Отсюда горизонтальная прокрутка вместо переноса.
+      //
+      // Но у браузера есть предел. Строка в 2,3 млн символов — это полотно
+      // шириной около 17 млн пикселей: Chrome заводит область прокрутки, а текст
+      // не рисует вовсе, и пользователь видит пустой экран со скроллбаром
+      // (скриншот Кирилла 2026-07-28 на large.json). Пустота хуже переноса,
+      // поэтому за порогом переносим и честно пишем, почему.
+      const longest = lines.reduce((m, l) => (l.length > m ? l.length : m), 0);
+      const tooWide = longest > RAW_NOWRAP_MAX_LINE_CHARS;
+      wrap.classList.add(tooWide ? "jsoneat-rawwrap-wrapped" : "jsoneat-rawwrap-plain");
+      const plain = el("div", "jsoneat-raw " + (tooWide ? "jsoneat-raw-wrapped" : "jsoneat-raw-plain"));
       plain.textContent = rawText;
       wrap.appendChild(plain);
+      if (tooWide) {
+        wrap.appendChild(
+          el("div", "jsoneat-rawnote",
+             `One line here is ${longest.toLocaleString("en-US")} characters long — too wide for the ` +
+             `browser to draw, so it is wrapped. Press Format for a readable view.`)
+        );
+      }
       if (options && options.numbered && lines.length > RAW_NUMBERED_MAX_LINES) {
         wrap.appendChild(
           el("div", "jsoneat-rawnote",

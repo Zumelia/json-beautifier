@@ -391,17 +391,27 @@ async function run(ctx) {
     !!hit && hit.querySelector(".jsoneat-rawnum")?.textContent === "5",
     hit ? hit.textContent.slice(0, 40) : "нет подсветки");
 
-  // Управление, которому нужно дерево, при нераспарсенном документе не гасится,
-  // а убирается: погашенная кнопка читается как поломка, да ещё и врёт подписью
-  // «Collapse all», когда разворачивать нечего (замечание Кирилла 2026-07-28).
+  // Управление, которому нужно дерево, гасится — и у каждой кнопки в подсказке
+  // своя причина, иначе неактивность читается как поломка. Прятать пробовали,
+  // Кириллу так менее понятно (2026-07-28).
   const rawToggle = doc.querySelector(".jsoneat-rawtoggle");
-  const hidden = (n) => n.style.display === "none";
-  check("ошибка: переключатель Raw скрыт, а не погашен", hidden(rawToggle));
-  check("ошибка: поиск и сворачивание тоже скрыты",
-    hidden(doc.querySelector(".jsoneat-search")) && hidden(doc.querySelector(".jsoneat-exptoggle")));
-  check("ошибка: Copy JSON и настройки остаются доступны",
-    !hidden([...doc.querySelectorAll(".jsoneat-btn")].find((b) => b.textContent === "Copy JSON")) &&
-    !hidden(doc.querySelector(".jsoneat-settings")));
+  const searchInput = doc.querySelector(".jsoneat-search");
+  const expToggle = doc.querySelector(".jsoneat-exptoggle");
+  check("ошибка: поиск и сворачивание погашены", searchInput.disabled && expToggle.disabled);
+  check("ошибка: у поиска и сворачивания объяснена причина",
+    /didn’t parse/.test(searchInput.title) && /didn’t parse/.test(expToggle.title));
+  check("ошибка: элементы на месте, а не спрятаны",
+    searchInput.style.display !== "none" && rawToggle.style.display !== "none");
+
+  // Исходник есть всегда, поэтому Raw не «недоступен» — он уже показан.
+  check("ошибка: Raw помечен как нажатый, а не просто погашенный",
+    rawToggle.getAttribute("aria-pressed") === "true" && rawToggle.disabled);
+  check("ошибка: подсказка у Raw объясняет «вы уже здесь»",
+    /Already showing the source/.test(rawToggle.title), rawToggle.title);
+
+  const copyBtn = [...doc.querySelectorAll(".jsoneat-btn")].find((b) => b.textContent === "Copy JSON");
+  check("ошибка: Copy JSON и настройки работают",
+    !copyBtn.disabled && !doc.querySelector(".jsoneat-settings").disabled);
   rawToggle.dispatchEvent(new window.Event("click", { bubbles: true }));
   await new Promise((r) => setTimeout(r, 5));
   check("ошибка: raw остался на экране после клика по отключённой кнопке",
@@ -427,8 +437,29 @@ async function run(ctx) {
     `${raw ? raw.textContent.length : 0} из ${min.length}`);
   check("минифицированный: одна строка → нумерации нет",
     doc.querySelectorAll(".jsoneat-rawnum").length === 0);
-  check("минифицированный: используется вариант с переносом",
+  check("минифицированный: короткая строка показана как есть, без переноса",
     !!doc.querySelector(".jsoneat-raw-plain"));
+}
+
+// ---- Case 21d: строка, которую браузер не в силах нарисовать ---------------
+// На large.json (2,3 МБ в одну строку) Chrome заводил область прокрутки, но
+// текст не рисовал вовсе: пустой экран со скроллбаром (скриншот Кирилла).
+// Пустота хуже переноса, поэтому за порогом переносим и объясняем почему.
+{
+  const huge = '{"blob":"' + "x".repeat(60000) + '"}';
+  const { window, doc } = await run(makeDoc({
+    contentType: "application/json", bodyHTML: `<pre>${huge}</pre>`,
+  }));
+  doc.querySelector(".jsoneat-rawtoggle").dispatchEvent(new window.Event("click", { bubbles: true }));
+  await new Promise((r) => setTimeout(r, 5));
+
+  check("сверхдлинная строка: включён перенос вместо пустого экрана",
+    !!doc.querySelector(".jsoneat-raw-wrapped") && !doc.querySelector(".jsoneat-raw-plain"));
+  check("сверхдлинная строка: текст отдан целиком",
+    doc.querySelector(".jsoneat-raw")?.textContent.length === huge.length);
+  const note = doc.querySelector(".jsoneat-rawnote");
+  check("сверхдлинная строка: объяснено, почему перенесли",
+    !!note && /characters long/.test(note.textContent), note ? note.textContent.slice(0, 60) : "нет");
 }
 
 // ---- Case 21c: нумерация строк в ДЕРЕВЕ ------------------------------------
