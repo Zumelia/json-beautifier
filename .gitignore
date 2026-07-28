@@ -4,3 +4,6 @@ listing/
 dist/
 web/samples/large.json
 web/.fonts-ttf/
+
+# Питоновский кэш — производное от build*.py, в истории ему не место
+__pycache__/
