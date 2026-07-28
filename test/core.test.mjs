@@ -183,6 +183,31 @@ const host = () => window.document.getElementById("host");
   h.destroy();
 }
 
+// ---- 12b. Бюджет разметки на строку ----------------------------------------
+// Скорость вьювера упирается в то, сколько всего умножается на число строк.
+// Любое «украшение», которое добавит узел в КАЖДУЮ строку, умножится на тысячи
+// и оплатится раскладкой и отрисовкой. Этот тест ловит такую правку: сам он
+// краску не измеряет (jsdom её не делает), но структурный рост поймает.
+{
+  host().textContent = "";
+  const data = { items: Array.from({ length: 5000 }, (_, i) => ({ id: i, name: "row " + i })) };
+
+  const plain = core.renderTree(host(), data, { lineNumbers: false });
+  const plainRows = plain.element.querySelectorAll(".jsoneat-line").length;
+  const plainNodes = plain.element.querySelectorAll("*").length;
+  const perRow = plainNodes / plainRows;
+  check("разметка: не больше 12 узлов на строку", perRow <= 12, perRow.toFixed(1) + " узла/строка");
+  plain.destroy();
+
+  const numbered = core.renderTree(host(), data, { lineNumbers: true });
+  const numberedNodes = numbered.element.querySelectorAll("*").length;
+  check("нумерация строк не добавляет ни одного узла (CSS-счётчики, не <span>)",
+    numberedNodes === plainNodes, `${plainNodes} → ${numberedNodes}`);
+  check("нумерация включается классом на дереве, а не разметкой строк",
+    numbered.element.classList.contains("jsoneat-lines"));
+  numbered.destroy();
+}
+
 // ---- 13. setAllCollapsed ---------------------------------------------------
 {
   host().textContent = "";
