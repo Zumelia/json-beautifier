@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JSON Beautifier — Documentation</title>
+<meta name="description" content="How JSON Beautifier works: the toolbar, settings, keyboard shortcuts, permissions, file limits and troubleshooting.">
+<link rel="canonical" href="https://jsonbeautifier.dev/docs/">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/site.css">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://jsonbeautifier.dev/" },
+    { "@type": "ListItem", "position": 2, "name": "Documentation", "item": "https://jsonbeautifier.dev/docs/" }
+  ]
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hdr">
+  <div class="wrap">
+    <div class="hdr-in">
+      <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+      <nav class="nav" aria-label="Main">
+        <a href="/json-formatter/">Formatter</a>
+        <a href="/json-validator/">Validator</a>
+        <a href="/json-minifier/">Minifier</a>
+        <a href="/docs/">Docs</a>
+        <a href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub</a>
+      </nav>
+      <span class="spacer"></span>
+      <button class="icon-btn" data-theme-toggle aria-label="Switch theme">☾</button>
+      <button class="icon-btn burger" data-menu-toggle aria-expanded="false" aria-controls="sheet" aria-label="Menu">☰</button>
+      <a class="btn btn-sm" data-cta-slot="header" target="_blank" rel="noopener" href="#">Add to Chrome</a>
+    </div>
+  </div>
+</header>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="wrap">
+    <div class="sheet-head">
+      <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+      <span class="spacer"></span>
+      <button class="icon-btn" data-menu-toggle aria-label="Close">✕</button>
+    </div>
+    <a class="item" href="/">JSON Beautifier <small>Format &amp; read</small></a>
+    <a class="item" href="/json-formatter/">JSON Formatter <small>Indent styles</small></a>
+    <a class="item" href="/json-validator/">JSON Validator <small>Errors with line &amp; column</small></a>
+    <a class="item" href="/json-minifier/">JSON Minifier <small>Strip whitespace</small></a>
+    <a class="item" href="/docs/">Docs <small>Settings, shortcuts, troubleshooting</small></a>
+    <a class="item" href="/changelog/">Changelog <small>What shipped when</small></a>
+    <a class="item" href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub <small>MIT source</small></a>
+    <p><a class="btn" data-cta-slot="mobile-menu" target="_blank" rel="noopener" href="#">Add to Chrome — free</a></p>
+  </div>
+</div>
+
+<main id="main">
+  <div class="wrap section">
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/">Home</a> <span aria-hidden="true">›</span> <span>Documentation</span>
+    </nav>
+
+    <div class="docs">
+      <nav class="docs-nav" aria-label="Documentation sections">
+        <button class="mini docs-contents" data-docs-contents aria-expanded="false">Contents ▾</button>
+        <div class="docs-nav-list" id="docs-nav-list">
+        <a href="#installation">Installation</a>
+        <a href="#browsers">Supported browsers</a>
+        <a href="#toolbar">The toolbar</a>
+        <a href="#settings">Settings</a>
+        <a href="#shortcuts">Keyboard shortcuts</a>
+        <a href="#local-files">Local files</a>
+        <a href="#limits">Large files and limits</a>
+        <a href="#permissions">Permissions explained</a>
+        <a href="#troubleshooting">Troubleshooting</a>
+        <a href="#stuck">Still stuck?</a>
+        </div>
+      </nav>
+
+      <article class="docs-body">
+        <h1>Documentation</h1>
+        <p class="lead">How the extension behaves, what each control does, which permissions it
+          asks for and why, and what to try when something looks wrong.</p>
+
+      <h2 id="installation">Installation<a class="anchor" href="#installation" aria-label="Link to this section">#</a></h2>
+        <p>Install from the Chrome Web Store, open any URL that returns JSON, and it is already
+          a tree. There is no button to press and no account to create.</p>
+        <p><a class="btn btn-sm" data-cta-slot="docs-install" target="_blank" rel="noopener" href="#">Add to Chrome — free</a></p>
+        <div class="callout callout--warn">
+          <span aria-hidden="true">!</span>
+          <div><b>Tabs opened before installing need one reload.</b> The viewer is injected when a
+            page loads, so it will not appear in tabs that were already open.</div>
+        </div>
+
+      <h2 id="browsers">Supported browsers<a class="anchor" href="#browsers" aria-label="Link to this section">#</a></h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Browser</th><th>Status</th><th>How to install</th></tr></thead>
+          <tbody>
+          <tr><td>Chrome</td><td>Supported</td><td>Chrome Web Store</td></tr>
+          <tr><td>Edge</td><td>Supported</td><td>Installs from the Chrome Web Store</td></tr>
+          <tr><td>Opera</td><td>Supported</td><td>Installs from the Chrome Web Store</td></tr>
+          </tbody>
+        </table>
+      </div>
+        <p>Firefox is not supported. It ships its own JSON viewer, and that viewer takes over
+          every JSON page as a privileged document where extensions are not allowed to run. A
+          Firefox build exists and passes Mozilla's checks, but on a default Firefox it would
+          never appear — so we do not ship it.</p>
+
+      <h2 id="toolbar">The toolbar<a class="anchor" href="#toolbar" aria-label="Link to this section">#</a></h2>
+        <p>The toolbar sits above the tree on every JSON page.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Element</th><th>What it does</th></tr></thead>
+          <tbody>
+          <tr><td>JSON Beautifier</td><td>The name. Not a button.</td></tr>
+          <tr><td>Search</td><td>Searches keys and values across the whole document, including collapsed branches, and expands the tree to each match.</td></tr>
+          <tr><td>Collapse all / Expand all</td><td>One toggle. The label is what the click will do, not the current state.</td></tr>
+          <tr><td>Copy JSON</td><td>Copies the whole document, using your indent setting.</td></tr>
+          <tr><td>Raw / Format</td><td>Switches between the tree and the source text. The label is the action.</td></tr>
+          <tr><td>☀ / ☾</td><td>Theme. One click flips to the opposite theme.</td></tr>
+          <tr><td>⚙</td><td>Opens settings.</td></tr>
+          </tbody>
+        </table>
+      </div>
+        <p>Clicking a key copies its JSONPath; clicking a value copies the value itself. Prefer
+          pasting into a page? <a href="/json-formatter/">/json-formatter/</a>,
+          <a href="/json-validator/">/json-validator/</a> and
+          <a href="/json-minifier/">/json-minifier/</a> do the same work in the browser.</p>
+        <div class="callout">
+          <span aria-hidden="true">i</span>
+          <div><b>When a document does not parse</b>, search, collapse and Raw are disabled with
+            an explanation in their tooltip, and Raw is marked as already active — the source is
+            all there is to show, so it is not unavailable, you are already looking at it.</div>
+        </div>
+
+      <h2 id="settings">Settings<a class="anchor" href="#settings" aria-label="Link to this section">#</a></h2>
+        <p>The popup, opened from the toolbar icon.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Setting</th><th>Values</th></tr></thead>
+          <tbody>
+          <tr><td>Theme</td><td>Auto (follows your system), Light or Dark.</td></tr>
+          <tr><td>Indent</td><td>1, 2 or 4 spaces. Applies to tree indentation and to Copy JSON.</td></tr>
+          <tr><td>Auto-expand depth</td><td>Collapsed, 1, 2 or 3 levels open on load.</td></tr>
+          <tr><td>Sort object keys</td><td>Orders keys alphabetically instead of document order.</td></tr>
+          <tr><td>Line numbers</td><td>Numbers down the left of the tree. In raw mode they appear only on the parse-error screen.</td></tr>
+          </tbody>
+        </table>
+      </div>
+        <p>Changes apply immediately to every open tab. No reload needed.</p>
+
+      <h2 id="shortcuts">Keyboard shortcuts<a class="anchor" href="#shortcuts" aria-label="Link to this section">#</a></h2>
+        <p>There are none yet — no custom chords are registered, so anything listed here would
+          be untrue. What does work is <kbd>Ctrl</kbd> + <kbd>F</kbd> for the browser's own find,
+          and <kbd>Tab</kbd> to move through the toolbar.</p>
+        <p>Want a specific shortcut? Ask for it on <a href="/feedback/">/feedback/</a> and it
+          gets read.</p>
+
+      <h2 id="local-files">Local files<a class="anchor" href="#local-files" aria-label="Link to this section">#</a></h2>
+        <p>JSON opened from disk works on <code>file://</code> URLs, but you have to turn it on
+          yourself: <code>chrome://extensions</code> → JSON Beautifier → <b>Details</b> →
+          <b>Allow access to file URLs</b>.</p>
+        <p>Chrome requires this explicit action — the extension cannot flip the switch for you.</p>
+
+      <h2 id="limits">Large files and limits<a class="anchor" href="#limits" aria-label="Link to this section">#</a></h2>
+        <ul class="docs-list">
+          <li>Multi-megabyte documents open: the tree is built in windows, and auto-expand stops at a node budget instead of trying to draw everything.</li>
+          <li>Above 25 MB the extension does not parse the file automatically — it offers a button so you decide when to spend the time.</li>
+          <li>In raw mode any line longer than 20 000 characters is force-wrapped, because a browser cannot draw a line millions of pixels wide.</li>
+          <li>The online tool warns above 5 MB and refuses above 25 MB.</li>
+          <li>Why the ceilings exist: a browser tab is not a batch processor, and a frozen tab is worse than an honest refusal.</li>
+        </ul>
+
+      <h2 id="permissions">Permissions explained<a class="anchor" href="#permissions" aria-label="Link to this section">#</a></h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Permission</th><th>Why it is needed</th></tr></thead>
+          <tbody>
+          <tr><td><code>storage</code></td><td>Keeps your settings on this device. Nothing is synced anywhere.</td></tr>
+          <tr><td><code>scripting</code></td><td>Puts the viewer into the tab you opened.</td></tr>
+          <tr><td><code>tabs</code></td><td>Finds tabs that are already open, so the viewer can start working in them too.</td></tr>
+          <tr><td><code>access to all sites</code></td><td>Any URL can turn out to return JSON, so the list cannot be written in advance. It reads the document you opened and nothing else.</td></tr>
+          </tbody>
+        </table>
+      </div>
+        <div class="callout">
+          <span aria-hidden="true">i</span>
+          <div>The extension makes <b>no network requests at all</b>. Open the Network panel and
+            watch it stay empty, or read the source — it is
+            <a href="#" data-href="github" target="_blank" rel="noopener noreferrer">MIT on GitHub</a>.</div>
+        </div>
+
+      <h2 id="troubleshooting">Troubleshooting<a class="anchor" href="#troubleshooting" aria-label="Link to this section">#</a></h2>
+      <div class="tr-item" id="nothing">
+        <h3>Nothing happened on a JSON page.</h3>
+        <p><span class="tr-tag">cause</span> The tab was open before the extension was installed, so the viewer was never injected into it.</p>
+        <p><span class="tr-tag">do</span> Reload the tab once.</p>
+      </div>
+      <div class="tr-item" id="toggled">
+        <h3>It stopped working after I toggled the extension off and on.</h3>
+        <p><span class="tr-tag">cause</span> Disabling the extension tears down the viewer in tabs that stay open.</p>
+        <p><span class="tr-tag">do</span> Reload the tab, or open the extension popup — it restores the viewer in open tabs.</p>
+      </div>
+      <div class="tr-item" id="file-urls">
+        <h3>file:// pages don&#x27;t format.</h3>
+        <p><span class="tr-tag">cause</span> Chrome withholds file access from extensions until you grant it explicitly.</p>
+        <p><span class="tr-tag">do</span> Turn on "Allow access to file URLs" — see <a href="#local-files">Local files</a> above.</p>
+      </div>
+      <div class="tr-item" id="looks-like">
+        <h3>The page looks like JSON but is not formatted.</h3>
+        <p><span class="tr-tag">cause</span> It is a regular web page that happens to display JSON. The extension deliberately leaves ordinary pages alone.</p>
+        <p><span class="tr-tag">do</span> Nothing to fix — it only steps in when the document itself is JSON.</p>
+      </div>
+      <div class="tr-item" id="too-big">
+        <h3>The file did not open in full.</h3>
+        <p><span class="tr-tag">cause</span> Above 25 MB the extension stops parsing automatically.</p>
+        <p><span class="tr-tag">do</span> Use the button it offers to format on demand — see <a href="#limits">Large files and limits</a>.</p>
+      </div>
+
+      <h2 id="stuck">Still stuck?<a class="anchor" href="#stuck" aria-label="Link to this section">#</a></h2>
+        <p>Both of these are read by the person who wrote the code.</p>
+        <p><a class="btn btn-sm" href="/feedback/">Tell us what's broken →</a>
+           <a class="mini" href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub issues</a></p>
+      </article>
+
+      <nav class="docs-toc" aria-label="On this page">
+        <h4>On this page</h4>
+        <a href="#installation">Reload open tabs once</a>
+        <a href="#nothing">Nothing happened</a>
+        <a href="#toggled">After toggling off and on</a>
+        <a href="#file-urls">file:// URLs</a>
+        <a href="#too-big">Files over 25 MB</a>
+      </nav>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cols">
+      <div>
+        <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+        <p style="color:var(--muted);font-size:14.5px;max-width:30ch">A JSON viewer that stays
+          out of the way and off the network.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a data-cta-slot="footer" target="_blank" rel="noopener" href="#">Chrome extension</a></li>
+        <li><a data-cta-slot="footer" target="_blank" rel="noopener" href="#">Edge · via CWS</a></li>
+        <li><a data-cta-slot="footer" target="_blank" rel="noopener" href="#">Opera · via CWS</a></li>
+        <li><a href="/changelog/">Changelog</a></li>
+      </ul></div>
+      <div><h4>Tools</h4><ul>
+        <li><a href="/">JSON Beautifier</a></li>
+        <li><a href="/json-formatter/">JSON Formatter</a></li>
+        <li><a href="/json-validator/">JSON Validator</a></li>
+        <li><a href="/json-minifier/">JSON Minifier</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+        <li><a href="/feedback/">Contact</a></li>
+      </ul></div>
+      <div><h4>Resources</h4><ul>
+        <li><a href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/samples/">Samples</a></li>
+        <li><a href="/rate/">Rate us</a></li>
+      </ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 <a href="https://zumelia.com" rel="noopener" target="_blank">Zumelia</a> · MIT licensed</span>
+      <span class="spacer"></span>
+      <button class="mini" data-theme-toggle aria-label="Switch theme">☾</button>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/site-config.js"></script>
+<script src="/assets/site.js" defer></script>
+<script src="/assets/docs.js" defer></script>
+</body>
+</html>

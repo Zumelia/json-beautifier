@@ -44,7 +44,7 @@ def shell(slug, title, desc, body, *, noindex=False, scripts=""):
       <span class="spacer"></span>
       <button class="icon-btn" data-theme-toggle aria-label="Switch theme">☾</button>
       <button class="icon-btn burger" data-menu-toggle aria-expanded="false" aria-controls="sheet" aria-label="Menu">☰</button>
-      <a class="btn btn-sm" data-cta-slot="header" href="#">Add to Chrome</a>
+      <a class="btn btn-sm" data-cta-slot="header" target="_blank" rel="noopener" href="#">Add to Chrome</a>
     </div>
   </div>
 </header>
@@ -140,7 +140,7 @@ WELCOME = """  <section class="wrap section">
       <div class="card"><h3>Something wrong?</h3>
         <p>Say so and it gets fixed. The person who reads it wrote the code.</p>
         <p style="margin-top:14px"><a class="mini" href="/feedback/">Send feedback</a>
-           <a class="mini" href="#" data-href="github">GitHub issues</a></p>
+           <a class="mini" href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub issues</a></p>
       </div>
     </div>
   </section>"""
@@ -182,10 +182,10 @@ UNINSTALL = f"""  <section class="wrap section" style="max-width:780px">
       <h2 style="font-size:24px">Thanks — this actually gets read.</h2>
       <p style="color:var(--muted)">If it was a bug or a missing feature, it goes on the list.
         What ships lands in the <a href="/changelog/">changelog</a>.</p>
-      <p style="margin-top:18px"><a class="btn btn-sm" data-cta-slot="footer" href="#">Reinstall</a></p>
+      <p style="margin-top:18px"><a class="btn btn-sm" data-cta-slot="footer" target="_blank" rel="noopener" href="#">Reinstall</a></p>
     </div>
     <p class="warn" id="form-fail" hidden>Couldn't send that — your text is still here.
-      Try again, or open an issue on <a href="#" data-href="github">GitHub</a>.</p>
+      Try again, or open an issue on <a href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
   </section>"""
 
 
@@ -235,10 +235,10 @@ FEEDBACK = f"""  <section class="wrap section" style="max-width:780px">
         <a href="/changelog/">changelog</a>.</p>
     </div>
     <p class="warn" id="form-fail" hidden>Couldn't send that — your text is still here.
-      Try again, or open an issue on <a href="#" data-href="github">GitHub</a>.</p>
+      Try again, or open an issue on <a href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
 
     <p style="margin-top:26px;color:var(--muted);font-size:14.5px">Prefer GitHub?
-      <a href="#" data-href="github">Open an issue</a> — the same person reads both.</p>
+      <a href="#" data-href="github" target="_blank" rel="noopener noreferrer">Open an issue</a> — the same person reads both.</p>
   </section>"""
 
 
@@ -306,7 +306,7 @@ def changelog_body():
         "    <h1>Changelog</h1>\n"
         '    <p class="lead">What shipped, when, and what it fixed. Written for the person using\n'
         "      the extension — the commit history is on\n"
-        '      <a href="#" data-href="github">GitHub</a> if you want the other kind.</p>\n'
+        '      <a href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub</a> if you want the other kind.</p>\n'
         '    <div class="cl" style="margin-top:34px">\n'
         + "\n".join(blocks)
         + "\n    </div>\n  </section>"
