@@ -86,6 +86,30 @@
   // ---- переключатель языка --------------------------------------------------
   const picker = $("#lang");
   const pickerMenu = $("#lang-menu");
+
+  /* Пока переведена одна локаль, переключатель прятать: выбор из одного пункта
+     бессмыслен, а ссылки на непереведённые страницы вели бы в 404. Появится
+     перевод — ставим available: true в site-config.js, и он включится сам. */
+  if (picker && pickerMenu && cfg.LOCALES) {
+    const live = cfg.LOCALES.filter((l) => l.available);
+    if (live.length < 2) {
+      picker.closest(".picker").hidden = true;
+    } else {
+      pickerMenu.textContent = "";
+      live.forEach((l) => {
+        const a = document.createElement("a");
+        a.href = l.href;
+        a.hreflang = l.code;
+        const name = document.createElement("span");
+        name.textContent = l.name;
+        const note = document.createElement("small");
+        note.textContent = l.note;
+        a.append(name, note);
+        pickerMenu.appendChild(a);
+      });
+    }
+  }
+
   if (picker) {
     picker.addEventListener("click", () => {
       const open = pickerMenu.hidden;
