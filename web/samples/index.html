@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sample JSON files for testing — JSON Beautifier</title>
+<meta name="description" content="Free sample JSON endpoints for testing a JSON viewer or formatter: a nested API response, a 2 MB file, and one that is deliberately broken.">
+<link rel="canonical" href="https://jsonbeautifier.dev/samples/">
+<style>
+  :root{
+    --bg:#f6f8f8; --card:#fff; --fg:#1b2426; --mut:#6b7a7b;
+    --line:#e5eae9; --accent:#0e7a6e;
+  }
+  @media (prefers-color-scheme:dark){
+    :root{ --bg:#0f1416; --card:#161d20; --fg:#e4ebea; --mut:#8fa3a1;
+           --line:#232d2f; --accent:#34c99e; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);
+       font:16px/1.65 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+       display:flex;justify-content:center;padding:56px 20px 72px}
+  .wrap{width:100%;max-width:680px}
+  h1{font-size:30px;line-height:1.2;margin:0 0 12px;letter-spacing:-.02em}
+  .lead{font-size:17px;color:var(--mut);margin:0 0 32px}
+  .s{background:var(--card);border:1px solid var(--line);border-radius:12px;
+     padding:18px;margin:0 0 14px}
+  .s h2{margin:0 0 4px;font-size:16px}
+  .s h2 a{color:var(--accent);text-decoration:none}
+  .s h2 a:hover{text-decoration:underline}
+  .s p{margin:0;font-size:14px;color:var(--mut)}
+  .meta{font-size:12.5px;color:var(--mut);margin-top:8px}
+  footer{margin-top:36px;padding-top:20px;border-top:1px solid var(--line);
+         color:var(--mut);font-size:13px}
+  footer a{color:var(--mut)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Sample JSON files</h1>
+  <p class="lead">Open any of these in your browser to see what JSON Beautifier does with a
+     real response. All the data is invented — no third-party APIs, no real people.</p>
+
+  <div class="s">
+    <h2><a href="/samples/orders.json">orders.json</a></h2>
+    <p>A nested API response: objects six levels deep, an array of 140 log events,
+       hyphenated header keys, Japanese and accented text, escapes, empty structures and
+       every scalar type. This is the one to open first.</p>
+    <p class="meta">37 KB · 1 302 lines</p>
+  </div>
+
+  <div class="s">
+    <h2><a href="/samples/large.json">large.json</a></h2>
+    <p>Twelve thousand records, about 2 MB. Shows that a large document stays scrollable
+       and collapsible instead of freezing the tab.</p>
+    <p class="meta">2.3 MB</p>
+  </div>
+
+  <div class="s">
+    <h2><a href="/samples/broken.json">broken.json</a></h2>
+    <p>Deliberately invalid — a comma is missing on line 7. A JSON viewer should tell you
+       where the problem is, not show you a blank page.</p>
+    <p class="meta">327 B</p>
+  </div>
+
+  <footer>
+    <a href="/">JSON Beautifier</a> · <a href="/docs/">Documentation</a><br>
+    Sample data is public domain — copy it, break it, use it in your own tests.
+  </footer>
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "_about": "This file is intentionally broken — it is here to show what the",
+  "_about_2": "extension does when JSON does not parse: a readable error with a",
+  "_about_3": "line, a column and the offending text, instead of a blank page.",
+  "order": {
+    "id": "ord_8126"
+    "status": "pending",
+    "total": 42.0
+  }
+}
