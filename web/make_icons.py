@@ -24,6 +24,11 @@ from PIL import Image, ImageDraw, ImageFont
 HERE = Path(__file__).resolve().parent
 FONTS = HERE / ".fonts-ttf"
 BRAND_DIR = HERE / "assets" / "brand"
+# Иконки расширения пишутся отсюда же. Раньше они жили сами по себе и остались
+# в прежней паре «чернила + teal», когда сайт, og и store-иконка уже переехали
+# на --brand: продукт выглядел двумя разными продуктами в зависимости от того,
+# куда смотришь. Один генератор — расходиться больше нечему.
+EXT_DIR = HERE.parent / "extension-chrome" / "icons"
 
 SS = 8  # мелкие размеры без запаса не сгладить
 
@@ -87,7 +92,8 @@ def main():
         img = draw_mark(size, radius, glyph, mark, weight, track)
         made[size] = img
         img.save(BRAND_DIR / f"icon{size}.png", optimize=True)
-        print(f"  assets/brand/icon{size}.png")
+        img.save(EXT_DIR / f"icon{size}.png", optimize=True)
+        print(f"  assets/brand/icon{size}.png  +  extension-chrome/icons/")
 
     # Store-иконка: квадрат без скругления и без прозрачности — стор рисует
     # маску сам, а свои скруглённые углы под его маской дают двойной кант.
