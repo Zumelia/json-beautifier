@@ -35,6 +35,8 @@ def shell(slug, title, desc, body, *, noindex=False, scripts=""):
 <meta property="og:site_name" content="JSON Beautifier">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="/assets/site.css">
 </head>
@@ -410,26 +412,22 @@ def text_page(title, body_html):
   </section>"""
 
 
-def rebuild_privacy():
-    """Переносит существующий текст политики в новую обвязку, не переписывая его.
+def privacy_page():
+    """Собирает /privacy/ из privacy-content.html.
 
-    Юридический текст трогать нельзя — он опубликован и на него ссылается
-    листинг в сторе. Забираем только содержимое <body> живой страницы."""
-    live = Path("/var/www/jsonbeautifier.dev/privacy/index.html")
-    if not live.exists():
-        return None
-    src = live.read_text(encoding="utf-8")
-    m = re.search(r"<body[^>]*>(.*?)</body>", src, re.S)
-    if not m:
-        return None
-    inner = m.group(1)
-    inner = re.sub(r"<footer.*?</footer>", "", inner, flags=re.S)  # свой футер уже есть
-    inner = re.sub(r'<div class="wrap">|</div>\s*$', "", inner, flags=re.S)
+    Раньше эта функция читала ЖИВУЮ страницу и заворачивала её в обвязку
+    заново — то есть каждая пересборка вкладывала предыдущую страницу внутрь
+    новой. За несколько выкладок получилось двенадцать шапок и 32 КБ.
+    Источник обязан быть неизменяемым файлом, а не результатом прошлой сборки.
+
+    Юридический текст не переписываем: он опубликован, и на него ссылается
+    листинг в сторе."""
+    content = (HERE / "privacy-content.html").read_text(encoding="utf-8")
     return shell(
         "privacy/",
         "Privacy — JSON Beautifier",
         "What JSON Beautifier collects (nothing), what it stores locally, and why it asks for the permissions it asks for.",
-        text_page("Privacy", inner.strip()),
+        '  <section class="wrap section" style="max-width:760px">\n' + content + "\n  </section>",
     )
 
 
@@ -461,9 +459,7 @@ def main():
         encoding="utf-8")
     print("  /404.html")
 
-    priv = rebuild_privacy()
-    if priv:
-        pages.append(("privacy", priv))
+    pages.append(("privacy", privacy_page()))
 
     for slug, content in pages:
         out = HERE / slug
