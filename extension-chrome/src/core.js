@@ -241,10 +241,16 @@
       const row = el("div", "jsoneat-node jsoneat-t-" + type);
 
       const line = el("div", "jsoneat-line");
-      line.style.paddingLeft = depth * indentStep() + 8 + "px";
-      line.appendChild(
-        el("span", "jsoneat-twisty" + (isContainer ? "" : " jsoneat-leaf"), isContainer ? "▸" : "")
+      // Отступ вложенности висит на первом потомке, а не на самой строке.
+      // Иначе номер строки (псевдоэлемент ::before в начале строки) уезжал бы
+      // вправо вместе с отступом, вместо того чтобы стоять ровной колонкой слева.
+      const twisty = el(
+        "span",
+        "jsoneat-twisty" + (isContainer ? "" : " jsoneat-leaf"),
+        isContainer ? "▸" : ""
       );
+      twisty.style.marginLeft = depth * indentStep() + 8 + "px";
+      line.appendChild(twisty);
 
       if (!isRoot) {
         // Display the RAW key exactly (fixes "content-type" showing as ["content-type"]).

@@ -7,36 +7,56 @@
      кнопки тулбара не дёргаются. */
   scrollbar-gutter: stable;
 
+  /* Токены из макета «JSON Beautifier — Extension UI» (2026-07-28).
+     Коэффициенты контраста в комментариях — измерены дизайном, не на глаз.
+     --jn-muted несёт смысл (значения, причины ошибок), --jn-faint только
+     украшает; путать их нельзя, иначе поедет доступность. */
   --jn-bg: #ffffff;
-  --jn-fg: #1b2426;
-  --jn-mut: #6b7a7b;
-  --jn-line: #e5eae9;
-  --jn-key: #0b6e8f;
-  --jn-string: #1a7f4b;
-  --jn-number: #9a4a17;
-  --jn-bool: #8a2be2;
-  --jn-null: #999;
-  --jn-bracket: #5a6a6b;
-  --jn-accent: #0e7a6e;
-  --jn-hit: #fff2a8;
-  --jn-hit-fg: #1b2426;
-  --jn-toolbar: #f6f8f8;
+  --jn-surface: #fbf7f0;
+  --jn-border: #ece3d5;
+  --jn-text: #1b1a17;
+  --jn-muted: #6f6758; /* 4.9:1 на surface */
+  --jn-faint: #8b8375; /* только декор */
+  --jn-brand: #6c4df6; /* одинаков в обеих темах */
+  --jn-accent: #6c4df6;
+  --jn-control-border: #8f8069; /* 3.6:1 */
+  --jn-gutter-bg: #fbf7f0;
+  --jn-gutter-fg: #9c9482; /* 3.1:1 — тихо, но читаемо */
+  --jn-row-hover: #faf6ef;
+  --jn-hit-bg: #fdeec2; /* тёмный текст поверх — 4.58:1 */
+  --jn-ok: #0a7a61;
+  --jn-on-accent: #ffffff; /* текст поверх акцентной заливки */
+  /* Подсветка JSON */
+  --jn-key: #6c4df6;
+  --jn-string: #0a7a61;
+  --jn-number: #a8360a;
+  --jn-boolean: #6b34c4;
+  --jn-null: #6f6758; /* это значение, поэтому ≥ 4.5:1 */
+  --jn-punct: #8b8375;
 }
 :root[data-jsoneat="dark"] {
-  --jn-bg: #0f1416;
-  --jn-fg: #e4ebea;
-  --jn-mut: #8fa3a1;
-  --jn-line: #232d2f;
-  --jn-key: #56c5e8;
-  --jn-string: #5dbb86;
-  --jn-number: #e0975a;
-  --jn-bool: #c58af0;
-  --jn-null: #7a8a89;
-  --jn-bracket: #93a5a3;
-  --jn-accent: #34c99e;
-  --jn-hit: #5a5320;
-  --jn-hit-fg: #fff;
-  --jn-toolbar: #161d20;
+  --jn-bg: #171522;
+  --jn-surface: #211e30;
+  --jn-border: #322d46;
+  --jn-text: #f4f0ff;
+  --jn-muted: #a49bbd;
+  --jn-faint: #8f88a3;
+  --jn-brand: #6c4df6;
+  --jn-accent: #b49bff;
+  --jn-control-border: #8c83a8; /* 3.1:1 */
+  --jn-gutter-bg: #1a1826;
+  --jn-gutter-fg: #6f6790; /* 3.2:1 */
+  --jn-row-hover: #1e1b2c;
+  --jn-hit-bg: #4a3f1f;
+  --jn-ok: #5ad6b0;
+  --jn-on-accent: #171522; /* акцент в тёмной теме светлый — текст поверх тёмный */
+  /* Подсветка JSON */
+  --jn-key: #b49bff;
+  --jn-string: #5ad6b0;
+  --jn-number: #ffc94d;
+  --jn-boolean: #c8b6ff;
+  --jn-null: #8f88a3;
+  --jn-punct: #8f88a3;
 }
 
 #jsoneat-root {
@@ -45,8 +65,8 @@
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
     "Liberation Mono", monospace;
   font-size: 13px;
-  line-height: 1.5;
-  color: var(--jn-fg);
+  line-height: 22px;
+  color: var(--jn-text);
   background: var(--jn-bg);
   min-height: 100vh;
 }
@@ -62,13 +82,13 @@
   align-items: center;
   gap: 6px;
   padding: 7px 10px;
-  background: var(--jn-toolbar);
-  border-bottom: 1px solid var(--jn-line);
+  background: var(--jn-surface);
+  border-bottom: 1px solid var(--jn-border);
   flex-wrap: wrap;
 }
 .jsoneat-brand {
   font-weight: 700;
-  color: var(--jn-accent);
+  color: var(--jn-brand);
   letter-spacing: -0.02em;
   margin-right: 4px;
 }
@@ -86,10 +106,10 @@
   flex: 1;
   min-width: 140px;
   padding: 5px 9px;
-  border: 1px solid var(--jn-line);
-  border-radius: 6px;
+  border: 1px solid var(--jn-border);
+  border-radius: 7px;
   background: var(--jn-bg);
-  color: var(--jn-fg);
+  color: var(--jn-text);
   font: inherit;
 }
 .jsoneat-search:focus {
@@ -98,10 +118,10 @@
 }
 .jsoneat-btn {
   padding: 5px 10px;
-  border: 1px solid var(--jn-line);
-  border-radius: 6px;
+  border: 1px solid var(--jn-border);
+  border-radius: 7px;
   background: var(--jn-bg);
-  color: var(--jn-fg);
+  color: var(--jn-text);
   font: inherit;
   cursor: pointer;
   white-space: nowrap;
@@ -114,15 +134,15 @@
   cursor: default;
 }
 .jsoneat-btn:disabled:hover {
-  border-color: var(--jn-line);
-  color: var(--jn-fg);
+  border-color: var(--jn-border);
+  color: var(--jn-text);
 }
 /* «Вы уже здесь», а не «нельзя»: Raw показан и другого вида нет. Нажатое
    состояние читается иначе, чем просто погашенное. */
 .jsoneat-btn[aria-pressed="true"]:disabled {
   opacity: 0.75;
   background: color-mix(in srgb, var(--jn-accent) 12%, var(--jn-bg));
-  border-color: color-mix(in srgb, var(--jn-accent) 35%, var(--jn-line));
+  border-color: color-mix(in srgb, var(--jn-accent) 35%, var(--jn-border));
 }
 .jsoneat-btn:hover {
   border-color: var(--jn-accent);
@@ -153,38 +173,44 @@
    копировании поддерева в буфер не попадает. */
 .jsoneat-treeview.jsoneat-lines {
   counter-reset: jbline;
-  padding-left: 3.6em;
 }
 .jsoneat-lines .jsoneat-line {
-  position: relative;
   counter-increment: jbline;
 }
+/* Номер — липкий: при горизонтальной прокрутке длинных значений колонка
+   остаётся на месте, как просит макет. Держится на позиции sticky у самого
+   псевдоэлемента, поэтому не стоит ни одного узла разметки. */
 .jsoneat-lines .jsoneat-line::before {
   content: counter(jbline);
-  position: absolute;
-  left: -3.6em;
-  width: 3em;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  display: inline-block;
+  width: 3.6em;
+  padding-right: 0.7em;
   text-align: right;
-  color: var(--jn-mut);
-  opacity: 0.75;
+  color: var(--jn-gutter-fg);
+  background: var(--jn-gutter-bg);
   user-select: none;
   -webkit-user-select: none;
   pointer-events: none;
 }
+/* Служебная строка «show 100 more» номера не получает — выравниваем её по
+   колонке содержимого вручную. */
 .jsoneat-lines .jsoneat-more {
-  position: relative;
+  margin-left: 3.6em;
 }
 .jsoneat-node.jsoneat-t-object > .jsoneat-line,
 .jsoneat-node.jsoneat-t-array > .jsoneat-line {
   cursor: pointer;
 }
 .jsoneat-line:hover {
-  background: color-mix(in srgb, var(--jn-accent) 8%, transparent);
+  background: var(--jn-row-hover);
 }
 .jsoneat-twisty {
   display: inline-block;
   width: 1em;
-  color: var(--jn-mut);
+  color: var(--jn-muted);
   user-select: none;
 }
 .jsoneat-twisty.jsoneat-leaf {
@@ -198,13 +224,13 @@
   text-decoration: underline;
 }
 .jsoneat-colon {
-  color: var(--jn-mut);
+  color: var(--jn-muted);
 }
 .jsoneat-bracket {
-  color: var(--jn-bracket);
+  color: var(--jn-punct);
 }
 .jsoneat-summary {
-  color: var(--jn-mut);
+  color: var(--jn-muted);
   font-style: italic;
 }
 .jsoneat-closepreview {
@@ -239,7 +265,7 @@
   color: var(--jn-number);
 }
 .jsoneat-v-boolean {
-  color: var(--jn-bool);
+  color: var(--jn-boolean);
 }
 .jsoneat-v-null {
   color: var(--jn-null);
@@ -251,12 +277,12 @@
 
 .jsoneat-copied {
   background: var(--jn-accent) !important;
-  color: #fff !important;
+  color: var(--jn-on-accent) !important;
   border-radius: 3px;
 }
 .jsoneat-hit {
-  background: var(--jn-hit);
-  color: var(--jn-hit-fg);
+  background: var(--jn-hit-bg);
+  color: var(--jn-text);
   border-left: 2px solid var(--jn-accent);
 }
 
@@ -272,7 +298,7 @@
 }
 .jsoneat-raw {
   margin: 0;
-  color: var(--jn-fg);
+  color: var(--jn-text);
   background: var(--jn-bg);
   font: inherit;
 }
@@ -301,7 +327,7 @@
   min-width: 3.5em;
   padding: 0 10px 0 14px;
   text-align: right;
-  color: var(--jn-mut);
+  color: var(--jn-muted);
   user-select: none;
   -webkit-user-select: none;
 }
@@ -317,19 +343,19 @@
 }
 .jsoneat-rawnote {
   padding: 8px 14px 0;
-  color: var(--jn-mut);
+  color: var(--jn-muted);
   font-size: 0.9em;
 }
 .jsoneat-notice {
   padding: 10px 14px;
-  color: var(--jn-mut);
+  color: var(--jn-muted);
   background: color-mix(in srgb, var(--jn-accent) 6%, transparent);
-  border-bottom: 1px solid var(--jn-line);
+  border-bottom: 1px solid var(--jn-border);
 }
 .jsoneat-error {
   margin: 14px;
   padding: 12px 14px;
-  border: 1px solid color-mix(in srgb, #c0392b 40%, var(--jn-line));
+  border: 1px solid color-mix(in srgb, #c0392b 40%, var(--jn-border));
   border-radius: 8px;
   background: color-mix(in srgb, #c0392b 8%, transparent);
 }
@@ -350,9 +376,9 @@
   padding: 5px 10px;
   font: inherit;
   font-weight: 600;
-  color: var(--jn-fg);
+  color: var(--jn-text);
   background: var(--jn-bg);
-  border: 1px solid color-mix(in srgb, #c0392b 40%, var(--jn-line));
+  border: 1px solid color-mix(in srgb, #c0392b 40%, var(--jn-border));
   border-radius: 6px;
   cursor: pointer;
 }
@@ -370,7 +396,7 @@
   line-height: 1.5;
 }
 .jsoneat-error-ctx .jsoneat-ctx-num {
-  color: var(--jn-mut);
+  color: var(--jn-muted);
   user-select: none;
   -webkit-user-select: none;
 }

@@ -263,9 +263,10 @@ async function run(ctx) {
     store: { indent: 2 },
   }));
   const nested = () => {
-    // строка глубины 1 ("outer") — её paddingLeft = 1*step+8
+    // Строка глубины 1 ("outer"). Отступ висит на первом потомке, а не на самой
+    // строке: иначе номер строки уезжал бы вправо вместе с отступом.
     const lines = [...doc.querySelectorAll(".jsoneat-line")];
-    return lines[1] ? lines[1].style.paddingLeft : null;
+    return lines[1] ? lines[1].querySelector(".jsoneat-twisty").style.marginLeft : null;
   };
   const before = nested();
   window.__onMsg({ type: "jsoneat-settings",

@@ -153,12 +153,12 @@ const host = () => window.document.getElementById("host");
 {
   host().textContent = "";
   const h2 = core.renderTree(host(), { outer: { inner: 1 } }, { indent: 2 });
-  const pad2 = h2.element.querySelectorAll(".jsoneat-line")[1]?.style.paddingLeft;
+  const pad2 = h2.element.querySelectorAll(".jsoneat-line")[1]?.querySelector(".jsoneat-twisty").style.marginLeft;
   h2.destroy();
   const h4 = core.renderTree(host(), { outer: { inner: 1 } }, { indent: 4 });
-  const pad4 = h4.element.querySelectorAll(".jsoneat-line")[1]?.style.paddingLeft;
+  const pad4 = h4.element.querySelectorAll(".jsoneat-line")[1]?.querySelector(".jsoneat-twisty").style.marginLeft;
   h4.destroy();
-  check("renderTree: indent 2 → 24px на первом уровне", pad2 === "24px", String(pad2));
+  check("renderTree: indent 2 → отступ 24px на первом уровне (на потомке, не на строке)", pad2 === "24px", String(pad2));
   check("renderTree: indent 4 → 40px", pad4 === "40px", String(pad4));
 }
 

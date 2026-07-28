@@ -1,110 +1,198 @@
+/* Попап настроек. Токены — из макета «JSON Beautifier — Extension UI».
+   Тема берётся из настройки расширения, а не только из системной: атрибут
+   data-jb-theme ставит popup.js, «auto» отдаётся медиазапросу. */
+
 :root {
-  --bg: #fff;
-  --fg: #1b2426;
-  --mut: #6b7a7b;
-  --line: #e5eae9;
-  --accent: #0e7a6e;
+  --jb-bg: #fbf7f0;
+  --jb-surface: #ffffff;
+  --jb-border: #ece3d5;
+  --jb-text: #1b1a17;
+  --jb-muted: #6f6758;
+  --jb-faint: #8b8375;
+  --jb-brand: #6c4df6;
+  --jb-accent: #6c4df6;
+  --jb-control-border: #8f8069;
+  --jb-on-accent: #ffffff;
 }
-/* Тема «auto» — по системе. */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f1416;
-    --fg: #e4ebea;
-    --mut: #8fa3a1;
-    --line: #232d2f;
-    --accent: #34c99e;
+    --jb-bg: #171522;
+    --jb-surface: #211e30;
+    --jb-border: #322d46;
+    --jb-text: #f4f0ff;
+    --jb-muted: #a49bbd;
+    --jb-faint: #8f88a3;
+    --jb-brand: #6c4df6;
+    --jb-accent: #b49bff;
+    --jb-control-border: #8c83a8;
+    --jb-on-accent: #171522;
   }
 }
-/* Явно выбранная тема должна перебивать системную: иначе при системной светлой
-   и выбранной тёмной вьювер уходит в тёмное, а попап остаётся белым (замечание
-   Кирилла 2026-07-28). Атрибут ставит popup.js по сохранённой настройке;
-   специфичность [data-jb-theme] выше, чем у голого :root, поэтому порядок
-   относительно медиазапроса значения не имеет. */
+/* Явно выбранная тема перебивает системную: специфичность [data-jb-theme]
+   выше, чем у голого :root, поэтому порядок относительно медиазапроса неважен. */
 :root[data-jb-theme="light"] {
-  --bg: #fff;
-  --fg: #1b2426;
-  --mut: #6b7a7b;
-  --line: #e5eae9;
-  --accent: #0e7a6e;
-}
-:root[data-jb-theme="dark"] {
-  --bg: #0f1416;
-  --fg: #e4ebea;
-  --mut: #8fa3a1;
-  --line: #232d2f;
-  --accent: #34c99e;
-}
-/* Родные контролы (выпадающие списки, галки) иначе рисуются светлыми поверх
-   тёмного фона. */
-:root[data-jb-theme="dark"] {
-  color-scheme: dark;
-}
-:root[data-jb-theme="light"] {
+  --jb-bg: #fbf7f0;
+  --jb-surface: #ffffff;
+  --jb-border: #ece3d5;
+  --jb-text: #1b1a17;
+  --jb-muted: #6f6758;
+  --jb-faint: #8b8375;
+  --jb-accent: #6c4df6;
+  --jb-control-border: #8f8069;
+  --jb-on-accent: #ffffff;
   color-scheme: light;
 }
+:root[data-jb-theme="dark"] {
+  --jb-bg: #171522;
+  --jb-surface: #211e30;
+  --jb-border: #322d46;
+  --jb-text: #f4f0ff;
+  --jb-muted: #a49bbd;
+  --jb-faint: #8f88a3;
+  --jb-accent: #b49bff;
+  --jb-control-border: #8c83a8;
+  --jb-on-accent: #171522;
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
 }
-/* Фон обязан быть и на html: окно попапа Chrome рисует полотно по <html>, а не
-   по <body>. Без этого при тёмной теме по правому и нижнему краю оставалась
-   белая полоса в пару пикселей — body уже окна на величину округления, и из-под
-   него светил白ый холст (скриншот Кирилла 2026-07-28).
-   color-scheme дополнительно говорит Chrome, каким цветом красить это полотно
-   и системные контролы. */
+/* Фон обязан быть на html: окно попапа Chrome красит полотно по корневому
+   элементу, а не по body. Без этого при тёмной теме по правому и нижнему краю
+   оставалась белая полоса в пару пикселей. */
 html {
-  background: var(--bg);
+  background: var(--jb-bg);
   color-scheme: light dark;
 }
 body {
-  width: 260px;
+  width: 300px;
   margin: 0;
-  padding: 14px 16px 16px;
-  font: 13px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--bg);
-  color: var(--fg);
+  padding: 16px;
+  background: transparent;
+  color: var(--jb-text);
+  font: 13px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
+
 h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0;
-  font-size: 18px;
-  letter-spacing: -0.02em;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+}
+/* Знак — фирменный цвет, одинаковый в обеих темах. */
+h1::before {
+  content: "{}";
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  flex: none;
+  border-radius: 8px;
+  background: var(--jb-brand);
+  color: #fff;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
 }
 h1 b {
-  color: var(--accent);
+  font-weight: 800;
 }
 .tag {
-  margin: 2px 0 14px;
-  color: var(--mut);
-  font-size: 11px;
+  margin: 8px 0 14px;
+  color: var(--jb-faint);
+  font-size: 11.5px;
 }
+
 .row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 7px 0;
-  border-top: 1px solid var(--line);
+  gap: 10px;
+  padding: 9px 0;
+  border-top: 1px solid var(--jb-border);
 }
 .row span {
-  color: var(--fg);
+  font-weight: 600;
+  color: var(--jb-text);
 }
-select,
-input[type="checkbox"] {
-  font: inherit;
-  accent-color: var(--accent);
-}
+
 select {
-  padding: 3px 6px;
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  background: var(--bg);
-  color: var(--fg);
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 6px 26px 6px 10px;
+  border: 1px solid var(--jb-control-border);
+  border-radius: 8px;
+  background: var(--jb-surface);
+  color: var(--jb-text);
+  font: inherit;
+  cursor: pointer;
+  /* Шеврон нарисован фоном, а не картинкой: расширение не грузит ресурсы. */
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 19px;
+  height: 19px;
+  flex: none;
+  margin: 0;
+  border: 1.5px solid var(--jb-control-border);
+  border-radius: 6px;
+  background: var(--jb-surface);
+  cursor: pointer;
+}
+input[type="checkbox"]:checked {
+  border-color: var(--jb-accent);
+  background: var(--jb-accent);
+}
+input[type="checkbox"]:checked::after {
+  content: "✓";
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--jb-on-accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+select:focus-visible,
+input[type="checkbox"]:focus-visible,
+a:focus-visible {
+  outline: 2px solid var(--jb-accent);
+  outline-offset: 2px;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 14px 0 0;
+  padding-top: 12px;
+  border-top: 1px solid var(--jb-border);
+  font-size: 12px;
+}
+.links a {
+  flex: 1;
+  padding: 6px 4px;
+  border: 1px solid var(--jb-border);
+  border-radius: 8px;
+  background: var(--jb-surface);
+  color: var(--jb-text);
+  text-align: center;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.links a:hover {
+  border-color: var(--jb-accent);
+  color: var(--jb-accent);
 }
 .foot {
-  margin: 12px 0 0;
-  color: var(--mut);
+  margin: 10px 0 0;
+  color: var(--jb-faint);
   font-size: 11px;
-  border-top: 1px solid var(--line);
-  padding-top: 10px;
-}
-a {
-  color: var(--accent);
 }
