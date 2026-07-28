@@ -313,6 +313,45 @@ def changelog_body():
     )
 
 
+NOT_FOUND = """  <section class="wrap section" style="max-width:760px">
+    <p class="eyebrow">Error 404</p>
+    <h1>This page doesn't exist</h1>
+    <p class="lead">Either the address has a typo in it, or something here moved and we left a
+      stale link behind. If it was our link, <a href="/feedback/">tell us</a> — that is a bug
+      like any other.</p>
+
+    <div class="grid-3" style="margin-top:38px">
+      <div class="card">
+        <h3>Format some JSON</h3>
+        <p>Paste, drop a file or load a sample. Runs in the page — nothing is uploaded.</p>
+        <p style="margin-top:14px"><a class="mini" href="/">Beautifier</a>
+          <a class="mini" href="/json-validator/">Validator</a>
+          <a class="mini" href="/json-minifier/">Minifier</a></p>
+      </div>
+      <div class="card">
+        <h3>Read the documentation</h3>
+        <p>What each control does, which permissions the extension asks for, and what to try
+          when something looks wrong.</p>
+        <p style="margin-top:14px"><a class="mini" href="/docs/">Docs</a>
+          <a class="mini" href="/changelog/">Changelog</a></p>
+      </div>
+      <div class="card">
+        <h3>Try it on real data</h3>
+        <p>Our own sample files: an ordinary response, a 2.3 MB one, and one that is
+          deliberately broken.</p>
+        <p style="margin-top:14px"><a class="mini" href="/samples/">Samples</a></p>
+      </div>
+    </div>
+
+    <div class="final" style="margin-top:40px">
+      <h2>Or get the extension</h2>
+      <p class="lead" style="margin-inline:auto;max-width:46ch">Then JSON formats itself
+        wherever you open it, and you stop visiting pages like this one.</p>
+      <p style="margin-top:22px"><a class="btn" data-cta-slot="404" href="#">Add to Chrome — free</a></p>
+    </div>
+  </section>"""
+
+
 def text_page(title, body_html):
     """Шаблон текстовой страницы: /privacy/, дальше /terms/ и /about/."""
     return f"""  <section class="wrap section" style="max-width:760px">
@@ -361,6 +400,13 @@ def main():
                        "Four or five stars go to the Chrome Web Store, one to three come to us privately.",
                        RATE, noindex=True)),
     ]
+    Path(HERE / "404.html").write_text(
+        shell("404.html", "Page not found — JSON Beautifier",
+              "That page does not exist. Here is where everything else lives.",
+              NOT_FOUND, noindex=True),
+        encoding="utf-8")
+    print("  /404.html")
+
     priv = rebuild_privacy()
     if priv:
         pages.append(("privacy", priv))
