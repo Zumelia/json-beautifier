@@ -151,27 +151,34 @@ UNINSTALL = f"""  <section class="wrap section" style="max-width:780px">
     <p class="lead">If something was wrong, one click tells us what. No account, and no reply
       unless you ask for one.</p>
 
-    <form class="card" data-form action="{FORMSPREE}" method="post" style="margin-top:28px">
+    <form class="form" data-form action="{FORMSPREE}" method="post" style="margin-top:28px">
       <input type="hidden" name="_subject" value="uninstall reason">
       <input type="hidden" name="page_url" value="">
       <input type="hidden" name="browser" value="">
       <input type="hidden" name="ext_version" value="">
 
-      <fieldset style="border:0;padding:0;margin:0">
-        <legend style="font-weight:700;margin-bottom:12px">Why did you remove it?</legend>
+      <fieldset class="opts-list form-row">
+        <legend class="form-legend">Why did you remove it?</legend>
 {radios()}
       </fieldset>
 
-      <p style="margin:20px 0 0"><label>Anything else? <span style="color:var(--faint)">(optional)</span><br>
-        <textarea name="comment" rows="4" class="field" placeholder="What went wrong?"></textarea></label></p>
+      <div class="form-row">
+        <label for="u-comment">Anything else? <span class="opt-note">optional</span></label>
+        <textarea id="u-comment" name="comment" rows="4" class="field" placeholder="What went wrong?"></textarea>
+      </div>
 
-      <p style="margin:14px 0 0"><label>Email <span style="color:var(--faint)">(optional — only if you want an answer)</span><br>
-        <input type="email" name="email" class="field" placeholder="you@example.com"></label></p>
+      <div class="form-row">
+        <label for="u-email">Email <span class="opt-note">optional — only if you want an answer</span></label>
+        <input id="u-email" type="email" name="email" class="field" placeholder="you@example.com">
+      </div>
 
-      <p style="margin:22px 0 0"><button class="btn" type="submit">Send</button></p>
+      <div class="form-foot">
+        <button class="btn" type="submit">Send</button>
+        <span class="hintline">Goes straight to the person who wrote the code.</span>
+      </div>
     </form>
 
-    <div class="card" id="form-ok" tabindex="-1" hidden style="margin-top:28px">
+    <div class="form-ok" id="form-ok" tabindex="-1" hidden style="margin-top:28px">
       <h2 style="font-size:24px">Thanks — this actually gets read.</h2>
       <p style="color:var(--muted)">If it was a bug or a missing feature, it goes on the list.
         What ships lands in the <a href="/changelog/">changelog</a>.</p>
@@ -187,31 +194,42 @@ FEEDBACK = f"""  <section class="wrap section" style="max-width:780px">
     <p class="lead">No account, no ticket number. This goes to the person who wrote the code.</p>
     <p id="stars-badge" hidden style="font-size:28px;color:var(--sun);margin:12px 0 0"></p>
 
-    <form class="card" data-form action="{FORMSPREE}" method="post" style="margin-top:28px">
+    <form class="form" data-form action="{FORMSPREE}" method="post" style="margin-top:28px">
       <input type="hidden" name="_subject" value="user feedback">
       <input type="hidden" name="page_url" value="">
       <input type="hidden" name="browser" value="">
       <input type="hidden" name="ext_version" value="">
       <input type="hidden" name="stars" value="">
 
-      <p style="margin:0"><label>What is it?<br>
-        <select name="type" class="field">
+      <div class="form-row">
+        <label for="f-type">What is it?</label>
+        <select id="f-type" name="type" class="field">
 {options()}
-        </select></label></p>
+        </select>
+      </div>
 
-      <p style="margin:16px 0 0"><label>What happened?<br>
-        <textarea name="message" rows="6" class="field" required
-          placeholder="What you did, what you expected, what happened instead. A URL helps if the page is public."></textarea></label></p>
+      <div class="form-row">
+        <label for="f-msg">What happened?</label>
+        <textarea id="f-msg" name="message" rows="6" class="field" required
+          placeholder="What you did, what you expected, what happened instead. A URL helps if the page is public."></textarea>
+      </div>
 
-      <p style="margin:14px 0 0"><label>Email <span style="color:var(--faint)">(optional)</span><br>
-        <input type="email" name="email" class="field" placeholder="you@example.com"></label></p>
+      <div class="form-row">
+        <label for="f-email">Email <span class="opt-note">optional</span></label>
+        <input id="f-email" type="email" name="email" class="field" placeholder="you@example.com">
+      </div>
 
-      <p style="margin:14px 0 0"><label class="row-opt"><input type="checkbox" name="may_reply" value="yes"> You may reply to me</label></p>
+      <div class="form-row">
+        <label class="row-check"><input type="checkbox" name="may_reply" value="yes"> You may reply to me</label>
+      </div>
 
-      <p style="margin:22px 0 0"><button class="btn" type="submit">Send</button></p>
+      <div class="form-foot">
+        <button class="btn" type="submit">Send</button>
+        <span class="hintline">No account, no ticket number.</span>
+      </div>
     </form>
 
-    <div class="card" id="form-ok" tabindex="-1" hidden style="margin-top:28px">
+    <div class="form-ok" id="form-ok" tabindex="-1" hidden style="margin-top:28px">
       <h2 style="font-size:24px">Sent — this actually gets read.</h2>
       <p style="color:var(--muted)">If it's a bug, it usually turns into a line in the
         <a href="/changelog/">changelog</a>.</p>
@@ -248,6 +266,51 @@ RATE = """  <section class="wrap section">
         <a href="/feedback/">Tell us why</a> instead.</p>
     </div>
   </section>"""
+
+
+def changelog_body():
+    """Собирает /changelog/ из changelog.json.
+
+    Записи выведены из истории git, но написаны для людей: заголовок коммита
+    сообщает, что мы двигали в репозитории, а пользователю нужно знать, что
+    изменилось в продукте. Сверять с `git log v0.2.7..HEAD -- extension-chrome core`.
+    """
+    import json
+
+    data = json.loads((HERE / "changelog.json").read_text(encoding="utf-8"))
+    blocks = []
+    for rel in data["releases"]:
+        when = rel["date"] or "unreleased"
+        badge = ' <span class="pill-tag">in development</span>' if rel["date"] is None else ""
+        groups = []
+        for name, items in rel["groups"].items():
+            if not items:
+                continue
+            lis = "\n".join("        <li>" + i + "</li>" for i in items)
+            groups.append(
+                '      <h3 class="cl-group">' + name + "</h3>\n"
+                '      <ul class="cl-list">\n' + lis + "\n      </ul>"
+            )
+        anchor = "v" + rel["version"].replace(".", "-")
+        blocks.append(
+            '    <article class="card cl-item" id="' + anchor + '">\n'
+            '      <header class="cl-head">\n'
+            "        <h2>" + rel["version"] + badge + "</h2>\n"
+            '        <p class="cl-meta"><time>' + when + "</time> &middot; " + rel["status"] + "</p>\n"
+            "      </header>\n"
+            '      <p class="cl-note">' + rel["note"] + "</p>\n"
+            + "\n".join(groups) + "\n    </article>"
+        )
+    return (
+        '  <section class="wrap section" style="max-width:860px">\n'
+        "    <h1>Changelog</h1>\n"
+        '    <p class="lead">What shipped, when, and what it fixed. Written for the person using\n'
+        "      the extension — the commit history is on\n"
+        '      <a href="#" data-href="github">GitHub</a> if you want the other kind.</p>\n'
+        '    <div class="cl" style="margin-top:34px">\n'
+        + "\n".join(blocks)
+        + "\n    </div>\n  </section>"
+    )
 
 
 def text_page(title, body_html):
@@ -291,6 +354,9 @@ def main():
         ("feedback", shell("feedback/", "Tell us what's broken — JSON Beautifier",
                            "Report a bug or ask for a feature. Read by the person who wrote the code.",
                            FEEDBACK, noindex=True, scripts=FORM_JS)),
+        ("changelog", shell("changelog/", "Changelog — JSON Beautifier",
+                            "Every release of JSON Beautifier: what was added, what changed, what was fixed.",
+                            changelog_body())),
         ("rate", shell("rate/", "Rate JSON Beautifier",
                        "Four or five stars go to the Chrome Web Store, one to three come to us privately.",
                        RATE, noindex=True)),

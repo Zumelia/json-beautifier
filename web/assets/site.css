@@ -1002,44 +1002,206 @@ td.us {
 }
 
 /* ---------- формы ---------- */
+.form {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+.form-row {
+  margin: 0 0 20px;
+}
+.form-row:last-of-type {
+  margin-bottom: 0;
+}
+.form-row > label,
+.form-legend {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 700;
+  font-size: 15px;
+}
+.opt-note {
+  font-weight: 500;
+  color: var(--faint);
+}
 .field {
   width: 100%;
-  margin-top: 6px;
-  padding: 11px 13px;
+  padding: 12px 14px;
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   background: var(--surface-2);
   color: var(--text);
   font: 15px/1.5 var(--font-body);
 }
-textarea.field {
-  resize: vertical;
-  font-family: var(--font-body);
+.field::placeholder {
+  color: var(--faint);
+}
+.field:hover {
+  border-color: var(--muted);
 }
 .field:focus {
   outline: 2px solid var(--accent);
   outline-offset: 1px;
   border-color: transparent;
+  background: var(--surface);
 }
-.field:invalid:not(:placeholder-shown) {
+textarea.field {
+  resize: vertical;
+  min-height: 110px;
+}
+/* Свой шеврон вместо системного: нарисован фоном, картинок сайт не грузит. */
+select.field {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 40px;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%),
+    linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 22px) 52%, calc(100% - 16px) 52%;
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+.field[aria-invalid="true"] {
   border-color: var(--danger);
 }
-.field:disabled {
-  opacity: 0.55;
+.field-err {
+  margin: 7px 0 0;
+  color: var(--danger);
+  font-size: 13.5px;
+}
+
+/* Радиокнопки — карточками: по ним проще попасть и видно, что выбрано. */
+.opts-list {
+  display: grid;
+  gap: 8px;
+  border: 0;
+  padding: 0;
+  margin: 0;
 }
 .row-opt {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 9px 0;
+  gap: 12px;
+  padding: 13px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  font-size: 15px;
   cursor: pointer;
 }
-.row-opt input {
-  width: 18px;
-  height: 18px;
-  accent-color: var(--accent);
-  flex: none;
+.row-opt:hover {
+  border-color: var(--muted);
 }
-fieldset legend {
-  padding: 0;
+.row-opt input {
+  width: 19px;
+  height: 19px;
+  flex: none;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.row-opt:has(input:checked) {
+  border-color: var(--accent);
+  background: var(--chip);
+  font-weight: 600;
+}
+.row-opt:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.row-check {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 15px;
+  cursor: pointer;
+}
+.row-check input {
+  width: 19px;
+  height: 19px;
+  flex: none;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.form-foot {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border-soft);
+  flex-wrap: wrap;
+}
+.form-foot .hintline {
+  color: var(--faint);
+  font-size: 13.5px;
+}
+.form-ok {
+  padding: 28px;
+  border: 1px solid color-mix(in srgb, var(--ok) 45%, var(--border));
+  border-radius: var(--radius-card);
+  background: color-mix(in srgb, var(--ok) 8%, var(--surface));
+}
+.form-ok h2 {
+  font-size: 26px;
+}
+
+/* ---------- журнал изменений ---------- */
+.cl {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.cl-item {
+  scroll-margin-top: 96px;
+}
+.cl-head {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.cl-head h2 {
+  font-size: 30px;
+}
+.cl-meta {
+  margin: 0;
+  color: var(--faint);
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.pill-tag {
+  display: inline-block;
+  padding: 4px 11px;
+  border-radius: var(--pill);
+  background: var(--chip);
+  color: var(--accent);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 700;
+  vertical-align: middle;
+}
+.cl-note {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+.cl-group {
+  margin: 22px 0 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.cl-list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--muted);
+  font-size: 15px;
+}
+.cl-list li {
+  margin-bottom: 8px;
 }

@@ -57,34 +57,45 @@
     <p class="lead">No account, no ticket number. This goes to the person who wrote the code.</p>
     <p id="stars-badge" hidden style="font-size:28px;color:var(--sun);margin:12px 0 0"></p>
 
-    <form class="card" data-form action="https://formspree.io/f/mwvgrkov" method="post" style="margin-top:28px">
+    <form class="form" data-form action="https://formspree.io/f/mwvgrkov" method="post" style="margin-top:28px">
       <input type="hidden" name="_subject" value="user feedback">
       <input type="hidden" name="page_url" value="">
       <input type="hidden" name="browser" value="">
       <input type="hidden" name="ext_version" value="">
       <input type="hidden" name="stars" value="">
 
-      <p style="margin:0"><label>What is it?<br>
-        <select name="type" class="field">
+      <div class="form-row">
+        <label for="f-type">What is it?</label>
+        <select id="f-type" name="type" class="field">
           <option>Bug</option>
           <option>Feature request</option>
           <option>Question</option>
           <option>Something else</option>
-        </select></label></p>
+        </select>
+      </div>
 
-      <p style="margin:16px 0 0"><label>What happened?<br>
-        <textarea name="message" rows="6" class="field" required
-          placeholder="What you did, what you expected, what happened instead. A URL helps if the page is public."></textarea></label></p>
+      <div class="form-row">
+        <label for="f-msg">What happened?</label>
+        <textarea id="f-msg" name="message" rows="6" class="field" required
+          placeholder="What you did, what you expected, what happened instead. A URL helps if the page is public."></textarea>
+      </div>
 
-      <p style="margin:14px 0 0"><label>Email <span style="color:var(--faint)">(optional)</span><br>
-        <input type="email" name="email" class="field" placeholder="you@example.com"></label></p>
+      <div class="form-row">
+        <label for="f-email">Email <span class="opt-note">optional</span></label>
+        <input id="f-email" type="email" name="email" class="field" placeholder="you@example.com">
+      </div>
 
-      <p style="margin:14px 0 0"><label class="row-opt"><input type="checkbox" name="may_reply" value="yes"> You may reply to me</label></p>
+      <div class="form-row">
+        <label class="row-check"><input type="checkbox" name="may_reply" value="yes"> You may reply to me</label>
+      </div>
 
-      <p style="margin:22px 0 0"><button class="btn" type="submit">Send</button></p>
+      <div class="form-foot">
+        <button class="btn" type="submit">Send</button>
+        <span class="hintline">No account, no ticket number.</span>
+      </div>
     </form>
 
-    <div class="card" id="form-ok" tabindex="-1" hidden style="margin-top:28px">
+    <div class="form-ok" id="form-ok" tabindex="-1" hidden style="margin-top:28px">
       <h2 style="font-size:24px">Sent — this actually gets read.</h2>
       <p style="color:var(--muted)">If it's a bug, it usually turns into a line in the
         <a href="/changelog/">changelog</a>.</p>

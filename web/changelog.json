@@ -1,0 +1,49 @@
+{
+  "_about": "Данные для /changelog/. Записи выведены из истории git, но написаны для людей, а не скопированы из заголовков коммитов: пользователю нужно знать, что изменилось в продукте, а не что мы переставляли в репозитории. Сверять с `git log v0.2.7..HEAD -- extension-chrome core`.",
+  "releases": [
+    {
+      "version": "0.3.0",
+      "date": null,
+      "status": "In development",
+      "note": "Not in the store yet. Built from the repository, verified in Chrome by hand.",
+      "groups": {
+        "Added": [
+          "Line numbers in the formatted tree, and a setting to switch them off.",
+          "A button that jumps straight to the line a parse error is on, and highlights it.",
+          "Website, Rate us and Source links in the settings popup.",
+          "Sample JSON files at jsonbeautifier.dev/samples/ — an ordinary response, a 2.3 MB one, and one that is deliberately broken."
+        ],
+        "Changed": [
+          "Parse errors now read like an editor, not a stack trace: the message, then the line and column, then the offending line with a caret under the exact character. The old text ended in “at position 282”, which nobody can locate by eye.",
+          "The raw view shows the source exactly as it arrived. A line too wide for the browser to draw is wrapped, and says so rather than showing an empty screen.",
+          "New colours throughout, matching the site.",
+          "The settings popup follows the theme you chose in the extension, not only the one your system is set to."
+        ],
+        "Fixed": [
+          "The popup showed a white edge along the bottom and right in dark mode.",
+          "Clicking the gear while the popup was already open opened the settings page in a separate tab.",
+          "Controls that need a parsed document are now dimmed with the reason in a tooltip. Raw is marked as already active instead of simply dead — the source is always there, so “unavailable” was never true."
+        ]
+      }
+    },
+    {
+      "version": "0.2.7",
+      "date": "2026-07-27",
+      "status": "First public release",
+      "note": "Reviewed and published on the Chrome Web Store.",
+      "groups": {
+        "Added": [
+          "Automatic formatting: open any raw JSON URL and it is already a tree.",
+          "Collapse and expand any branch, with windowed rendering so a multi-megabyte document does not freeze the tab.",
+          "Search across the whole document, including branches that have not been rendered yet.",
+          "Click a key to copy its JSONPath, click a value to copy the value, or copy the whole document.",
+          "Light and dark themes, indent width, auto-expand depth and key sorting.",
+          "A visible parse-error view — a document that looks like JSON but does not parse says so instead of showing a blank page.",
+          "Store listing localised for 52 locales."
+        ],
+        "Changed": [],
+        "Fixed": []
+      }
+    }
+  ]
+}

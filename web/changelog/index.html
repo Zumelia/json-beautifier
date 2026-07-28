@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Sorry to see you go — JSON Beautifier</title>
-<meta name="description" content="Tell us why you removed JSON Beautifier. One click, and it actually gets read.">
-<link rel="canonical" href="https://jsonbeautifier.dev/uninstall/">
-<meta name="robots" content="noindex,follow">
+<title>Changelog — JSON Beautifier</title>
+<meta name="description" content="Every release of JSON Beautifier: what was added, what changed, what was fixed.">
+<link rel="canonical" href="https://jsonbeautifier.dev/changelog/">
+<meta name="robots" content="index,follow">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="/assets/site.css">
@@ -52,51 +52,57 @@
 </div>
 
 <main id="main">
-  <section class="wrap section" style="max-width:780px">
-    <h1>Sorry to see you go</h1>
-    <p class="lead">If something was wrong, one click tells us what. No account, and no reply
-      unless you ask for one.</p>
-
-    <form class="form" data-form action="https://formspree.io/f/mwvgrkov" method="post" style="margin-top:28px">
-      <input type="hidden" name="_subject" value="uninstall reason">
-      <input type="hidden" name="page_url" value="">
-      <input type="hidden" name="browser" value="">
-      <input type="hidden" name="ext_version" value="">
-
-      <fieldset class="opts-list form-row">
-        <legend class="form-legend">Why did you remove it?</legend>
-        <label class="row-opt"><input type="radio" name="reason" value="Didn&#x27;t work on my pages" required> Didn&#x27;t work on my pages</label>
-        <label class="row-opt"><input type="radio" name="reason" value="Too slow or heavy"> Too slow or heavy</label>
-        <label class="row-opt"><input type="radio" name="reason" value="Missing a feature I needed"> Missing a feature I needed</label>
-        <label class="row-opt"><input type="radio" name="reason" value="Found something better"> Found something better</label>
-        <label class="row-opt"><input type="radio" name="reason" value="Installed it by mistake"> Installed it by mistake</label>
-        <label class="row-opt"><input type="radio" name="reason" value="Something else"> Something else</label>
-      </fieldset>
-
-      <div class="form-row">
-        <label for="u-comment">Anything else? <span class="opt-note">optional</span></label>
-        <textarea id="u-comment" name="comment" rows="4" class="field" placeholder="What went wrong?"></textarea>
-      </div>
-
-      <div class="form-row">
-        <label for="u-email">Email <span class="opt-note">optional — only if you want an answer</span></label>
-        <input id="u-email" type="email" name="email" class="field" placeholder="you@example.com">
-      </div>
-
-      <div class="form-foot">
-        <button class="btn" type="submit">Send</button>
-        <span class="hintline">Goes straight to the person who wrote the code.</span>
-      </div>
-    </form>
-
-    <div class="form-ok" id="form-ok" tabindex="-1" hidden style="margin-top:28px">
-      <h2 style="font-size:24px">Thanks — this actually gets read.</h2>
-      <p style="color:var(--muted)">If it was a bug or a missing feature, it goes on the list.
-        What ships lands in the <a href="/changelog/">changelog</a>.</p>
-      <p style="margin-top:18px"><a class="btn btn-sm" data-cta-slot="footer" href="#">Reinstall</a></p>
+  <section class="wrap section" style="max-width:860px">
+    <h1>Changelog</h1>
+    <p class="lead">What shipped, when, and what it fixed. Written for the person using
+      the extension — the commit history is on
+      <a href="#" data-href="github">GitHub</a> if you want the other kind.</p>
+    <div class="cl" style="margin-top:34px">
+    <article class="card cl-item" id="v0-3-0">
+      <header class="cl-head">
+        <h2>0.3.0 <span class="pill-tag">in development</span></h2>
+        <p class="cl-meta"><time>unreleased</time> &middot; In development</p>
+      </header>
+      <p class="cl-note">Not in the store yet. Built from the repository, verified in Chrome by hand.</p>
+      <h3 class="cl-group">Added</h3>
+      <ul class="cl-list">
+        <li>Line numbers in the formatted tree, and a setting to switch them off.</li>
+        <li>A button that jumps straight to the line a parse error is on, and highlights it.</li>
+        <li>Website, Rate us and Source links in the settings popup.</li>
+        <li>Sample JSON files at jsonbeautifier.dev/samples/ — an ordinary response, a 2.3 MB one, and one that is deliberately broken.</li>
+      </ul>
+      <h3 class="cl-group">Changed</h3>
+      <ul class="cl-list">
+        <li>Parse errors now read like an editor, not a stack trace: the message, then the line and column, then the offending line with a caret under the exact character. The old text ended in “at position 282”, which nobody can locate by eye.</li>
+        <li>The raw view shows the source exactly as it arrived. A line too wide for the browser to draw is wrapped, and says so rather than showing an empty screen.</li>
+        <li>New colours throughout, matching the site.</li>
+        <li>The settings popup follows the theme you chose in the extension, not only the one your system is set to.</li>
+      </ul>
+      <h3 class="cl-group">Fixed</h3>
+      <ul class="cl-list">
+        <li>The popup showed a white edge along the bottom and right in dark mode.</li>
+        <li>Clicking the gear while the popup was already open opened the settings page in a separate tab.</li>
+        <li>Controls that need a parsed document are now dimmed with the reason in a tooltip. Raw is marked as already active instead of simply dead — the source is always there, so “unavailable” was never true.</li>
+      </ul>
+    </article>
+    <article class="card cl-item" id="v0-2-7">
+      <header class="cl-head">
+        <h2>0.2.7</h2>
+        <p class="cl-meta"><time>2026-07-27</time> &middot; First public release</p>
+      </header>
+      <p class="cl-note">Reviewed and published on the Chrome Web Store.</p>
+      <h3 class="cl-group">Added</h3>
+      <ul class="cl-list">
+        <li>Automatic formatting: open any raw JSON URL and it is already a tree.</li>
+        <li>Collapse and expand any branch, with windowed rendering so a multi-megabyte document does not freeze the tab.</li>
+        <li>Search across the whole document, including branches that have not been rendered yet.</li>
+        <li>Click a key to copy its JSONPath, click a value to copy the value, or copy the whole document.</li>
+        <li>Light and dark themes, indent width, auto-expand depth and key sorting.</li>
+        <li>A visible parse-error view — a document that looks like JSON but does not parse says so instead of showing a blank page.</li>
+        <li>Store listing localised for 52 locales.</li>
+      </ul>
+    </article>
     </div>
-    <p class="warn" id="form-fail" hidden>Couldn't send that — your text is still here.
-      Try again, or open an issue on <a href="#" data-href="github">GitHub</a>.</p>
   </section>
 </main>
 
@@ -143,6 +149,6 @@
 
 <script src="/assets/site-config.js"></script>
 <script src="/assets/site.js" defer></script>
-<script src="/assets/forms.js" defer></script>
+
 </body>
 </html>
