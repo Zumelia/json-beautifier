@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JSON Beautifier — Format, Validate &amp; Read JSON in Your Browser</title>
+<meta name="description" content="Free online JSON beautifier and a Chrome extension that formats any JSON page automatically. Collapsible tree, search, validation. 100% local — your data never leaves the browser.">
+<link rel="canonical" href="https://jsonbeautifier.dev/">
+<meta name="robots" content="index,follow">
+
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://jsonbeautifier.dev/">
+<meta property="og:title" content="JSON Beautifier — Format, Validate &amp; Read JSON in Your Browser">
+<meta property="og:description" content="Open any JSON URL and it's already formatted, collapsible and searchable. Free, MIT-licensed, and it never phones home.">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" href="/favicon.png" type="image/png">
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/site.css">
+<link rel="alternate" hreflang="x-default" href="https://jsonbeautifier.dev/">
+<link rel="alternate" hreflang="en" href="https://jsonbeautifier.dev/">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "JSON Beautifier",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Chrome, Edge, Opera",
+  "url": "https://jsonbeautifier.dev/",
+  "downloadUrl": "https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn",
+  "softwareVersion": "0.2.7",
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+  "publisher": { "@type": "Organization", "name": "Zumelia", "sameAs": "https://github.com/Zumelia" }
+}
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hdr">
+  <div class="wrap">
+    <div class="hdr-in">
+      <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+      <nav class="nav" aria-label="Main">
+        <a href="/json-formatter/">Formatter</a>
+        <a href="/json-validator/">Validator</a>
+        <a href="/json-minifier/">Minifier</a>
+        <a href="/docs/">Docs</a>
+        <a href="#" data-href="github" rel="noopener">GitHub</a>
+      </nav>
+      <span class="spacer"></span>
+      <button class="icon-btn" data-theme-toggle aria-label="Switch theme">☾</button>
+      <button class="icon-btn burger" data-menu-toggle aria-expanded="false" aria-controls="sheet" aria-label="Menu">☰</button>
+      <a class="btn btn-sm" data-cta-slot="header" href="#">Add to Chrome</a>
+    </div>
+  </div>
+</header>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="wrap">
+    <div class="sheet-head">
+      <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+      <span class="spacer"></span>
+      <button class="icon-btn" data-menu-toggle aria-label="Close">✕</button>
+    </div>
+    <a class="item" href="/">JSON Beautifier <small>Format &amp; read</small></a>
+    <a class="item" href="/json-formatter/">JSON Formatter <small>Indent styles</small></a>
+    <a class="item" href="/json-validator/">JSON Validator <small>Errors with line &amp; column</small></a>
+    <a class="item" href="/json-minifier/">JSON Minifier <small>Strip whitespace</small></a>
+    <a class="item" href="/docs/">Docs <small>Settings, shortcuts, troubleshooting</small></a>
+    <a class="item" href="/changelog/">Changelog <small>What shipped when</small></a>
+    <a class="item" href="#" data-href="github" rel="noopener">GitHub <small>MIT source</small></a>
+    <p><a class="btn" data-cta-slot="mobile-menu" href="#">Add to Chrome — free</a></p>
+  </div>
+</div>
+
+<main id="main">
+
+  <!-- ================= герой ================= -->
+  <section class="wrap hero">
+    <div>
+      <p class="eyebrow">Free · Open source · No telemetry</p>
+      <h1>JSON that reads like a document</h1>
+      <p class="lead">Open any JSON URL and it's already formatted, collapsible and
+        searchable. No paste, no upload, no second tab.</p>
+      <div class="hero-cta">
+        <a class="btn" data-cta-slot="hero" href="#">Add to Chrome — free</a>
+        <a class="plain" href="#tool">Try it below ↓</a>
+      </div>
+      <ul class="chips">
+        <li>Chrome <span aria-hidden="true">✓</span></li>
+        <li>Edge <span class="dim">· via CWS</span></li>
+        <li>Opera <span class="dim">· via CWS</span></li>
+      </ul>
+    </div>
+
+    <div class="demo">
+      <div class="demo-bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span>api.example.com/v1/orders.json</span>
+        <span class="spacer"></span>
+        <span>0 network requests</span>
+      </div>
+      <div class="demo-split">
+        <div class="demo-pane">
+          <span class="demo-tag">Raw response</span>
+          <div class="demo-raw">{"order":{"id":"ord_8123","status":"shipped","customer":{"name":"Ada Sample","city":"Rotterdam"},"items":[{"sku":"SKU-114","qty":1,"price":129}],"totals":{"grand_total":173.92}}}</div>
+        </div>
+        <div class="demo-pane">
+          <span class="demo-tag">With the extension</span>
+<pre style="margin:0"><span class="jsoneat-bracket">{</span>
+  <span class="jsoneat-key">order</span><span class="jsoneat-colon">: </span><span class="jsoneat-bracket">{</span>
+    <span class="jsoneat-key">id</span><span class="jsoneat-colon">: </span><span class="jsoneat-v-string">ord_8123</span>
+    <span class="jsoneat-key">status</span><span class="jsoneat-colon">: </span><span class="jsoneat-v-string">shipped</span>
+    <span class="jsoneat-key">customer</span><span class="jsoneat-colon">: </span><span class="jsoneat-bracket">{ 2 keys }</span>
+    <span class="jsoneat-key">items</span><span class="jsoneat-colon">: </span><span class="jsoneat-bracket">[ 1 item ]</span>
+    <span class="jsoneat-key">totals</span><span class="jsoneat-colon">: </span><span class="jsoneat-bracket">{ 1 key }</span>
+  <span class="jsoneat-bracket">}</span>
+<span class="jsoneat-bracket">}</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="wrap">
+    <div class="trust">
+      <div><b>Zero network requests</b><span>Your JSON never leaves the browser</span></div>
+      <div><b>Open source, MIT</b><span>Read every line on GitHub</span></div>
+      <div><b>52 languages</b><span>Store listing localised for 52 locales</span></div>
+      <div><b>No ads, no telemetry</b><span>Nothing to opt out of</span></div>
+    </div>
+  </div>
+
+  <!-- ================= инструмент ================= -->
+  <section class="wrap section" id="tool">
+    <h2>Beautify JSON online</h2>
+    <p class="lead">Paste, drop a file, or load a sample. Parsed right here in the page.</p>
+
+    <div class="tool" style="margin-top:26px">
+      <div class="tool-head">
+        <div class="tabs" role="tablist" aria-label="Tool mode">
+          <button class="tab" role="tab" data-tool-tab="beautify" aria-selected="true">Beautify</button>
+          <button class="tab" role="tab" data-tool-tab="minify" aria-selected="false">Minify</button>
+          <button class="tab" role="tab" data-tool-tab="validate" aria-selected="false">Validate</button>
+          <button class="tab" role="tab" data-tool-tab="tree" aria-selected="false">Tree</button>
+        </div>
+        <div class="opts">
+          <label>indent
+            <select id="jb-indent" data-tool-indent>
+              <option value="2">2</option>
+              <option value="4">4</option>
+            </select>
+          </label>
+          <label><input type="checkbox" id="jb-sort" data-tool-sortkeys> Sort keys</label>
+        </div>
+      </div>
+
+      <div class="tool-grid">
+        <div class="pane">
+          <div class="pane-head">
+            Input<span class="spacer"></span>
+            <button class="mini" data-tool-action="upload">Upload</button>
+            <button class="mini" data-tool-action="sample">Try a sample</button>
+          </div>
+          <textarea id="jb-input" spellcheck="false" aria-label="JSON input"
+            placeholder='Paste JSON here, or drop a file…'></textarea>
+          <input type="file" id="jb-file" accept=".json,application/json,text/plain" hidden>
+        </div>
+        <div class="pane">
+          <div class="pane-head">
+            Output<span class="spacer"></span>
+            <button class="mini" data-tool-action="format">Format</button>
+            <button class="mini" data-tool-action="copy">Copy</button>
+            <button class="mini" data-tool-action="download">Download</button>
+            <button class="mini" data-tool-action="clear">Clear</button>
+          </div>
+          <div class="out" id="jb-out"></div>
+        </div>
+      </div>
+
+      <div class="tool-foot">
+        <span class="led"></span>
+        Processed locally in your browser. Nothing is uploaded.
+        <span class="spacer"></span>
+        <span id="jb-status"></span>
+      </div>
+    </div>
+
+    <p class="hint" id="jb-hint" hidden>
+      This is exactly what the extension shows automatically on any JSON URL.
+    </p>
+    <div class="prompt" id="jb-prompt" hidden>
+      <p>You've formatted 3 documents. Install it and never paste again.</p>
+      <a class="btn btn-sm" data-cta-slot="tool-prompt" href="#">Add to Chrome</a>
+      <button class="icon-btn" data-prompt-dismiss aria-label="Dismiss">✕</button>
+    </div>
+  </section>
+
+  <!-- ================= асимметрия ================= -->
+  <section class="wrap section">
+    <h2>Six things a website can't do</h2>
+    <p class="lead">The tool above formats what you paste. The extension lives where your
+      JSON already is.</p>
+    <div class="grid-3">
+      <div class="card"><span class="num">01</span><h3>Automatic</h3><p>Open any JSON URL and it is already formatted. No paste, no second tab, no button.</p></div>
+      <div class="card"><span class="num">02</span><h3>Search that finds</h3><p>Searches the whole document and expands straight to each match — including branches that are still collapsed.</p></div>
+      <div class="card"><span class="num">03</span><h3>Handles big files</h3><p>Multi-megabyte responses stay scrollable and collapsible instead of freezing the tab.</p></div>
+      <div class="card"><span class="num">04</span><h3>Copy anything</h3><p>Click a key to copy its JSONPath, click a value to copy the value, or copy the whole document in one click.</p></div>
+      <div class="card"><span class="num">05</span><h3>Truly local</h3><p>No account, no upload, no telemetry. Check the network panel — it stays empty.</p></div>
+      <div class="card"><span class="num">06</span><h3>Yours to inspect</h3><p>MIT licensed on GitHub. Read it, fork it, or keep your own build.</p></div>
+    </div>
+    <p class="note-strip">Internal APIs, staging behind SSO, <code>localhost</code>,
+      <code>file://</code> — you can't paste those into a website.</p>
+  </section>
+
+  <!-- ================= три шага ================= -->
+  <section class="wrap section">
+    <h2>Three steps, then never again</h2>
+    <div class="grid-3">
+      <div class="card"><span class="num">Step 1</span><h3>Install it</h3><p>One click from the Chrome Web Store. No account, no onboarding wizard.</p></div>
+      <div class="card"><span class="num">Step 2</span><h3>Open any JSON URL</h3><p>An API endpoint, a localhost port, a staging server — anything that returns JSON. Local files work too, once you allow file access.</p></div>
+      <div class="card"><span class="num">Step 3</span><h3>It's already formatted</h3><p>Collapsible tree, search, copy-path. Toggle back to raw whenever you need it.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= сравнение ================= -->
+  <section class="wrap section">
+    <h2>Three ways to read JSON</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Capability</th><th>This extension</th><th>Typical online formatter</th><th>Built-in viewer</th></tr></thead>
+        <tbody>
+          <tr><td>Works offline</td><td class="us">Yes</td><td>No</td><td>Yes</td></tr>
+          <tr><td>Data never sent to a server</td><td class="us">Yes</td><td>Usually not</td><td>Yes</td></tr>
+          <tr><td>Formats without pasting</td><td class="us">Yes</td><td>No</td><td>Raw only</td></tr>
+          <tr><td>Search across the document</td><td class="us">Yes</td><td>Sometimes</td><td>No</td></tr>
+          <tr><td>Multi-megabyte files</td><td class="us">Yes</td><td>Struggles</td><td>No</td></tr>
+          <tr><td>No ads</td><td class="us">Yes</td><td>Rarely</td><td>Yes</td></tr>
+          <tr><td>Open source</td><td class="us">MIT</td><td>No</td><td>No</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ================= оценка ================= -->
+  <section class="wrap section">
+    <div class="rate">
+      <h2>Using the extension? Rate it.</h2>
+      <p class="lead" style="margin-inline:auto;max-width:56ch">Four or five stars go to the
+        Chrome Web Store. One to three come to us privately, where a fix can actually happen.</p>
+      <div id="rate-widget">
+        <div class="stars" role="radiogroup" aria-label="Rate JSON Beautifier">
+          <button class="star" data-rate-star="1" role="radio" aria-checked="false" aria-label="1 star">★</button>
+          <button class="star" data-rate-star="2" role="radio" aria-checked="false" aria-label="2 stars">★</button>
+          <button class="star" data-rate-star="3" role="radio" aria-checked="false" aria-label="3 stars">★</button>
+          <button class="star" data-rate-star="4" role="radio" aria-checked="false" aria-label="4 stars">★</button>
+          <button class="star" data-rate-star="5" role="radio" aria-checked="false" aria-label="5 stars">★</button>
+        </div>
+        <p class="rate-label" id="rate-label"></p>
+        <div class="rate-actions" id="rate-actions" hidden>
+          <a class="btn" id="rate-store" href="#" rel="noopener" hidden>Rate on the Chrome Web Store →</a>
+          <a class="btn btn-ghost" id="rate-form" href="/feedback/" hidden>Tell us what's wrong →</a>
+        </div>
+      </div>
+      <p id="rate-done" hidden></p>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="wrap section">
+    <h2>Questions people actually ask</h2>
+    <div class="faq">
+      <details data-faq="free"><summary>Is it free?</summary><p>Yes. Free, no account, no paid tier, MIT licensed. There is nothing to upsell you.</p></details>
+      <details data-faq="privacy"><summary>Does my JSON leave my browser?</summary><p>No. The extension makes zero network requests — you can verify it in DevTools. The online tool on this page parses and formats in the page itself; nothing is uploaded.</p></details>
+      <details data-faq="browsers"><summary>Does it work in Firefox, Edge or Opera?</summary><p>Edge and Opera install it straight from the Chrome Web Store — same package, same behaviour. Firefox is a different story: it ships its own JSON viewer, and that viewer takes over every JSON page as a privileged document where extensions are not allowed to run. A Firefox build exists and passes Mozilla's checks, but on a default Firefox it would never actually appear, so we do not ship it. If that changes, this answer changes with it.</p></details>
+      <details data-faq="size"><summary>What's the maximum file size?</summary><p>The viewer stays interactive into the multi-megabyte range. The online tool warns above 5 MB and refuses above 25 MB, because a browser tab is not a batch processor.</p></details>
+      <details data-faq="files"><summary>Does it work with local files?</summary><p>Yes, on file:// URLs — after you tick “Allow access to file URLs” on the extension page. Chrome requires that switch; we cannot flip it for you.</p></details>
+      <details data-faq="permissions"><summary>Why does it need host permissions?</summary><p>To read the JSON a page returns and replace it with a formatted view, the extension has to run on the page you opened. It reads that document and nothing else.</p></details>
+      <details data-faq="source"><summary>Is it open source?</summary><p>Yes — <a href="#" data-href="github" rel="noopener">github.com/Zumelia/json-beautifier</a>, MIT. The site is open source too.</p></details>
+      <details data-faq="bug"><summary>How do I report a bug?</summary><p>Use <a href="/feedback/">/feedback/</a> or open a GitHub issue. Both are read by the person who wrote the code.</p></details>
+    </div>
+  </section>
+
+  <!-- ================= финальный CTA ================= -->
+  <section class="wrap section">
+    <div class="final">
+      <h2>Stop pasting JSON into websites.</h2>
+      <p class="lead" style="margin-inline:auto">Free, MIT-licensed, and it never phones home.</p>
+      <p style="margin-top:24px"><a class="btn" data-cta-slot="faq" href="#">Add to Chrome — free</a></p>
+      <p class="cta-note">Chrome ✓ · Edge · via CWS · Opera · via CWS</p>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cols">
+      <div>
+        <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+        <p style="color:var(--muted);font-size:14.5px;max-width:30ch">A JSON viewer that stays
+          out of the way and off the network.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a data-cta-slot="footer" href="#">Chrome extension</a></li>
+        <li><a data-cta-slot="footer" href="#">Edge · via CWS</a></li>
+        <li><a data-cta-slot="footer" href="#">Opera · via CWS</a></li>
+        <li><a href="/changelog/">Changelog</a></li>
+      </ul></div>
+      <div><h4>Tools</h4><ul>
+        <li><a href="/">JSON Beautifier</a></li>
+        <li><a href="/json-formatter/">JSON Formatter</a></li>
+        <li><a href="/json-validator/">JSON Validator</a></li>
+        <li><a href="/json-minifier/">JSON Minifier</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+        <li><a href="/feedback/">Contact</a></li>
+      </ul></div>
+      <div><h4>Resources</h4><ul>
+        <li><a href="#" data-href="github" rel="noopener">GitHub</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/samples/">Samples</a></li>
+        <li><a href="/rate/">Rate us</a></li>
+      </ul></div>
+    </div>
+
+    <div class="foot-bottom">
+      <span>© 2026 <a href="https://zumelia.com" rel="noopener">Zumelia</a> · MIT licensed</span>
+      <span class="spacer"></span>
+      <div class="picker">
+        <button class="mini" id="lang" aria-expanded="false" aria-haspopup="true">English ▾</button>
+        <div class="picker-menu" id="lang-menu" hidden>
+          <a href="/"><span>English</span><small>x-default</small></a>
+          <a href="/ja/"><span>日本語</span><small>priority</small></a>
+          <a href="/de/"><span>Deutsch</span><small></small></a>
+          <a href="/fr/"><span>Français</span><small></small></a>
+          <a href="/es/"><span>Español</span><small></small></a>
+          <a href="/pt-br/"><span>Português (BR)</span><small></small></a>
+          <a href="/ru/"><span>Русский</span><small></small></a>
+          <a href="/zh-cn/"><span>简体中文</span><small></small></a>
+          <a href="/ko/"><span>한국어</span><small></small></a>
+          <a href="/it/"><span>Italiano</span><small></small></a>
+        </div>
+      </div>
+      <button class="mini" data-theme-toggle aria-label="Switch theme">☾</button>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/site-config.js"></script>
+<script src="/assets/core.js"></script>
+<script src="/assets/site.js" defer></script>
+</body>
+</html>

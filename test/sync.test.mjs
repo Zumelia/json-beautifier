@@ -22,7 +22,7 @@ const check = (name, ok, detail = "") => {
 };
 
 const SOURCE = path.join(root, "core/core.js");
-const COPIES = ["extension-chrome/src/core.js"];
+const COPIES = ["extension-chrome/src/core.js", "web/assets/core.js"];
 const HEADER_RE = /^\/\* GENERATED FILE[^\n]*\n/;
 
 const canonical = readFileSync(SOURCE, "utf8");

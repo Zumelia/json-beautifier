@@ -17,8 +17,8 @@ cd "$(dirname "$0")/.."
 
 HEADER='/* GENERATED FILE — do not edit. Source of truth: core/core.js (refresh with scripts/sync-core.sh). */'
 
-for target in extension-chrome; do
-  mkdir -p "$target/src"
-  { printf '%s\n' "$HEADER"; cat core/core.js; } > "$target/src/core.js"
-  echo "synced core/core.js → $target/src/core.js"
+for target in extension-chrome/src web/assets; do
+  mkdir -p "$target"
+  { printf '%s\n' "$HEADER"; cat core/core.js; } > "$target/core.js"
+  echo "synced core/core.js → $target/core.js"
 done
