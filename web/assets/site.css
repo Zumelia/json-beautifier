@@ -1012,10 +1012,13 @@ td.us {
 .form-row {
   margin: 0 0 20px;
 }
-.form-row:last-of-type {
+/* :last-child, а не :last-of-type: последний тип считается отдельно для каждого
+   тега, и <fieldset> с вариантами оказывался «последним fieldset» на странице —
+   отступ под ним обнулялся, и следующее поле прилипало к последнему варианту. */
+.form-row:last-child {
   margin-bottom: 0;
 }
-.form-row > label,
+.form-row > label:not(.row-opt):not(.row-check),
 .form-legend {
   display: block;
   margin-bottom: 8px;
@@ -1078,8 +1081,14 @@ select.field {
   gap: 8px;
   border: 0;
   padding: 0;
-  margin: 0;
+  /* Нижний отступ .form-row сохраняем: без него следующее поле прилипает
+     к последнему варианту. */
+  margin: 0 0 20px;
 }
+.form-legend {
+  margin-bottom: 12px;
+}
+label.row-opt,
 .row-opt {
   display: flex;
   align-items: center;
@@ -1116,6 +1125,7 @@ select.field {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
+label.row-check,
 .row-check {
   display: flex;
   align-items: center;
