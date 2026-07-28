@@ -330,20 +330,11 @@
     <div class="foot-bottom">
       <span>© 2026 <a href="https://zumelia.com" rel="noopener" target="_blank">Zumelia</a> · MIT licensed</span>
       <span class="spacer"></span>
-      <div class="picker">
+      <!-- Пункты строит site.js из LOCALES; пока доступна одна локаль,
+           переключатель скрыт целиком — мёртвых ссылок в разметке нет. -->
+      <div class="picker" hidden>
         <button class="mini" id="lang" aria-expanded="false" aria-haspopup="true">English ▾</button>
-        <div class="picker-menu" id="lang-menu" hidden>
-          <a href="/"><span>English</span><small>x-default</small></a>
-          <a href="/ja/"><span>日本語</span><small>priority</small></a>
-          <a href="/de/"><span>Deutsch</span><small></small></a>
-          <a href="/fr/"><span>Français</span><small></small></a>
-          <a href="/es/"><span>Español</span><small></small></a>
-          <a href="/pt-br/"><span>Português (BR)</span><small></small></a>
-          <a href="/ru/"><span>Русский</span><small></small></a>
-          <a href="/zh-cn/"><span>简体中文</span><small></small></a>
-          <a href="/ko/"><span>한국어</span><small></small></a>
-          <a href="/it/"><span>Italiano</span><small></small></a>
-        </div>
+        <div class="picker-menu" id="lang-menu" hidden></div>
       </div>
       <button class="mini" data-theme-toggle aria-label="Switch theme">☾</button>
     </div>

@@ -92,9 +92,11 @@
      перевод — ставим available: true в site-config.js, и он включится сам. */
   if (picker && pickerMenu && cfg.LOCALES) {
     const live = cfg.LOCALES.filter((l) => l.available);
+    const box = picker.closest(".picker");
     if (live.length < 2) {
-      picker.closest(".picker").hidden = true;
+      box.hidden = true;
     } else {
+      box.hidden = false;
       pickerMenu.textContent = "";
       live.forEach((l) => {
         const a = document.createElement("a");
