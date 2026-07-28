@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy — JSON Beautifier</title>
+<meta name="description" content="What JSON Beautifier collects (nothing), what it stores locally, and why it asks for the permissions it asks for.">
+<link rel="canonical" href="https://jsonbeautifier.dev/privacy/">
+<meta name="robots" content="index,follow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hdr">
+  <div class="wrap">
+    <div class="hdr-in">
+      <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+      <nav class="nav" aria-label="Main">
+        <a href="/json-formatter/">Formatter</a>
+        <a href="/json-validator/">Validator</a>
+        <a href="/json-minifier/">Minifier</a>
+        <a href="/docs/">Docs</a>
+        <a href="#" data-href="github" rel="noopener">GitHub</a>
+      </nav>
+      <span class="spacer"></span>
+      <button class="icon-btn" data-theme-toggle aria-label="Switch theme">☾</button>
+      <button class="icon-btn burger" data-menu-toggle aria-expanded="false" aria-controls="sheet" aria-label="Menu">☰</button>
+      <a class="btn btn-sm" data-cta-slot="header" href="#">Add to Chrome</a>
+    </div>
+  </div>
+</header>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="wrap">
+    <div class="sheet-head">
+      <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+      <span class="spacer"></span>
+      <button class="icon-btn" data-menu-toggle aria-label="Close">✕</button>
+    </div>
+    <a class="item" href="/">JSON Beautifier <small>Format &amp; read</small></a>
+    <a class="item" href="/json-formatter/">JSON Formatter <small>Indent styles</small></a>
+    <a class="item" href="/json-validator/">JSON Validator <small>Errors with line &amp; column</small></a>
+    <a class="item" href="/json-minifier/">JSON Minifier <small>Strip whitespace</small></a>
+    <a class="item" href="/docs/">Docs <small>Settings, shortcuts, troubleshooting</small></a>
+    <a class="item" href="/changelog/">Changelog <small>What shipped when</small></a>
+    <a class="item" href="#" data-href="github" rel="noopener">GitHub <small>MIT source</small></a>
+    <p><a class="btn" data-cta-slot="mobile-menu" href="#">Add to Chrome — free</a></p>
+  </div>
+</div>
+
+<main id="main">
+  <section class="wrap section" style="max-width:760px">
+<h1>JSON Beautifier — Privacy Policy</h1>
+  <p class="date">Last updated: 2026-07-23</p>
+
+  <p class="lead">JSON Beautifier does not collect your data. The JSON you view never leaves your device.</p>
+
+  <h2>Data we collect</h2>
+  <p>None from inside the extension. JSON Beautifier does not read, transmit, sell, or share the content you view. There is no telemetry, no crash reporting, and no identifiers tied to you.</p>
+
+  <h2>What the extension can access, and why</h2>
+  <ul>
+    <li><strong>The content of pages you open</strong> — only so it can detect when a page is raw JSON and format it. On any page that isn't raw JSON, JSON Beautifier exits immediately and does nothing. The JSON it formats is read in the page, in your browser, and is never sent off your device.</li>
+    <li><strong>Local storage</strong> (<code>storage</code> permission) — used only to remember your own settings (theme, indent width, auto-expand depth, sort-keys). This never leaves your device.</li>
+  </ul>
+
+  <h2>Network</h2>
+  <p><strong>The extension itself makes no network requests.</strong> Its code contains no <code>fetch</code>, <code>XMLHttpRequest</code>, <code>sendBeacon</code>, tracking pixels, or remote scripts — you can verify this in the open-source code. The JSON you view is never uploaded.</p>
+  <p>There are exactly two moments when your browser opens one of our ordinary web pages in a tab:</p>
+  <ul>
+    <li><strong>Right after you install</strong>, a short welcome page opens explaining where to find the extension and how to pin it.</li>
+    <li><strong>Right after you uninstall</strong>, Chrome opens a one-question feedback page asking why you removed it. Answering is entirely optional.</li>
+  </ul>
+  <p>Those are normal web pages. Like most websites they may count anonymous page views so we know how many people installed or removed the extension. They do not receive any of your JSON, browsing history, or personal information, and they set no advertising cookies.</p>
+
+  <h2>Permissions, explained</h2>
+  <ul>
+    <li><strong>Host access</strong> (<code>http</code>, <code>https</code>, <code>file</code>): content scripts are matched by URL, not by content type. To detect raw JSON on any endpoint or domain, the script must run broadly — but it exits instantly on anything that isn't raw JSON and touches nothing else.</li>
+    <li><strong><code>storage</code></strong>: local settings only, as above.</li>
+    <li><strong><code>scripting</code></strong> and <strong><code>tabs</code></strong>: used once, at install time only. Tabs you already had open before installing would otherwise show unformatted JSON until you reloaded them, so the extension injects the same viewer into those already-open tabs. It queries tab URLs solely to skip pages it cannot inject into. No tab data is stored or transmitted.</li>
+  </ul>
+
+  <h2>Contact</h2>
+  <p>Open an issue on the source repository, or use the feedback form on this site.</p>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-cols">
+      <div>
+        <a class="logo" href="/"><span class="mark">{}</span> JSON Beautifier</a>
+        <p style="color:var(--muted);font-size:14.5px;max-width:30ch">A JSON viewer that stays
+          out of the way and off the network.</p>
+      </div>
+      <div><h4>Product</h4><ul>
+        <li><a data-cta-slot="footer" href="#">Chrome extension</a></li>
+        <li><a data-cta-slot="footer" href="#">Edge · via CWS</a></li>
+        <li><a data-cta-slot="footer" href="#">Opera · via CWS</a></li>
+        <li><a href="/changelog/">Changelog</a></li>
+      </ul></div>
+      <div><h4>Tools</h4><ul>
+        <li><a href="/">JSON Beautifier</a></li>
+        <li><a href="/json-formatter/">JSON Formatter</a></li>
+        <li><a href="/json-validator/">JSON Validator</a></li>
+        <li><a href="/json-minifier/">JSON Minifier</a></li>
+      </ul></div>
+      <div><h4>Company</h4><ul>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/privacy/">Privacy</a></li>
+        <li><a href="/terms/">Terms</a></li>
+        <li><a href="/feedback/">Contact</a></li>
+      </ul></div>
+      <div><h4>Resources</h4><ul>
+        <li><a href="#" data-href="github" rel="noopener">GitHub</a></li>
+        <li><a href="/docs/">Docs</a></li>
+        <li><a href="/samples/">Samples</a></li>
+        <li><a href="/rate/">Rate us</a></li>
+      </ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 <a href="https://zumelia.com" rel="noopener">Zumelia</a> · MIT licensed</span>
+      <span class="spacer"></span>
+      <button class="mini" data-theme-toggle aria-label="Switch theme">☾</button>
+    </div>
+  </div>
+</footer>
+
+<script src="/assets/site-config.js"></script>
+<script src="/assets/site.js" defer></script>
+
+</body>
+</html>

@@ -1000,3 +1000,46 @@ td.us {
     padding: 0 18px;
   }
 }
+
+/* ---------- формы ---------- */
+.field {
+  width: 100%;
+  margin-top: 6px;
+  padding: 11px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  color: var(--text);
+  font: 15px/1.5 var(--font-body);
+}
+textarea.field {
+  resize: vertical;
+  font-family: var(--font-body);
+}
+.field:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: transparent;
+}
+.field:invalid:not(:placeholder-shown) {
+  border-color: var(--danger);
+}
+.field:disabled {
+  opacity: 0.55;
+}
+.row-opt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  cursor: pointer;
+}
+.row-opt input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+  flex: none;
+}
+fieldset legend {
+  padding: 0;
+}
