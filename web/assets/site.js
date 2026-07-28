@@ -96,8 +96,13 @@
     const status = $("#jb-status");
     const hint = $("#jb-hint");
     const prompt = $("#jb-prompt");
-    let mode = "beautify";
+    // Страницы-инструменты открываются сразу в своём режиме: на /json-validator/
+    // человек пришёл проверять, а не форматировать.
+    let mode = $("[data-tool-default]")?.getAttribute("data-tool-default") || "beautify";
     let treeHandle = null;
+    $$("[data-tool-tab]").forEach((b) =>
+      b.setAttribute("aria-selected", String(b.getAttribute("data-tool-tab") === mode))
+    );
 
     const indent = () => parseInt($("#jb-indent").value, 10);
     const sortKeys = () => $("#jb-sort").checked;
