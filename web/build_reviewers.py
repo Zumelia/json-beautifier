@@ -1,21 +1,17 @@
 #!/usr/bin/env python3
 """
-Страница для сбора отзывов: /reviewers/go/ — служебная, noindex, ни с чего не
-слинкована.
+Страница для тех, кто согласился посмотреть расширение: /reviewers/go/ —
+служебная, noindex, ни с чего не слинкована.
 
-Готовых текстов отзывов здесь нет. Отзыв — утверждение факта незнакомым людям,
-и наблюдения в нём должны приходить от того, кто наблюдал. Страница снимает не
-«что я думаю», а «как это сформулировать»: три вопроса, ответы в пару фраз,
-внизу они механически складываются в связный текст.
+Отзыв человек пишет сам и целиком: это его впечатление, и подставлять за него
+слова нельзя. Страница даёт только повод — список вопросов, чтобы не сидеть
+перед пустым полем в сторе.
 
-Три вопроса берутся из РАЗНЫХ тем. Это не украшение: пятнадцать русских тем по
-три вопроса дают 12 285 различных наборов, десять английских — 3 240. Два
-человека почти наверняка получат разные вопросы, а значит напишут о разном —
-без этого двадцать пять отзывов сползаются к одному и тому же абзацу.
+Порядок вопросов случайный при каждом заходе. Иначе отвечают на первые три и
+все отзывы получаются про одно и то же.
 
-  /reviewers/go/   рабочая страница: три слота, у каждого своя кнопка «другой
-                   вопрос», плюс переключатель языка
-  /reviewers/      обзор всего пула для владельца + письмо для чата
+  /reviewers/go/   инструкция и пятнадцать вопросов
+  /reviewers/      обзор всего пула + письмо для чата
 
     python3 build_reviewers.py
 """
@@ -139,60 +135,36 @@ TOPICS = [
 
 UI = {
     "ru": {
-        "title": "Собери свой отзыв",
-        "hint": "Три вопроса про разное. Отвечай в двух-трёх предложениях и с деталями: "
-                "что открыл, что увидел, сколько ждал. Односложное «да» в отзыве читается "
-                "как пустое место. Ниже сложится текст: слова твои, страница только "
-                "расставляет точки и абзац.",
-        "ph": "Что сделал и что увидел",
-        "thin": "Одной фразой мало — напиши, что именно ты видел",
-        "another": "Другой вопрос",
+        "title": "Вопросы для вдохновения",
+        "sub": "Отвечать на все не надо — выбери то, что зацепило, и напиши своими словами.",
         "swap": "In English",
-        "result": "Получилось",
-        "copy": "Скопировать отзыв",
-        "copied": "Скопировано",
-        "short": "Коротковато — две-три фразы читаются лучше",
-        "empty": "Ответь хотя бы на один вопрос — текст появится здесь.",
-        "intro": "Спасибо, что смотришь. Ниже три вопроса про разные стороны расширения — "
-                 "ответь на те, что сможешь проверить.",
+        "intro": "Спасибо, что смотришь. Поставь, погоняй на своих задачах — а ниже "
+                 "вопросы на случай, если не знаешь, с чего начать отзыв.",
         "nope": "Если расширение не понравилось — не пиши отзыв, напиши напрямую: ",
         "nope_link": "форма обратной связи",
         "steps_title": "Как оставить отзыв",
         "steps": [
             'Поставь расширение: <a href="{store}" target="_blank" rel="noopener">Chrome Web Store</a>',
             'Открой любой из примеров — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — или свой JSON-URL',
-            "Посмотри на то, о чём спрашивают вопросы ниже",
-            "Ответь на вопросы — текст соберётся сам, скопируй его",
-            'Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, вставь и отправь',
+            "Ниже есть список вопросов для вдохновения для отзыва",
+            'Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, напиши своими словами и отправь',
             'Для взаимного отзыва напиши в тг <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a>',
         ],
     },
     "en": {
-        "title": "Put your review together",
-        "hint": "Three questions about different things. Two or three sentences each, with "
-                "detail: what you opened, what you saw, how long it took. A one-word answer "
-                "reads as nothing at all. The text below is assembled from your answers — "
-                "the page only adds the full stops.",
-        "ph": "What you did and what you saw",
-        "thin": "Too short — say what you actually saw",
-        "another": "Another question",
+        "title": "Questions for inspiration",
+        "sub": "No need to answer them all — pick whatever struck you and write it your way.",
         "swap": "По-русски",
-        "result": "Result",
-        "copy": "Copy review",
-        "copied": "Copied",
-        "short": "A bit short — two or three sentences read better",
-        "empty": "Answer at least one question and the text appears here.",
-        "intro": "Thanks for taking a look. Three questions below, each about a different "
-                 "part of the extension — answer the ones you can actually check.",
+        "intro": "Thanks for taking a look. Install it, use it on your own work — the "
+                 "questions below are there in case you don't know where to start.",
         "nope": "If you didn't like it, please don't review it — tell me instead: ",
         "nope_link": "feedback form",
         "steps_title": "How to leave a review",
         "steps": [
             'Install it: <a href="{store}" target="_blank" rel="noopener">Chrome Web Store</a>',
             'Open one of the samples — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own',
-            "Look at whatever the questions below ask about",
-            "Answer them — the text assembles itself, then copy it",
-            'Back on the store page: <b>Reviews</b> → <b>Write a review</b>, paste and send',
+            "Below is a list of questions to give you something to write about",
+            'Back on the store page: <b>Reviews</b> → <b>Write a review</b>, write it in your own words and send',
             'For a review in return, message <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> on Telegram',
         ],
     },
@@ -204,36 +176,15 @@ CSS = """
   .steps { margin: 20px 0 0; padding-left: 22px; }
   .steps li { margin-bottom: 9px; }
 
-  .asm-title { margin: 34px 0 14px; font-size: clamp(24px, 3vw, 30px); }
-  .pick { display: flex; gap: 10px; margin: 0 0 16px; flex-wrap: wrap; }
-  .asm-hint { margin: 0 0 22px; color: var(--muted); font-size: 14.5px; }
-
-  .slot { margin-bottom: 24px; }
-  .slot + .slot { border-top: 1px solid var(--border-soft); padding-top: 24px; }
-  .slot-topic { font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em;
-                color: var(--faint); display: block; margin-bottom: 5px; }
-  .slot-q { display: block; margin-bottom: 8px; font-weight: 600; font-size: 15.5px; }
-  .slot textarea { width: 100%; min-height: 66px; padding: 11px 13px; resize: vertical;
-                   border: 1px solid var(--border); border-radius: var(--radius-sm);
-                   background: var(--surface-2); color: var(--text);
-                   font: 15px/1.55 var(--font-body); }
-  .slot.is-thin textarea { border-color: var(--sun); }
-  .slot-foot { display: flex; align-items: center; gap: 12px; margin-top: 7px; flex-wrap: wrap; }
-  .slot .thin-hint { display: none; font-size: 13.5px; color: var(--faint); }
-  .slot.is-thin .thin-hint { display: block; }
-  .mini-btn { padding: 5px 11px; border: 1px solid var(--border); border-radius: var(--pill);
-              background: var(--surface); color: var(--muted); font: 600 13px var(--font-body);
-              cursor: pointer; }
-  .mini-btn:hover { color: var(--text); }
-
-  .asm-out { margin-top: 6px; padding: 16px 18px; border: 1px solid var(--border);
-             border-radius: var(--radius); background: var(--surface-2);
-             white-space: pre-wrap; min-height: 60px; }
-  .asm-out.is-empty { color: var(--faint); }
-  .asm-foot { display: flex; align-items: center; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
-  .asm-note { color: var(--faint); font-size: 13.5px; }
-  .asm-ok { color: var(--ok); font-weight: 600; font-size: 14px; }
-  .result-label { display: block; margin: 26px 0 8px; font-weight: 600; font-size: 15.5px; }
+  .qs-title { margin: 38px 0 8px; font-size: clamp(24px, 3vw, 30px); }
+  .qs-sub { margin: 0 0 18px; color: var(--muted); }
+  .pick { display: flex; gap: 10px; margin: 0 0 18px; flex-wrap: wrap; }
+  .qs { margin: 0; padding: 0; list-style: none; }
+  .qs li { padding: 15px 0; border-bottom: 1px solid var(--border-soft); }
+  .qs li:last-child { border-bottom: 0; }
+  .qs-q { font-size: 16.5px; }
+  .qs-topic { display: block; margin-top: 5px; font-family: var(--font-mono);
+              font-size: 12px; letter-spacing: .04em; color: var(--faint); }
 """
 
 JS = """
@@ -241,157 +192,69 @@ JS = """
   "use strict";
   const POOL = __POOL__;
   const UI = __UI__;
-  const K = { slots: "jb-rev-slots", lang: "jb-rev-lang", ans: (i) => "jb-rev-a" + i };
-  const SLOTS = 3;
-  const THIN = 25;
+  const HOW_MANY = 15;
 
   const lang = (() => {
-    const saved = localStorage.getItem(K.lang);
+    const saved = localStorage.getItem("jb-rev-lang");
     if (saved === "ru" || saved === "en") return saved;
     return (navigator.language || "en").toLowerCase().startsWith("ru") ? "ru" : "en";
   })();
   const t = UI[lang];
-  const inLang = POOL.map((q, i) => i).filter((i) => POOL[i].lang === lang);
-
-  const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-  // Три вопроса обязаны быть из трёх разных тем: иначе человек пишет один и
-  // тот же абзац трижды, а ради разнообразия всё и затевалось.
-  const freshSet = () => {
-    const chosen = [];
-    const used = new Set();
-    while (chosen.length < SLOTS) {
-      const i = rand(inLang.filter((j) => !used.has(POOL[j].topic)));
-      if (i === undefined) break;
-      used.add(POOL[i].topic);
-      chosen.push(i);
-    }
-    return chosen;
-  };
-
-  let slots = (() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(K.slots) || "null");
-      if (Array.isArray(saved) && saved.length === SLOTS &&
-          saved.every((i) => POOL[i] && POOL[i].lang === lang)) return saved;
-    } catch (e) { /* мусор в хранилище — просто берём новый набор */ }
-    return freshSet();
-  })();
-  const save = () => localStorage.setItem(K.slots, JSON.stringify(slots));
-  save();
 
   document.documentElement.lang = lang;
   document.querySelector("[data-intro]").textContent = t.intro;
   document.querySelector("[data-strip]").innerHTML =
     t.nope + '<a href="/feedback/">' + t.nope_link + "</a>.";
-  document.querySelector("[data-asm-title]").textContent = t.title;
-  document.querySelector("[data-hint]").textContent = t.hint;
-  document.querySelector("[data-result-label]").textContent = t.result;
-  document.querySelector("[data-copy-review]").textContent = t.copy;
+  document.querySelector("[data-qs-title]").textContent = t.title;
+  document.querySelector("[data-qs-sub]").textContent = t.sub;
   const swap = document.querySelector("[data-lang-switch]");
   swap.textContent = t.swap;
   swap.addEventListener("click", () => {
-    localStorage.setItem(K.lang, lang === "ru" ? "en" : "ru");
-    localStorage.removeItem(K.slots);
-    for (let i = 0; i < SLOTS; i++) localStorage.removeItem(K.ans(i));
+    localStorage.setItem("jb-rev-lang", lang === "ru" ? "en" : "ru");
     location.reload();
   });
   const steps = document.querySelector('[data-steps="' + lang + '"]');
   if (steps) steps.hidden = false;
 
-  const out = document.querySelector(".asm-out");
-  const note = document.querySelector(".asm-note");
-  const copyBtn = document.querySelector("[data-copy-review]");
-  const okMsg = document.querySelector(".asm-ok");
-  const host = document.querySelector("[data-slots]");
-
-  // Склейка механическая: обрезали, поставили заглавную, закрыли точкой,
-  // выкинули пустые. Ни одного своего слова — иначе это уже не его отзыв.
-  const tidy = (s) => {
-    s = s.trim().replace(/\\s+/g, " ");
-    if (!s) return "";
-    s = s[0].toUpperCase() + s.slice(1);
-    return /[.!?…]$/.test(s) ? s : s + ".";
-  };
-
-  const assemble = () => {
-    const parts = [...host.querySelectorAll("textarea")].map((f) => tidy(f.value)).filter(Boolean);
-    if (!parts.length) {
-      out.textContent = t.empty;
-      out.classList.add("is-empty");
-      note.textContent = "";
-      copyBtn.disabled = true;
-      return "";
+  // Порядок случайный при каждом заходе и НЕ запоминается: иначе человек
+  // отвечает на первые три, и все отзывы выходят про одно и то же.
+  const shuffle = (a) => {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
     }
-    const text = parts.length > 1 ? parts[0] + "\\n\\n" + parts.slice(1).join(" ") : parts[0];
-    out.textContent = text;
-    out.classList.remove("is-empty");
-    note.textContent = text.length < 80 ? t.short : text.length + " / 2000";
-    copyBtn.disabled = false;
-    return text;
+    return a;
   };
 
-  const render = () => {
-    host.textContent = "";
-    slots.forEach((qi, n) => {
-      const q = POOL[qi];
-      const wrap = document.createElement("div");
-      wrap.className = "slot";
-      wrap.innerHTML =
-        '<span class="slot-topic"></span><label><span class="slot-q"></span>' +
-        '<textarea rows="3"></textarea></label>' +
-        '<div class="slot-foot"><button class="mini-btn"></button>' +
-        '<span class="thin-hint"></span></div>';
-      wrap.querySelector(".slot-topic").textContent = q.topic + " · " + q.try;
-      wrap.querySelector(".slot-q").textContent = q.q;
-      const f = wrap.querySelector("textarea");
-      f.placeholder = t.ph;
-      f.value = localStorage.getItem(K.ans(n)) || "";
-      wrap.querySelector(".thin-hint").textContent = t.thin;
-
-      const btn = wrap.querySelector(".mini-btn");
-      btn.textContent = t.another;
-      btn.addEventListener("click", () => {
-        // Занятыми считаем и тему этого слота: иначе «другой вопрос» крутит
-        // человека внутри одной темы, а нужен именно уход в другую сторону.
-        const busy = new Set(slots.map((j) => POOL[j].topic));
-        const next = rand(inLang.filter((j) => !busy.has(POOL[j].topic)));
-        if (next === undefined) return;
-        slots[n] = next;
-        save();
-        render();
-      });
-
-      // Ответ не стираем при смене вопроса: в отзыв попадают только ответы,
-      // вопросы — леса. Наблюдение остаётся верным, даже если спросили иначе.
-      f.addEventListener("input", () => {
-        localStorage.setItem(K.ans(n), f.value);
-        if (f.value.trim().length >= THIN) wrap.classList.remove("is-thin");
-        assemble();
-      });
-      f.addEventListener("blur", () => {
-        const v = f.value.trim();
-        wrap.classList.toggle("is-thin", v.length > 0 && v.length < THIN);
-      });
-
-      host.appendChild(wrap);
-    });
-    assemble();
-  };
-
-  copyBtn.addEventListener("click", () => {
-    const text = assemble();
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(() => { okMsg.textContent = t.copied; })
-      .catch(() => {
-        const r = document.createRange();
-        r.selectNodeContents(out);
-        getSelection().removeAllRanges();
-        getSelection().addRange(r);
-      });
+  // Сначала по одному вопросу из каждой темы, и только потом добираем: пятнадцать
+  // вопросов из пяти тем — это те же пять вопросов, сказанные по-разному.
+  const mine = POOL.filter((q) => q.lang === lang);
+  const byTopic = new Map();
+  mine.forEach((q) => {
+    if (!byTopic.has(q.topic)) byTopic.set(q.topic, []);
+    byTopic.get(q.topic).push(q);
   });
+  const buckets = shuffle([...byTopic.values()].map((qs) => shuffle(qs.slice())));
+  const chosen = [];
+  for (let round = 0; chosen.length < HOW_MANY && round < 3; round++) {
+    for (const b of buckets) {
+      if (chosen.length >= HOW_MANY) break;
+      if (b[round]) chosen.push(b[round]);
+    }
+  }
 
-  render();
+  const list = document.querySelector("[data-qs]");
+  shuffle(chosen).forEach((q) => {
+    const li = document.createElement("li");
+    const main = document.createElement("span");
+    main.className = "qs-q";
+    main.textContent = q.q;
+    const sub = document.createElement("span");
+    sub.className = "qs-topic";
+    sub.textContent = q.topic + " · " + q.try;
+    li.append(main, sub);
+    list.appendChild(li);
+  });
 })();
 """
 
@@ -418,20 +281,10 @@ GO_TEMPLATE = """<!doctype html>
 
     <p class="note-strip" style="margin-top:26px" data-strip></p>
 
-    <h2 class="asm-title" data-asm-title></h2>
+    <h2 class="qs-title" data-qs-title></h2>
+    <p class="qs-sub" data-qs-sub></p>
     <div class="pick"><button class="btn btn-sm btn-ghost" data-lang-switch></button></div>
-
-    <div class="card">
-      <p class="asm-hint" data-hint></p>
-      <div data-slots></div>
-      <span class="result-label" data-result-label></span>
-      <div class="asm-out is-empty"></div>
-      <div class="asm-foot">
-        <button class="btn btn-sm" data-copy-review disabled></button>
-        <span class="asm-ok"></span>
-        <span class="asm-note"></span>
-      </div>
-    </div>
+    <div class="card"><ul class="qs" data-qs></ul></div>
   </section>
 </main>
 <script>__JS__</script>
@@ -444,7 +297,7 @@ CHAT_MSG = """Ребят, кто недавно запустился — пре�
 Моё — JSON Beautifier, форматирует любой JSON-URL сразу при открытии:
 {store}
 
-Чтобы не гадать, на что смотреть, — вот страничка, она выдаст три вопроса про разные стороны и соберёт из ответов текст для стора. Слова твои, страница только расставляет точки:
+Если не знаешь, с чего начать отзыв, — вот страничка с вопросами для вдохновения:
 {go}
 
 Отзыв не обязателен и не в обмен: если не понравится — лучше напиши мне, починю."""

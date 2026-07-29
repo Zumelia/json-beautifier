@@ -14,36 +14,15 @@
   .steps { margin: 20px 0 0; padding-left: 22px; }
   .steps li { margin-bottom: 9px; }
 
-  .asm-title { margin: 34px 0 14px; font-size: clamp(24px, 3vw, 30px); }
-  .pick { display: flex; gap: 10px; margin: 0 0 16px; flex-wrap: wrap; }
-  .asm-hint { margin: 0 0 22px; color: var(--muted); font-size: 14.5px; }
-
-  .slot { margin-bottom: 24px; }
-  .slot + .slot { border-top: 1px solid var(--border-soft); padding-top: 24px; }
-  .slot-topic { font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em;
-                color: var(--faint); display: block; margin-bottom: 5px; }
-  .slot-q { display: block; margin-bottom: 8px; font-weight: 600; font-size: 15.5px; }
-  .slot textarea { width: 100%; min-height: 66px; padding: 11px 13px; resize: vertical;
-                   border: 1px solid var(--border); border-radius: var(--radius-sm);
-                   background: var(--surface-2); color: var(--text);
-                   font: 15px/1.55 var(--font-body); }
-  .slot.is-thin textarea { border-color: var(--sun); }
-  .slot-foot { display: flex; align-items: center; gap: 12px; margin-top: 7px; flex-wrap: wrap; }
-  .slot .thin-hint { display: none; font-size: 13.5px; color: var(--faint); }
-  .slot.is-thin .thin-hint { display: block; }
-  .mini-btn { padding: 5px 11px; border: 1px solid var(--border); border-radius: var(--pill);
-              background: var(--surface); color: var(--muted); font: 600 13px var(--font-body);
-              cursor: pointer; }
-  .mini-btn:hover { color: var(--text); }
-
-  .asm-out { margin-top: 6px; padding: 16px 18px; border: 1px solid var(--border);
-             border-radius: var(--radius); background: var(--surface-2);
-             white-space: pre-wrap; min-height: 60px; }
-  .asm-out.is-empty { color: var(--faint); }
-  .asm-foot { display: flex; align-items: center; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
-  .asm-note { color: var(--faint); font-size: 13.5px; }
-  .asm-ok { color: var(--ok); font-weight: 600; font-size: 14px; }
-  .result-label { display: block; margin: 26px 0 8px; font-weight: 600; font-size: 15.5px; }
+  .qs-title { margin: 38px 0 8px; font-size: clamp(24px, 3vw, 30px); }
+  .qs-sub { margin: 0 0 18px; color: var(--muted); }
+  .pick { display: flex; gap: 10px; margin: 0 0 18px; flex-wrap: wrap; }
+  .qs { margin: 0; padding: 0; list-style: none; }
+  .qs li { padding: 15px 0; border-bottom: 1px solid var(--border-soft); }
+  .qs li:last-child { border-bottom: 0; }
+  .qs-q { font-size: 16.5px; }
+  .qs-topic { display: block; margin-top: 5px; font-family: var(--font-mono);
+              font-size: 12px; letter-spacing: .04em; color: var(--faint); }
 </style>
 </head>
 <body>
@@ -52,183 +31,85 @@
     <h1>JSON Beautifier</h1>
     <p class="lead" data-intro></p>
 
-    <div class="steps-box" data-steps="ru" hidden><h2>Как оставить отзыв</h2><ol class="steps"><li>Поставь расширение: <a href="https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn" target="_blank" rel="noopener">Chrome Web Store</a></li><li>Открой любой из примеров — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — или свой JSON-URL</li><li>Посмотри на то, о чём спрашивают вопросы ниже</li><li>Ответь на вопросы — текст соберётся сам, скопируй его</li><li>Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, вставь и отправь</li><li>Для взаимного отзыва напиши в тг <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a></li></ol></div>
-    <div class="steps-box" data-steps="en" hidden><h2>How to leave a review</h2><ol class="steps"><li>Install it: <a href="https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn" target="_blank" rel="noopener">Chrome Web Store</a></li><li>Open one of the samples — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own</li><li>Look at whatever the questions below ask about</li><li>Answer them — the text assembles itself, then copy it</li><li>Back on the store page: <b>Reviews</b> → <b>Write a review</b>, paste and send</li><li>For a review in return, message <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> on Telegram</li></ol></div>
+    <div class="steps-box" data-steps="ru" hidden><h2>Как оставить отзыв</h2><ol class="steps"><li>Поставь расширение: <a href="https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn" target="_blank" rel="noopener">Chrome Web Store</a></li><li>Открой любой из примеров — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — или свой JSON-URL</li><li>Ниже есть список вопросов для вдохновения для отзыва</li><li>Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, напиши своими словами и отправь</li><li>Для взаимного отзыва напиши в тг <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a></li></ol></div>
+    <div class="steps-box" data-steps="en" hidden><h2>How to leave a review</h2><ol class="steps"><li>Install it: <a href="https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn" target="_blank" rel="noopener">Chrome Web Store</a></li><li>Open one of the samples — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own</li><li>Below is a list of questions to give you something to write about</li><li>Back on the store page: <b>Reviews</b> → <b>Write a review</b>, write it in your own words and send</li><li>For a review in return, message <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> on Telegram</li></ol></div>
 
     <p class="note-strip" style="margin-top:26px" data-strip></p>
 
-    <h2 class="asm-title" data-asm-title></h2>
+    <h2 class="qs-title" data-qs-title></h2>
+    <p class="qs-sub" data-qs-sub></p>
     <div class="pick"><button class="btn btn-sm btn-ghost" data-lang-switch></button></div>
-
-    <div class="card">
-      <p class="asm-hint" data-hint></p>
-      <div data-slots></div>
-      <span class="result-label" data-result-label></span>
-      <div class="asm-out is-empty"></div>
-      <div class="asm-foot">
-        <button class="btn btn-sm" data-copy-review disabled></button>
-        <span class="asm-ok"></span>
-        <span class="asm-note"></span>
-      </div>
-    </div>
+    <div class="card"><ul class="qs" data-qs></ul></div>
   </section>
 </main>
 <script>
 (() => {
   "use strict";
   const POOL = [{"lang": "ru", "topic": "Большие ответы API", "try": "открой /samples/large.json — 2.3 МБ в одну строку", "q": "Что открыл и сколько примерно ждал до появления дерева?"}, {"lang": "ru", "topic": "Большие ответы API", "try": "открой /samples/large.json — 2.3 МБ в одну строку", "q": "Что делал дальше — сворачивал, искал? Как оно вело себя на таком объёме?"}, {"lang": "ru", "topic": "Большие ответы API", "try": "открой /samples/large.json — 2.3 МБ в одну строку", "q": "Что на файлах такого размера делали вьюеры, которыми ты пользовался раньше?"}, {"lang": "ru", "topic": "Сломанный JSON", "try": "открой /samples/broken.json — там нет запятой на 7-й строке", "q": "Что именно написало расширение — какие цифры и текст ты увидел?"}, {"lang": "ru", "topic": "Сломанный JSON", "try": "открой /samples/broken.json — там нет запятой на 7-й строке", "q": "Сколько времени ушло, чтобы понять, где ошибка?"}, {"lang": "ru", "topic": "Сломанный JSON", "try": "открой /samples/broken.json — там нет запятой на 7-й строке", "q": "Что на этом же файле показывают инструменты, которыми ты пользуешься?"}, {"lang": "ru", "topic": "Поиск", "try": "на /samples/orders.json сверни всё и поищи «url»", "q": "Что искал и сколько совпадений нашлось?"}, {"lang": "ru", "topic": "Поиск", "try": "на /samples/orders.json сверни всё и поищи «url»", "q": "Опиши, что произошло со свёрнутыми ветками, когда пошёл поиск"}, {"lang": "ru", "topic": "Поиск", "try": "на /samples/orders.json сверни всё и поищи «url»", "q": "Чего в поиске не хватило?"}, {"lang": "ru", "topic": "Тёмная тема", "try": "переключи тему в попапе", "q": "Опиши тёмную тему: что выглядит продуманным, а что просто перекрашенным?"}, {"lang": "ru", "topic": "Тёмная тема", "try": "переключи тему в попапе", "q": "Как читаются цвета типов — строки, числа, ключи?"}, {"lang": "ru", "topic": "Тёмная тема", "try": "переключи тему в попапе", "q": "На чём глаз спотыкается?"}, {"lang": "ru", "topic": "Номера строк", "try": "открой любой JSON, номера включены по умолчанию", "q": "Зачем номера строк пригодились — или почему не пригодились?"}, {"lang": "ru", "topic": "Номера строк", "try": "открой любой JSON, номера включены по умолчанию", "q": "Что происходит с нумерацией, когда сворачиваешь ветки?"}, {"lang": "ru", "topic": "Номера строк", "try": "открой любой JSON, номера включены по умолчанию", "q": "Что бы ты в них изменил?"}, {"lang": "ru", "topic": "Права доступа", "try": "посмотри список прав на странице расширения и в /privacy/", "q": "Какие права запрашивает расширение и как ты их оценил?"}, {"lang": "ru", "topic": "Права доступа", "try": "посмотри список прав на странице расширения и в /privacy/", "q": "Что в объяснении прав показалось убедительным, а что нет?"}, {"lang": "ru", "topic": "Права доступа", "try": "посмотри список прав на странице расширения и в /privacy/", "q": "Что бы ты спросил у автора на месте обычного пользователя?"}, {"lang": "ru", "topic": "Не-JSON страницы", "try": "походи по обычным сайтам с включённым расширением", "q": "На каких сайтах ты его погонял?"}, {"lang": "ru", "topic": "Не-JSON страницы", "try": "походи по обычным сайтам с включённым расширением", "q": "Что происходило на страницах, где JSON нет?"}, {"lang": "ru", "topic": "Не-JSON страницы", "try": "походи по обычным сайтам с включённым расширением", "q": "Какие следы его присутствия ты вообще заметил?"}, {"lang": "ru", "topic": "Юникод и экранирование", "try": "на /samples/orders.json есть японский, эмодзи и escape-последовательности", "q": "Какие символы проверил и что с ними стало?"}, {"lang": "ru", "topic": "Юникод и экранирование", "try": "на /samples/orders.json есть японский, эмодзи и escape-последовательности", "q": "Что произошло с длинной строкой, которая не влезает в ширину окна?"}, {"lang": "ru", "topic": "Юникод и экранирование", "try": "на /samples/orders.json есть японский, эмодзи и escape-последовательности", "q": "Что в этом месте обычно ломается у других вьюеров?"}, {"lang": "ru", "topic": "Копирование", "try": "кликни по значению, попробуй «Copy JSON»", "q": "Что копировал и куда вставлял?"}, {"lang": "ru", "topic": "Копирование", "try": "кликни по значению, попробуй «Copy JSON»", "q": "В каком виде это пришло — совпало с ожиданием?"}, {"lang": "ru", "topic": "Копирование", "try": "кликни по значению, попробуй «Copy JSON»", "q": "Какого способа достать данные наружу не хватило?"}, {"lang": "ru", "topic": "Настройки", "try": "открой попап: тема, отступ, глубина, сортировка, номера строк", "q": "Какие настройки поменял и что изменилось в открытой вкладке?"}, {"lang": "ru", "topic": "Настройки", "try": "открой попап: тема, отступ, глубина, сортировка, номера строк", "q": "Какую настройку добавил бы первой?"}, {"lang": "ru", "topic": "Настройки", "try": "открой попап: тема, отступ, глубина, сортировка, номера строк", "q": "Что из существующего кажется лишним?"}, {"lang": "ru", "topic": "Сортировка ключей", "try": "включи «Sort object keys» на /samples/orders.json", "q": "Для какой задачи ты бы включал сортировку ключей?"}, {"lang": "ru", "topic": "Сортировка ключей", "try": "включи «Sort object keys» на /samples/orders.json", "q": "Что изменилось в чтении файла, когда ключи встали по алфавиту?"}, {"lang": "ru", "topic": "Сортировка ключей", "try": "включи «Sort object keys» на /samples/orders.json", "q": "Когда такая сортировка мешает?"}, {"lang": "ru", "topic": "Raw-режим", "try": "нажми Raw и вернись обратно", "q": "Что показал Raw — совпало с исходником?"}, {"lang": "ru", "topic": "Raw-режим", "try": "нажми Raw и вернись обратно", "q": "На каких файлах проверял переключение и как быстро оно шло?"}, {"lang": "ru", "topic": "Raw-режим", "try": "нажми Raw и вернись обратно", "q": "Зачем вообще Raw в таком инструменте?"}, {"lang": "ru", "topic": "Открытый код", "try": "github.com/Zumelia/json-beautifier — core/core.js и extension-chrome/src/", "q": "Что именно ты посмотрел в репозитории?"}, {"lang": "ru", "topic": "Открытый код", "try": "github.com/Zumelia/json-beautifier — core/core.js и extension-chrome/src/", "q": "Как проверял утверждение про отсутствие сетевых запросов и что нашёл?"}, {"lang": "ru", "topic": "Открытый код", "try": "github.com/Zumelia/json-beautifier — core/core.js и extension-chrome/src/", "q": "Что для тебя как разработчика значит открытый код в такой утилите?"}, {"lang": "ru", "topic": "Первое впечатление", "try": "вспомни момент установки и первый открытый JSON", "q": "Опиши первые минуты — что произошло сразу после установки?"}, {"lang": "ru", "topic": "Первое впечатление", "try": "вспомни момент установки и первый открытый JSON", "q": "На каком файле проверил и что увидел?"}, {"lang": "ru", "topic": "Первое впечатление", "try": "вспомни момент установки и первый открытый JSON", "q": "Что было непонятно или показалось лишним?"}, {"lang": "ru", "topic": "Чего не хватает", "try": "поработай с расширением на своих задачах пару дней", "q": "Над какими задачами ты работал, пока им пользовался?"}, {"lang": "ru", "topic": "Чего не хватает", "try": "поработай с расширением на своих задачах пару дней", "q": "В какой момент захотелось функции, которой нет — какой именно?"}, {"lang": "ru", "topic": "Чего не хватает", "try": "поработай с расширением на своих задачах пару дней", "q": "Что раздражает при ежедневном использовании?"}, {"lang": "en", "topic": "Deeply nested data", "try": "open /samples/orders.json — six levels deep in places", "q": "How deep did you go, and where did it get hard to follow?"}, {"lang": "en", "topic": "Deeply nested data", "try": "open /samples/orders.json — six levels deep in places", "q": "What did the collapse controls do for you at that depth?"}, {"lang": "en", "topic": "Deeply nested data", "try": "open /samples/orders.json — six levels deep in places", "q": "How do the key and item counters change the way you move around?"}, {"lang": "en", "topic": "Coming from another viewer", "try": "compare it against whatever you used before", "q": "What were you using before, and for what kind of work?"}, {"lang": "en", "topic": "Coming from another viewer", "try": "compare it against whatever you used before", "q": "Describe a moment where the difference between them showed"}, {"lang": "en", "topic": "Coming from another viewer", "try": "compare it against whatever you used before", "q": "What does the old one still do better?"}, {"lang": "en", "topic": "No network requests", "try": "open DevTools → Network on a JSON page", "q": "What did you check, and what showed up in the Network tab?"}, {"lang": "en", "topic": "No network requests", "try": "open DevTools → Network on a JSON page", "q": "Why does that matter for a tool that reads every page you open?"}, {"lang": "en", "topic": "No network requests", "try": "open DevTools → Network on a JSON page", "q": "What else would you want verified before trusting it?"}, {"lang": "en", "topic": "Edge-case values", "try": "in /samples/orders.json: empty objects, null, exponents, negatives", "q": "Which values did you look at, and how were they rendered?"}, {"lang": "en", "topic": "Edge-case values", "try": "in /samples/orders.json: empty objects, null, exponents, negatives", "q": "What was hard to tell apart?"}, {"lang": "en", "topic": "Edge-case values", "try": "in /samples/orders.json: empty objects, null, exponents, negatives", "q": "What do other viewers get wrong in this area?"}, {"lang": "en", "topic": "Speed on a busy machine", "try": "use it during a normal working day", "q": "What does your normal working setup look like — tabs, machine?"}, {"lang": "en", "topic": "Speed on a busy machine", "try": "use it during a normal working day", "q": "How long from opening a JSON URL to a tree you can use?"}, {"lang": "en", "topic": "Speed on a busy machine", "try": "use it during a normal working day", "q": "Where, if anywhere, did it get in the way?"}, {"lang": "en", "topic": "The online tools", "try": "try jsonbeautifier.dev/json-formatter/ next to the extension", "q": "What did you use the site for, and what the extension?"}, {"lang": "en", "topic": "The online tools", "try": "try jsonbeautifier.dev/json-formatter/ next to the extension", "q": "Describe a moment where one saved you steps over the other"}, {"lang": "en", "topic": "The online tools", "try": "try jsonbeautifier.dev/json-formatter/ next to the extension", "q": "What is confusing about having both?"}, {"lang": "en", "topic": "Copying a path", "try": "click a nested value and copy its path", "q": "What did you copy the path of, and where did you paste it?"}, {"lang": "en", "topic": "Copying a path", "try": "click a nested value and copy its path", "q": "What did the path look like — usable as it came?"}, {"lang": "en", "topic": "Copying a path", "try": "click a nested value and copy its path", "q": "What format would you have expected instead?"}, {"lang": "en", "topic": "Auto-expand depth", "try": "change the depth setting in the popup and reopen a file", "q": "What depth did you settle on, and for what kind of data?"}, {"lang": "en", "topic": "Auto-expand depth", "try": "change the depth setting in the popup and reopen a file", "q": "What happened to the tabs you already had open?"}, {"lang": "en", "topic": "Auto-expand depth", "try": "change the depth setting in the popup and reopen a file", "q": "What would you make the default, and why?"}, {"lang": "en", "topic": "Error recovery", "try": "open /samples/broken.json and just read the message", "q": "What did the message tell you, word for word?"}, {"lang": "en", "topic": "Error recovery", "try": "open /samples/broken.json and just read the message", "q": "How long did it take you to find the problem?"}, {"lang": "en", "topic": "Error recovery", "try": "open /samples/broken.json and just read the message", "q": "How does that compare with the tools you use?"}, {"lang": "en", "topic": "Honest downside", "try": "use it for a couple of days on real work", "q": "What did you use it for over those days?"}, {"lang": "en", "topic": "Honest downside", "try": "use it for a couple of days on real work", "q": "Describe the moment it annoyed you most"}, {"lang": "en", "topic": "Honest downside", "try": "use it for a couple of days on real work", "q": "What would stop you recommending it to a colleague?"}];
-  const UI = {"ru": {"title": "Собери свой отзыв", "hint": "Три вопроса про разное. Отвечай в двух-трёх предложениях и с деталями: что открыл, что увидел, сколько ждал. Односложное «да» в отзыве читается как пустое место. Ниже сложится текст: слова твои, страница только расставляет точки и абзац.", "ph": "Что сделал и что увидел", "thin": "Одной фразой мало — напиши, что именно ты видел", "another": "Другой вопрос", "swap": "In English", "result": "Получилось", "copy": "Скопировать отзыв", "copied": "Скопировано", "short": "Коротковато — две-три фразы читаются лучше", "empty": "Ответь хотя бы на один вопрос — текст появится здесь.", "intro": "Спасибо, что смотришь. Ниже три вопроса про разные стороны расширения — ответь на те, что сможешь проверить.", "nope": "Если расширение не понравилось — не пиши отзыв, напиши напрямую: ", "nope_link": "форма обратной связи", "steps_title": "Как оставить отзыв", "steps": ["Поставь расширение: <a href=\"{store}\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>", "Открой любой из примеров — <a href=\"/samples/\" target=\"_blank\" rel=\"noopener\">jsonbeautifier.dev/samples/</a> — или свой JSON-URL", "Посмотри на то, о чём спрашивают вопросы ниже", "Ответь на вопросы — текст соберётся сам, скопируй его", "Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, вставь и отправь", "Для взаимного отзыва напиши в тг <a href=\"https://t.me/minisol\" target=\"_blank\" rel=\"noopener\">@minisol</a>"]}, "en": {"title": "Put your review together", "hint": "Three questions about different things. Two or three sentences each, with detail: what you opened, what you saw, how long it took. A one-word answer reads as nothing at all. The text below is assembled from your answers — the page only adds the full stops.", "ph": "What you did and what you saw", "thin": "Too short — say what you actually saw", "another": "Another question", "swap": "По-русски", "result": "Result", "copy": "Copy review", "copied": "Copied", "short": "A bit short — two or three sentences read better", "empty": "Answer at least one question and the text appears here.", "intro": "Thanks for taking a look. Three questions below, each about a different part of the extension — answer the ones you can actually check.", "nope": "If you didn't like it, please don't review it — tell me instead: ", "nope_link": "feedback form", "steps_title": "How to leave a review", "steps": ["Install it: <a href=\"{store}\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>", "Open one of the samples — <a href=\"/samples/\" target=\"_blank\" rel=\"noopener\">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own", "Look at whatever the questions below ask about", "Answer them — the text assembles itself, then copy it", "Back on the store page: <b>Reviews</b> → <b>Write a review</b>, paste and send", "For a review in return, message <a href=\"https://t.me/minisol\" target=\"_blank\" rel=\"noopener\">@minisol</a> on Telegram"]}};
-  const K = { slots: "jb-rev-slots", lang: "jb-rev-lang", ans: (i) => "jb-rev-a" + i };
-  const SLOTS = 3;
-  const THIN = 25;
+  const UI = {"ru": {"title": "Вопросы для вдохновения", "sub": "Отвечать на все не надо — выбери то, что зацепило, и напиши своими словами.", "swap": "In English", "intro": "Спасибо, что смотришь. Поставь, погоняй на своих задачах — а ниже вопросы на случай, если не знаешь, с чего начать отзыв.", "nope": "Если расширение не понравилось — не пиши отзыв, напиши напрямую: ", "nope_link": "форма обратной связи", "steps_title": "Как оставить отзыв", "steps": ["Поставь расширение: <a href=\"{store}\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>", "Открой любой из примеров — <a href=\"/samples/\" target=\"_blank\" rel=\"noopener\">jsonbeautifier.dev/samples/</a> — или свой JSON-URL", "Ниже есть список вопросов для вдохновения для отзыва", "Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, напиши своими словами и отправь", "Для взаимного отзыва напиши в тг <a href=\"https://t.me/minisol\" target=\"_blank\" rel=\"noopener\">@minisol</a>"]}, "en": {"title": "Questions for inspiration", "sub": "No need to answer them all — pick whatever struck you and write it your way.", "swap": "По-русски", "intro": "Thanks for taking a look. Install it, use it on your own work — the questions below are there in case you don't know where to start.", "nope": "If you didn't like it, please don't review it — tell me instead: ", "nope_link": "feedback form", "steps_title": "How to leave a review", "steps": ["Install it: <a href=\"{store}\" target=\"_blank\" rel=\"noopener\">Chrome Web Store</a>", "Open one of the samples — <a href=\"/samples/\" target=\"_blank\" rel=\"noopener\">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own", "Below is a list of questions to give you something to write about", "Back on the store page: <b>Reviews</b> → <b>Write a review</b>, write it in your own words and send", "For a review in return, message <a href=\"https://t.me/minisol\" target=\"_blank\" rel=\"noopener\">@minisol</a> on Telegram"]}};
+  const HOW_MANY = 15;
 
   const lang = (() => {
-    const saved = localStorage.getItem(K.lang);
+    const saved = localStorage.getItem("jb-rev-lang");
     if (saved === "ru" || saved === "en") return saved;
     return (navigator.language || "en").toLowerCase().startsWith("ru") ? "ru" : "en";
   })();
   const t = UI[lang];
-  const inLang = POOL.map((q, i) => i).filter((i) => POOL[i].lang === lang);
-
-  const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
-
-  // Три вопроса обязаны быть из трёх разных тем: иначе человек пишет один и
-  // тот же абзац трижды, а ради разнообразия всё и затевалось.
-  const freshSet = () => {
-    const chosen = [];
-    const used = new Set();
-    while (chosen.length < SLOTS) {
-      const i = rand(inLang.filter((j) => !used.has(POOL[j].topic)));
-      if (i === undefined) break;
-      used.add(POOL[i].topic);
-      chosen.push(i);
-    }
-    return chosen;
-  };
-
-  let slots = (() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(K.slots) || "null");
-      if (Array.isArray(saved) && saved.length === SLOTS &&
-          saved.every((i) => POOL[i] && POOL[i].lang === lang)) return saved;
-    } catch (e) { /* мусор в хранилище — просто берём новый набор */ }
-    return freshSet();
-  })();
-  const save = () => localStorage.setItem(K.slots, JSON.stringify(slots));
-  save();
 
   document.documentElement.lang = lang;
   document.querySelector("[data-intro]").textContent = t.intro;
   document.querySelector("[data-strip]").innerHTML =
     t.nope + '<a href="/feedback/">' + t.nope_link + "</a>.";
-  document.querySelector("[data-asm-title]").textContent = t.title;
-  document.querySelector("[data-hint]").textContent = t.hint;
-  document.querySelector("[data-result-label]").textContent = t.result;
-  document.querySelector("[data-copy-review]").textContent = t.copy;
+  document.querySelector("[data-qs-title]").textContent = t.title;
+  document.querySelector("[data-qs-sub]").textContent = t.sub;
   const swap = document.querySelector("[data-lang-switch]");
   swap.textContent = t.swap;
   swap.addEventListener("click", () => {
-    localStorage.setItem(K.lang, lang === "ru" ? "en" : "ru");
-    localStorage.removeItem(K.slots);
-    for (let i = 0; i < SLOTS; i++) localStorage.removeItem(K.ans(i));
+    localStorage.setItem("jb-rev-lang", lang === "ru" ? "en" : "ru");
     location.reload();
   });
   const steps = document.querySelector('[data-steps="' + lang + '"]');
   if (steps) steps.hidden = false;
 
-  const out = document.querySelector(".asm-out");
-  const note = document.querySelector(".asm-note");
-  const copyBtn = document.querySelector("[data-copy-review]");
-  const okMsg = document.querySelector(".asm-ok");
-  const host = document.querySelector("[data-slots]");
-
-  // Склейка механическая: обрезали, поставили заглавную, закрыли точкой,
-  // выкинули пустые. Ни одного своего слова — иначе это уже не его отзыв.
-  const tidy = (s) => {
-    s = s.trim().replace(/\s+/g, " ");
-    if (!s) return "";
-    s = s[0].toUpperCase() + s.slice(1);
-    return /[.!?…]$/.test(s) ? s : s + ".";
-  };
-
-  const assemble = () => {
-    const parts = [...host.querySelectorAll("textarea")].map((f) => tidy(f.value)).filter(Boolean);
-    if (!parts.length) {
-      out.textContent = t.empty;
-      out.classList.add("is-empty");
-      note.textContent = "";
-      copyBtn.disabled = true;
-      return "";
+  // Порядок случайный при каждом заходе и НЕ запоминается: иначе человек
+  // отвечает на первые три, и все отзывы выходят про одно и то же.
+  const shuffle = (a) => {
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
     }
-    const text = parts.length > 1 ? parts[0] + "\n\n" + parts.slice(1).join(" ") : parts[0];
-    out.textContent = text;
-    out.classList.remove("is-empty");
-    note.textContent = text.length < 80 ? t.short : text.length + " / 2000";
-    copyBtn.disabled = false;
-    return text;
+    return a;
   };
 
-  const render = () => {
-    host.textContent = "";
-    slots.forEach((qi, n) => {
-      const q = POOL[qi];
-      const wrap = document.createElement("div");
-      wrap.className = "slot";
-      wrap.innerHTML =
-        '<span class="slot-topic"></span><label><span class="slot-q"></span>' +
-        '<textarea rows="3"></textarea></label>' +
-        '<div class="slot-foot"><button class="mini-btn"></button>' +
-        '<span class="thin-hint"></span></div>';
-      wrap.querySelector(".slot-topic").textContent = q.topic + " · " + q.try;
-      wrap.querySelector(".slot-q").textContent = q.q;
-      const f = wrap.querySelector("textarea");
-      f.placeholder = t.ph;
-      f.value = localStorage.getItem(K.ans(n)) || "";
-      wrap.querySelector(".thin-hint").textContent = t.thin;
-
-      const btn = wrap.querySelector(".mini-btn");
-      btn.textContent = t.another;
-      btn.addEventListener("click", () => {
-        // Занятыми считаем и тему этого слота: иначе «другой вопрос» крутит
-        // человека внутри одной темы, а нужен именно уход в другую сторону.
-        const busy = new Set(slots.map((j) => POOL[j].topic));
-        const next = rand(inLang.filter((j) => !busy.has(POOL[j].topic)));
-        if (next === undefined) return;
-        slots[n] = next;
-        save();
-        render();
-      });
-
-      // Ответ не стираем при смене вопроса: в отзыв попадают только ответы,
-      // вопросы — леса. Наблюдение остаётся верным, даже если спросили иначе.
-      f.addEventListener("input", () => {
-        localStorage.setItem(K.ans(n), f.value);
-        if (f.value.trim().length >= THIN) wrap.classList.remove("is-thin");
-        assemble();
-      });
-      f.addEventListener("blur", () => {
-        const v = f.value.trim();
-        wrap.classList.toggle("is-thin", v.length > 0 && v.length < THIN);
-      });
-
-      host.appendChild(wrap);
-    });
-    assemble();
-  };
-
-  copyBtn.addEventListener("click", () => {
-    const text = assemble();
-    if (!text) return;
-    navigator.clipboard.writeText(text).then(() => { okMsg.textContent = t.copied; })
-      .catch(() => {
-        const r = document.createRange();
-        r.selectNodeContents(out);
-        getSelection().removeAllRanges();
-        getSelection().addRange(r);
-      });
+  // Сначала по одному вопросу из каждой темы, и только потом добираем: пятнадцать
+  // вопросов из пяти тем — это те же пять вопросов, сказанные по-разному.
+  const mine = POOL.filter((q) => q.lang === lang);
+  const byTopic = new Map();
+  mine.forEach((q) => {
+    if (!byTopic.has(q.topic)) byTopic.set(q.topic, []);
+    byTopic.get(q.topic).push(q);
   });
+  const buckets = shuffle([...byTopic.values()].map((qs) => shuffle(qs.slice())));
+  const chosen = [];
+  for (let round = 0; chosen.length < HOW_MANY && round < 3; round++) {
+    for (const b of buckets) {
+      if (chosen.length >= HOW_MANY) break;
+      if (b[round]) chosen.push(b[round]);
+    }
+  }
 
-  render();
+  const list = document.querySelector("[data-qs]");
+  shuffle(chosen).forEach((q) => {
+    const li = document.createElement("li");
+    const main = document.createElement("span");
+    main.className = "qs-q";
+    main.textContent = q.q;
+    const sub = document.createElement("span");
+    sub.className = "qs-topic";
+    sub.textContent = q.topic + " · " + q.try;
+    li.append(main, sub);
+    list.appendChild(li);
+  });
 })();
 </script>
 </body>
