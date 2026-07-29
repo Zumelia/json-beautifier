@@ -1,28 +1,26 @@
 #!/usr/bin/env python3
 """
-Страница для работы с отзывами: /reviewers/ — служебная, noindex, ни с чего не
+Страница для сбора отзывов: /reviewers/go/ — служебная, noindex, ни с чего не
 слинкована.
 
-Готовых текстов отзывов здесь нет и не будет. Двадцать пять правок одного
-текста — это одно мнение в двадцати пяти редакциях, и видно это и читателю, и
-фильтрам стора. Отзыв — утверждение факта незнакомым людям, и наблюдения в нём
-должны приходить от того, кто наблюдал.
+Готовых текстов отзывов здесь нет. Отзыв — утверждение факта незнакомым людям,
+и наблюдения в нём должны приходить от того, кто наблюдал. Страница снимает не
+«что я думаю», а «как это сформулировать»: три вопроса, ответы в пару фраз,
+внизу они механически складываются в связный текст.
 
-Вместо этого страница работает в двух режимах.
+Три вопроса берутся из РАЗНЫХ тем. Это не украшение: пятнадцать русских тем по
+три вопроса дают 12 285 различных наборов, десять английских — 3 240. Два
+человека почти наверняка получат разные вопросы, а значит напишут о разном —
+без этого двадцать пять отзывов сползаются к одному и тому же абзацу.
 
-  /reviewers/         консоль Кирилла: двадцать пять разных углов, письмо
-                      каждому человеку, отметки «отправлен» и «опубликован».
-  /reviewers/?c=N     то, что видит человек: только его карточка, три вопроса
-                      и сборщик.
+  /reviewers/go/   рабочая страница: три слота, у каждого своя кнопка «другой
+                   вопрос», плюс переключатель языка
+  /reviewers/      обзор всего пула для владельца + письмо для чата
 
-Сборщик складывает ответы в связный текст **механически** — расставляет точки,
-заглавные буквы и абзац, выкидывает пустые поля. Ни одного слова от себя он не
-добавляет: усилие для человека падает до трёх фраз о том, что он только что
-видел, а свидетельство остаётся его.
-
-    python3 build_reviewers.py      # → reviewers/index.html
+    python3 build_reviewers.py
 """
 
+import json
 from html import escape
 from pathlib import Path
 
@@ -31,225 +29,169 @@ OUT = HERE / "reviewers"
 
 STORE = "https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn"
 SAMPLES = "https://jsonbeautifier.dev/samples/"
-PAGE = "https://jsonbeautifier.dev/reviewers/"
+GO = "https://jsonbeautifier.dev/reviewers/go/"
 
-# (язык, угол, что попробовать, три вопроса)
-CARDS = [
-    ("ru", "Большие ответы API",
-     "Открой /samples/large.json — 2.3 МБ в одну строку.",
-     ["Вкладка осталась отзывчивой или подтормаживала?",
-      "Сколько ждал до появления дерева?",
-      "Сворачивание веток на таком объёме работает так же быстро?"]),
-    ("ru", "Сломанный JSON",
-     "Открой /samples/broken.json — там нет запятой на 7-й строке.",
-     ["Понятно ли из сообщения, где именно ошибка?",
-      "Помогла ли кнопка перехода к строке?",
-      "Что показывали другие вьюеры в такой ситуации?"]),
-    ("ru", "Поиск по свёрнутым веткам",
-     "На /samples/orders.json сверни всё и найди «url».",
-     ["Нашлись ли совпадения внутри свёрнутых веток?",
-      "Раскрылось ли до нужного места само?",
-      "Хватает ли перехода между совпадениями?"]),
-    ("ru", "Тёмная тема",
-     "Переключи тему в попапе и посмотри дерево и сам попап.",
-     ["Это настоящая тёмная тема или инверсия светлой?",
-      "Читаются ли цвета типов на тёмном?",
-      "Не слепит ли что-нибудь?"]),
-    ("ru", "Номера строк",
-     "Открой любой JSON — номера включены по умолчанию, выключаются в попапе.",
-     ["Мешают или помогают?",
-      "Не съезжают ли при сворачивании веток?",
-      "Заметно ли влияние на скорость?"]),
-    ("ru", "Взгляд разработчика расширений: права",
-     "Посмотри список прав на странице расширения и в /privacy/.",
-     ["Оправдан ли доступ ко всем страницам тем, что расширение делает?",
-      "Понятно ли из описания, зачем каждое право?",
-      "Что бы ты спросил на месте пользователя?"]),
-    ("ru", "Не-JSON страницы",
-     "Походи по обычным сайтам с включённым расширением.",
-     ["Что-нибудь сломалось или подтормозило?",
-      "Замечал ли ты его вообще там, где оно не нужно?",
-      "Были ли ложные срабатывания?"]),
-    ("ru", "Юникод и экранирование",
-     "На /samples/orders.json найди японский текст, эмодзи и escape-последовательности.",
-     ["Всё отрисовалось верно?",
-      "Не поехала ли вёрстка на длинных строках?",
-      "Как показаны спецсимволы?"]),
-    ("ru", "Копирование",
-     "Кликни по значению, попробуй «Copy JSON».",
-     ["Копируется то, что ожидаешь?",
-      "Хватает ли способов достать кусок наружу?",
-      "Чего не хватило?"]),
-    ("ru", "Настройки",
-     "Открой попап: тема, отступ, глубина раскрытия, сортировка ключей, номера строк.",
-     ["Применяются ли изменения к уже открытой вкладке?",
-      "Каких настроек не хватает?",
-      "Есть ли лишние?"]),
-    ("ru", "Сортировка ключей",
-     "Включи «Sort object keys» на /samples/orders.json.",
-     ["Полезно ли для сравнения ответов?",
-      "Не путает ли, что порядок больше не как в исходнике?",
-      "Пользовался бы постоянно или точечно?"]),
-    ("ru", "Raw-режим",
-     "Нажми Raw и вернись обратно.",
-     ["Показывает исходник как есть, без переформатирования?",
-      "Быстро ли переключается туда-обратно?",
-      "На большом файле ведёт себя так же?"]),
-    ("ru", "Открытый код",
-     "Загляни в репозиторий github.com/Zumelia/json-beautifier — файлы core/core.js и extension-chrome/src/.",
-     ["Проверяемо ли утверждение «нет сетевых запросов»?",
-      "Читается ли код?",
-      "Важна ли тебе как разработчику открытость в такой утилите?"]),
-    ("ru", "Первое впечатление",
-     "Вспомни момент установки: страница приветствия, первый открытый JSON.",
-     ["Понятно ли было, что делать дальше?",
-      "Сработало ли на первом же файле без настройки?",
-      "Что показалось лишним?"]),
-    ("ru", "Чего не хватает",
-     "Поработай с расширением на своих задачах пару дней.",
-     ["Чего не хватило в реальной работе?",
-      "Что бы добавил первым?",
-      "Есть ли то, что раздражает?"]),
-    ("en", "Deeply nested structures",
-     "Open /samples/orders.json — six levels deep in places.",
-     ["Is the indentation readable that deep?",
-      "Do the collapse controls stay usable?",
-      "Do the item and key counters help you navigate?"]),
-    ("en", "Coming from another viewer",
-     "Compare it against whatever you used before.",
-     ["What does this one do better?",
-      "What does the old one still do better?",
-      "Would you actually switch?"]),
-    ("en", "No network requests",
-     "Open DevTools → Network with the extension active on a JSON page.",
-     ["Does the extension make any request at all?",
-      "Does that matter to you for a tool that reads every page?",
-      "Would you have checked if nobody suggested it?"]),
-    ("en", "Edge-case values",
-     "In /samples/orders.json look at empty objects, empty arrays, null, exponents, negative numbers.",
-     ["Is each type visually distinct?",
-      "Is null distinguishable from the string \"null\"?",
-      "Anything rendered confusingly?"]),
-    ("en", "Speed on a busy machine",
-     "Use it during a normal working day, with your usual tabs open.",
-     ["Did you notice any slowdown?",
-      "How long from opening a JSON URL to a usable tree?",
-      "Did it ever get in the way?"]),
-    ("en", "The online tools",
-     "Try jsonbeautifier.dev/json-formatter/ next to the extension.",
-     ["When would you use the site instead of the extension?",
-      "Does the extension actually save you steps?",
-      "Is the difference between them clear?"]),
-    ("en", "Copying a path",
-     "Click a nested value and copy its path.",
-     ["Is the path in a form you can paste into code?",
-      "Does it save you time versus counting brackets?",
-      "What format would you have expected?"]),
-    ("en", "Auto-expand depth",
-     "Change the depth setting in the popup and reopen a file.",
-     ["Which depth turned out right for your data?",
-      "Should the default be different?",
-      "Does it apply to the tab you already had open?"]),
-    ("en", "Error recovery",
-     "Open /samples/broken.json, then fix nothing and just read the message.",
-     ["Could you find the problem from the message alone?",
-      "Is line-and-column enough, or do you want more?",
-      "How do the tools you use compare?"]),
-    ("en", "Honest downside",
-     "Use it for a couple of days on real work.",
-     ["What is the weakest part?",
-      "What would stop you recommending it?",
-      "What is missing that you expected?"]),
+# (язык, тема, что попробовать, три вопроса). Вопросы открытые: на «понятно ли»
+# и «всё ли верно» единственный естественный ответ — «да», и отзыв выходит
+# пустым. Спрашиваем что, как и сколько.
+TOPICS = [
+    ("ru", "Большие ответы API", "открой /samples/large.json — 2.3 МБ в одну строку",
+     ["Что открыл и сколько примерно ждал до появления дерева?",
+      "Что делал дальше — сворачивал, искал? Как оно вело себя на таком объёме?",
+      "Что на файлах такого размера делали вьюеры, которыми ты пользовался раньше?"]),
+    ("ru", "Сломанный JSON", "открой /samples/broken.json — там нет запятой на 7-й строке",
+     ["Что именно написало расширение — какие цифры и текст ты увидел?",
+      "Сколько времени ушло, чтобы понять, где ошибка?",
+      "Что на этом же файле показывают инструменты, которыми ты пользуешься?"]),
+    ("ru", "Поиск", "на /samples/orders.json сверни всё и поищи «url»",
+     ["Что искал и сколько совпадений нашлось?",
+      "Опиши, что произошло со свёрнутыми ветками, когда пошёл поиск",
+      "Чего в поиске не хватило?"]),
+    ("ru", "Тёмная тема", "переключи тему в попапе",
+     ["Опиши тёмную тему: что выглядит продуманным, а что просто перекрашенным?",
+      "Как читаются цвета типов — строки, числа, ключи?",
+      "На чём глаз спотыкается?"]),
+    ("ru", "Номера строк", "открой любой JSON, номера включены по умолчанию",
+     ["Зачем номера строк пригодились — или почему не пригодились?",
+      "Что происходит с нумерацией, когда сворачиваешь ветки?",
+      "Что бы ты в них изменил?"]),
+    ("ru", "Права доступа", "посмотри список прав на странице расширения и в /privacy/",
+     ["Какие права запрашивает расширение и как ты их оценил?",
+      "Что в объяснении прав показалось убедительным, а что нет?",
+      "Что бы ты спросил у автора на месте обычного пользователя?"]),
+    ("ru", "Не-JSON страницы", "походи по обычным сайтам с включённым расширением",
+     ["На каких сайтах ты его погонял?",
+      "Что происходило на страницах, где JSON нет?",
+      "Какие следы его присутствия ты вообще заметил?"]),
+    ("ru", "Юникод и экранирование", "на /samples/orders.json есть японский, эмодзи и escape-последовательности",
+     ["Какие символы проверил и что с ними стало?",
+      "Что произошло с длинной строкой, которая не влезает в ширину окна?",
+      "Что в этом месте обычно ломается у других вьюеров?"]),
+    ("ru", "Копирование", "кликни по значению, попробуй «Copy JSON»",
+     ["Что копировал и куда вставлял?",
+      "В каком виде это пришло — совпало с ожиданием?",
+      "Какого способа достать данные наружу не хватило?"]),
+    ("ru", "Настройки", "открой попап: тема, отступ, глубина, сортировка, номера строк",
+     ["Какие настройки поменял и что изменилось в открытой вкладке?",
+      "Какую настройку добавил бы первой?",
+      "Что из существующего кажется лишним?"]),
+    ("ru", "Сортировка ключей", "включи «Sort object keys» на /samples/orders.json",
+     ["Для какой задачи ты бы включал сортировку ключей?",
+      "Что изменилось в чтении файла, когда ключи встали по алфавиту?",
+      "Когда такая сортировка мешает?"]),
+    ("ru", "Raw-режим", "нажми Raw и вернись обратно",
+     ["Что показал Raw — совпало с исходником?",
+      "На каких файлах проверял переключение и как быстро оно шло?",
+      "Зачем вообще Raw в таком инструменте?"]),
+    ("ru", "Открытый код", "github.com/Zumelia/json-beautifier — core/core.js и extension-chrome/src/",
+     ["Что именно ты посмотрел в репозитории?",
+      "Как проверял утверждение про отсутствие сетевых запросов и что нашёл?",
+      "Что для тебя как разработчика значит открытый код в такой утилите?"]),
+    ("ru", "Первое впечатление", "вспомни момент установки и первый открытый JSON",
+     ["Опиши первые минуты — что произошло сразу после установки?",
+      "На каком файле проверил и что увидел?",
+      "Что было непонятно или показалось лишним?"]),
+    ("ru", "Чего не хватает", "поработай с расширением на своих задачах пару дней",
+     ["Над какими задачами ты работал, пока им пользовался?",
+      "В какой момент захотелось функции, которой нет — какой именно?",
+      "Что раздражает при ежедневном использовании?"]),
+    ("en", "Deeply nested data", "open /samples/orders.json — six levels deep in places",
+     ["How deep did you go, and where did it get hard to follow?",
+      "What did the collapse controls do for you at that depth?",
+      "How do the key and item counters change the way you move around?"]),
+    ("en", "Coming from another viewer", "compare it against whatever you used before",
+     ["What were you using before, and for what kind of work?",
+      "Describe a moment where the difference between them showed",
+      "What does the old one still do better?"]),
+    ("en", "No network requests", "open DevTools → Network on a JSON page",
+     ["What did you check, and what showed up in the Network tab?",
+      "Why does that matter for a tool that reads every page you open?",
+      "What else would you want verified before trusting it?"]),
+    ("en", "Edge-case values", "in /samples/orders.json: empty objects, null, exponents, negatives",
+     ["Which values did you look at, and how were they rendered?",
+      "What was hard to tell apart?",
+      "What do other viewers get wrong in this area?"]),
+    ("en", "Speed on a busy machine", "use it during a normal working day",
+     ["What does your normal working setup look like — tabs, machine?",
+      "How long from opening a JSON URL to a tree you can use?",
+      "Where, if anywhere, did it get in the way?"]),
+    ("en", "The online tools", "try jsonbeautifier.dev/json-formatter/ next to the extension",
+     ["What did you use the site for, and what the extension?",
+      "Describe a moment where one saved you steps over the other",
+      "What is confusing about having both?"]),
+    ("en", "Copying a path", "click a nested value and copy its path",
+     ["What did you copy the path of, and where did you paste it?",
+      "What did the path look like — usable as it came?",
+      "What format would you have expected instead?"]),
+    ("en", "Auto-expand depth", "change the depth setting in the popup and reopen a file",
+     ["What depth did you settle on, and for what kind of data?",
+      "What happened to the tabs you already had open?",
+      "What would you make the default, and why?"]),
+    ("en", "Error recovery", "open /samples/broken.json and just read the message",
+     ["What did the message tell you, word for word?",
+      "How long did it take you to find the problem?",
+      "How does that compare with the tools you use?"]),
+    ("en", "Honest downside", "use it for a couple of days on real work",
+     ["What did you use it for over those days?",
+      "Describe the moment it annoyed you most",
+      "What would stop you recommending it to a colleague?"]),
 ]
-
-MSG_RU = """Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
-
-{store}
-
-Если будет пара минут, глянешь? Не «вообще» — мне интереснее одна конкретная вещь: {angle_low}.
-
-Что попробовать: {try_it}
-Файлы для этого: {samples}
-
-Чтобы не тратить время на формулировки, сделал страничку: три вопроса, ответишь по фразе — там же сложится текст, который можно вставить в стор. Слова твои, страница только расставляет точки.
-
-{link}
-
-Честно про минусы: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
-
-Если расширение не понравится — напиши лучше мне, а не в стор, починю.
-
-Спасибо!"""
-
-MSG_EN = """Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
-
-{store}
-
-If you have a couple of minutes, would you take a look? Not "in general" — I'm after one specific thing: {angle_low}.
-
-What to try: {try_it}
-Files for it: {samples}
-
-So you don't have to fight with wording, I made a page: three questions, a sentence each, and it assembles your answers into something you can paste into the store. The words stay yours — it only adds the full stops.
-
-{link}
-
-The honest downsides: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
-
-If you don't like it, tell me rather than the store — I'll fix it.
-
-Thanks!"""
 
 UI = {
     "ru": {
-        "build": "Собери свой отзыв",
-        "hint": "Ответь на вопросы своими словами — по фразе. Ниже сложится текст: "
-                "слова твои, страница только расставляет точки и абзац. Правь как хочешь.",
-        "ph": "Своими словами",
+        "title": "Собери свой отзыв",
+        "hint": "Три вопроса про разное. Отвечай в двух-трёх предложениях и с деталями: "
+                "что открыл, что увидел, сколько ждал. Односложное «да» в отзыве читается "
+                "как пустое место. Ниже сложится текст: слова твои, страница только "
+                "расставляет точки и абзац.",
+        "ph": "Что сделал и что увидел",
+        "thin": "Одной фразой мало — напиши, что именно ты видел",
+        "another": "Другой вопрос",
+        "swap": "In English",
         "result": "Получилось",
         "copy": "Скопировать отзыв",
         "copied": "Скопировано",
         "short": "Коротковато — две-три фразы читаются лучше",
         "empty": "Ответь хотя бы на один вопрос — текст появится здесь.",
-        "intro": "Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую "
-                 "было бы полезно взглянуть, и три вопроса о ней.",
+        "intro": "Спасибо, что смотришь. Ниже три вопроса про разные стороны расширения — "
+                 "ответь на те, что сможешь проверить.",
         "nope": "Если расширение не понравилось — не пиши отзыв, напиши напрямую: ",
         "nope_link": "форма обратной связи",
-        "another": "Другие вопросы для отзыва",
-        "swap": "In English",
         "steps_title": "Как оставить отзыв",
         "steps": [
             'Поставь расширение: <a href="{store}" target="_blank" rel="noopener">Chrome Web Store</a>',
-            'Открой любой из примеров — <a href="/samples/">jsonbeautifier.dev/samples/</a> — или свой JSON-URL',
+            'Открой любой из примеров — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — или свой JSON-URL',
             "Посмотри на то, о чём спрашивают вопросы ниже",
-            "Ответь на три вопроса — текст соберётся сам, скопируй его",
+            "Ответь на вопросы — текст соберётся сам, скопируй его",
             'Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, вставь и отправь',
             'Для взаимного отзыва напиши в тг <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a>',
         ],
     },
     "en": {
-        "build": "Put your review together",
-        "hint": "Answer in your own words, a sentence each. The text below is assembled "
-                "from your answers — the page only adds the full stops and the paragraph "
-                "break. Edit it however you like.",
-        "ph": "In your own words",
+        "title": "Put your review together",
+        "hint": "Three questions about different things. Two or three sentences each, with "
+                "detail: what you opened, what you saw, how long it took. A one-word answer "
+                "reads as nothing at all. The text below is assembled from your answers — "
+                "the page only adds the full stops.",
+        "ph": "What you did and what you saw",
+        "thin": "Too short — say what you actually saw",
+        "another": "Another question",
+        "swap": "По-русски",
         "result": "Result",
         "copy": "Copy review",
         "copied": "Copied",
         "short": "A bit short — two or three sentences read better",
         "empty": "Answer at least one question and the text appears here.",
-        "intro": "Thanks for taking a look. Below is one specific thing worth "
-                 "checking, and three questions about it.",
+        "intro": "Thanks for taking a look. Three questions below, each about a different "
+                 "part of the extension — answer the ones you can actually check.",
         "nope": "If you didn't like it, please don't review it — tell me instead: ",
         "nope_link": "feedback form",
-        "another": "Different questions",
-        "swap": "По-русски",
         "steps_title": "How to leave a review",
         "steps": [
             'Install it: <a href="{store}" target="_blank" rel="noopener">Chrome Web Store</a>',
-            'Open one of the samples — <a href="/samples/">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own',
+            'Open one of the samples — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own',
             "Look at whatever the questions below ask about",
-            "Answer the three questions — the text assembles itself, then copy it",
+            "Answer them — the text assembles itself, then copy it",
             'Back on the store page: <b>Reviews</b> → <b>Write a review</b>, paste and send',
             'For a review in return, message <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> on Telegram',
         ],
@@ -257,27 +199,33 @@ UI = {
 }
 
 CSS = """
-  .rev { margin-bottom: 18px; }
-  .rev-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
-  .rev-head h3 { margin: 0; font-size: 20px; }
-  .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em;
-         padding: 3px 8px; border-radius: var(--pill); background: var(--chip); color: var(--accent); }
-  .rev-try { margin: 12px 0 0; color: var(--muted); }
-  .rev-act { display: flex; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
-  .rev-sent { color: var(--ok); font-weight: 600; font-size: 14px; }
-  .rev-pub { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
-  .rev.is-pub { opacity: .55; }
-  .rev-count { font-family: var(--font-mono); color: var(--faint); font-size: 14px; }
+  .steps-box { margin-top: 30px; }
+  .steps-box h2 { font-size: clamp(22px, 2.6vw, 26px); margin: 0; }
+  .steps { margin: 20px 0 0; padding-left: 22px; }
+  .steps li { margin-bottom: 9px; }
 
-  .asm { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border-soft); }
-  .asm h4 { margin: 0 0 6px; font-size: 16px; }
+  .asm-title { margin: 34px 0 14px; font-size: clamp(24px, 3vw, 30px); }
+  .pick { display: flex; gap: 10px; margin: 0 0 16px; flex-wrap: wrap; }
   .asm-hint { margin: 0 0 22px; color: var(--muted); font-size: 14.5px; }
-  .asm-q { display: block; margin-bottom: 14px; }
-  .asm-q span { display: block; margin-bottom: 6px; font-weight: 600; font-size: 15px; }
-  .asm-q textarea { width: 100%; min-height: 60px; padding: 11px 13px; resize: vertical;
-                    border: 1px solid var(--border); border-radius: var(--radius-sm);
-                    background: var(--surface-2); color: var(--text);
-                    font: 15px/1.55 var(--font-body); }
+
+  .slot { margin-bottom: 24px; }
+  .slot + .slot { border-top: 1px solid var(--border-soft); padding-top: 24px; }
+  .slot-topic { font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em;
+                color: var(--faint); display: block; margin-bottom: 5px; }
+  .slot-q { display: block; margin-bottom: 8px; font-weight: 600; font-size: 15.5px; }
+  .slot textarea { width: 100%; min-height: 66px; padding: 11px 13px; resize: vertical;
+                   border: 1px solid var(--border); border-radius: var(--radius-sm);
+                   background: var(--surface-2); color: var(--text);
+                   font: 15px/1.55 var(--font-body); }
+  .slot.is-thin textarea { border-color: var(--sun); }
+  .slot-foot { display: flex; align-items: center; gap: 12px; margin-top: 7px; flex-wrap: wrap; }
+  .slot .thin-hint { display: none; font-size: 13.5px; color: var(--faint); }
+  .slot.is-thin .thin-hint { display: block; }
+  .mini-btn { padding: 5px 11px; border: 1px solid var(--border); border-radius: var(--pill);
+              background: var(--surface); color: var(--muted); font: 600 13px var(--font-body);
+              cursor: pointer; }
+  .mini-btn:hover { color: var(--text); }
+
   .asm-out { margin-top: 6px; padding: 16px 18px; border: 1px solid var(--border);
              border-radius: var(--radius); background: var(--surface-2);
              white-space: pre-wrap; min-height: 60px; }
@@ -285,104 +233,79 @@ CSS = """
   .asm-foot { display: flex; align-items: center; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
   .asm-note { color: var(--faint); font-size: 13.5px; }
   .asm-ok { color: var(--ok); font-weight: 600; font-size: 14px; }
-  body.one-card .rev-act, body.one-card .rev-count, body.one-card .console-only { display: none; }
-
-  /* Тема и кнопки живут прямо на песочном фоне страницы, в белую карточку
-     завёрнуты только вопросы: белое пятно = «здесь надо что-то делать». */
-  .asm-title { margin: 34px 0 0; font-size: clamp(24px, 3vw, 30px); }
-  .topic { margin: 18px 0 14px; }
-  .topic h3 { margin: 8px 0 0; font-size: 21px; }
-  .pick { display: flex; gap: 10px; margin: 0 0 16px; flex-wrap: wrap; }
-  .steps { margin: 24px 0 0; padding-left: 22px; }
-  .steps li { margin-bottom: 9px; }
-  .steps-box { margin-top: 30px; }
-  .steps-box h2 { font-size: clamp(22px, 2.6vw, 26px); margin: 0; }
-  .visitor-only { display: none; }
-  body.one-card .visitor-only { display: block; }
-  body.one-card .pick.visitor-only { display: flex; }
+  .result-label { display: block; margin: 26px 0 8px; font-weight: 600; font-size: 15.5px; }
 """
 
 JS = """
 (() => {
   "use strict";
-  const KEY = (n, k) => "jb-rev-" + n + "-" + k;
-  const only = new URLSearchParams(location.search).get("c");
-  const cards = [...document.querySelectorAll(".rev")];
-  const counter = document.querySelector("[data-count]");
+  const POOL = __POOL__;
+  const UI = __UI__;
+  const K = { slots: "jb-rev-slots", lang: "jb-rev-lang", ans: (i) => "jb-rev-a" + i };
+  const SLOTS = 3;
+  const THIN = 25;
 
-  const visitor = document.body.dataset.mode === "visitor";
-
-  // Общий вход: одна ссылка на всех. Тему страница выдаёт сама и запоминает —
-  // иначе перезагрузка меняла бы вопросы и стирала уже написанные ответы.
-  // Совпадения у разных людей возможны, поэтому рядом кнопка «другая тема».
-  const PICK = "jb-rev-pick";
-  const byLang = (lang) => cards.filter((c) => c.dataset.lang === lang).map((c) => c.dataset.n);
-  // Скобки здесь не косметика: `a || b ? x : y` — это `(a || b) ? x : y`, и
-  // сохранённый «en» как непустая строка отправлял бы всех обратно в русский.
-  const prefLang = () => {
-    const saved = localStorage.getItem("jb-rev-lang");
-    if (saved) return saved;
+  const lang = (() => {
+    const saved = localStorage.getItem(K.lang);
+    if (saved === "ru" || saved === "en") return saved;
     return (navigator.language || "en").toLowerCase().startsWith("ru") ? "ru" : "en";
-  };
-  const draw = (lang, avoid) => {
-    const pool = byLang(lang).filter((n) => n !== avoid);
-    return pool[Math.floor(Math.random() * pool.length)];
-  };
+  })();
+  const t = UI[lang];
+  const inLang = POOL.map((q, i) => i).filter((i) => POOL[i].lang === lang);
 
-  let assigned = null;
-  if (visitor) {
-    assigned = localStorage.getItem(PICK);
-    if (!assigned || !document.getElementById("c" + assigned)) {
-      assigned = draw(prefLang(), null);
-      localStorage.setItem(PICK, assigned);
+  const rand = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+  // Три вопроса обязаны быть из трёх разных тем: иначе человек пишет один и
+  // тот же абзац трижды, а ради разнообразия всё и затевалось.
+  const freshSet = () => {
+    const chosen = [];
+    const used = new Set();
+    while (chosen.length < SLOTS) {
+      const i = rand(inLang.filter((j) => !used.has(POOL[j].topic)));
+      if (i === undefined) break;
+      used.add(POOL[i].topic);
+      chosen.push(i);
     }
-  }
-
-  if (only || visitor) {
-    const pickOne = only || assigned;
-    cards.forEach((c) => { if (c.dataset.n !== pickOne) c.hidden = true; });
-    document.body.classList.add("one-card");
-    const card = document.getElementById("c" + pickOne);
-    const intro = document.querySelector("[data-intro]");
-    if (card && intro) {
-      // «Работа с отзывами» — заголовок для владельца страницы; человеку,
-      // пришедшему по ссылке, он ничего не говорит.
-      document.querySelector("h1").textContent = "JSON Beautifier";
-      document.title = "JSON Beautifier";
-      document.documentElement.lang = card.dataset.lang;
-      intro.textContent = card.dataset.intro;
-      document.querySelector("[data-lede]").remove();
-      document.querySelector("[data-strip]").innerHTML =
-        card.dataset.nope + '<a href="/feedback/">' + card.dataset.nopeLink + "</a>.";
-    }
-
-    // Инструкция — на языке выданной карточки.
-    const steps = document.querySelector('[data-steps="' + card.dataset.lang + '"]');
-    if (steps) steps.hidden = false;
-
-    if (visitor && card) {
-      const another = card.querySelector("[data-another]");
-      const swap = card.querySelector("[data-lang-switch]");
-      const take = (lang, avoid) => {
-        const n = draw(lang, avoid);
-        if (!n) return;
-        localStorage.setItem(PICK, n);
-        localStorage.setItem("jb-rev-lang", lang);
-        location.reload();
-      };
-      another.addEventListener("click", () => take(card.dataset.lang, card.dataset.n));
-      swap.addEventListener("click", () => take(card.dataset.lang === "ru" ? "en" : "ru", null));
-    }
-  }
-
-  const recount = () => {
-    if (!counter) return;
-    const sent = cards.filter((c) => localStorage.getItem(KEY(c.dataset.n, "sent"))).length;
-    const pub = cards.filter((c) => localStorage.getItem(KEY(c.dataset.n, "pub"))).length;
-    counter.textContent = "отправлено " + sent + " из " + cards.length + " · опубликовано " + pub;
+    return chosen;
   };
 
-  // Склейка чисто механическая: обрезали, поставили заглавную, закрыли точкой,
+  let slots = (() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(K.slots) || "null");
+      if (Array.isArray(saved) && saved.length === SLOTS &&
+          saved.every((i) => POOL[i] && POOL[i].lang === lang)) return saved;
+    } catch (e) { /* мусор в хранилище — просто берём новый набор */ }
+    return freshSet();
+  })();
+  const save = () => localStorage.setItem(K.slots, JSON.stringify(slots));
+  save();
+
+  document.documentElement.lang = lang;
+  document.querySelector("[data-intro]").textContent = t.intro;
+  document.querySelector("[data-strip]").innerHTML =
+    t.nope + '<a href="/feedback/">' + t.nope_link + "</a>.";
+  document.querySelector("[data-asm-title]").textContent = t.title;
+  document.querySelector("[data-hint]").textContent = t.hint;
+  document.querySelector("[data-result-label]").textContent = t.result;
+  document.querySelector("[data-copy-review]").textContent = t.copy;
+  const swap = document.querySelector("[data-lang-switch]");
+  swap.textContent = t.swap;
+  swap.addEventListener("click", () => {
+    localStorage.setItem(K.lang, lang === "ru" ? "en" : "ru");
+    localStorage.removeItem(K.slots);
+    for (let i = 0; i < SLOTS; i++) localStorage.removeItem(K.ans(i));
+    location.reload();
+  });
+  const steps = document.querySelector('[data-steps="' + lang + '"]');
+  if (steps) steps.hidden = false;
+
+  const out = document.querySelector(".asm-out");
+  const note = document.querySelector(".asm-note");
+  const copyBtn = document.querySelector("[data-copy-review]");
+  const okMsg = document.querySelector(".asm-ok");
+  const host = document.querySelector("[data-slots]");
+
+  // Склейка механическая: обрезали, поставили заглавную, закрыли точкой,
   // выкинули пустые. Ни одного своего слова — иначе это уже не его отзыв.
   const tidy = (s) => {
     s = s.trim().replace(/\\s+/g, " ");
@@ -391,122 +314,124 @@ JS = """
     return /[.!?…]$/.test(s) ? s : s + ".";
   };
 
-  document.querySelectorAll(".rev").forEach((card) => {
-    const n = card.dataset.n;
+  const assemble = () => {
+    const parts = [...host.querySelectorAll("textarea")].map((f) => tidy(f.value)).filter(Boolean);
+    if (!parts.length) {
+      out.textContent = t.empty;
+      out.classList.add("is-empty");
+      note.textContent = "";
+      copyBtn.disabled = true;
+      return "";
+    }
+    const text = parts.length > 1 ? parts[0] + "\\n\\n" + parts.slice(1).join(" ") : parts[0];
+    out.textContent = text;
+    out.classList.remove("is-empty");
+    note.textContent = text.length < 80 ? t.short : text.length + " / 2000";
+    copyBtn.disabled = false;
+    return text;
+  };
 
-    const btn = card.querySelector("[data-copy]");
-    const sent = card.querySelector(".rev-sent");
-    const pub = card.querySelector("[data-pub]");
-    if (btn) {
-      const markSent = () => { btn.disabled = true; sent.hidden = false; };
-      if (localStorage.getItem(KEY(n, "sent"))) markSent();
+  const render = () => {
+    host.textContent = "";
+    slots.forEach((qi, n) => {
+      const q = POOL[qi];
+      const wrap = document.createElement("div");
+      wrap.className = "slot";
+      wrap.innerHTML =
+        '<span class="slot-topic"></span><label><span class="slot-q"></span>' +
+        '<textarea rows="3"></textarea></label>' +
+        '<div class="slot-foot"><button class="mini-btn"></button>' +
+        '<span class="thin-hint"></span></div>';
+      wrap.querySelector(".slot-topic").textContent = q.topic + " · " + q.try;
+      wrap.querySelector(".slot-q").textContent = q.q;
+      const f = wrap.querySelector("textarea");
+      f.placeholder = t.ph;
+      f.value = localStorage.getItem(K.ans(n)) || "";
+      wrap.querySelector(".thin-hint").textContent = t.thin;
+
+      const btn = wrap.querySelector(".mini-btn");
+      btn.textContent = t.another;
       btn.addEventListener("click", () => {
-        const text = card.querySelector(".rev-msg").value;
-        navigator.clipboard.writeText(text).then(() => {
-          localStorage.setItem(KEY(n, "sent"), "1");
-          markSent();
-          recount();
-        }).catch(() => {
-          btn.textContent = "Не удалось скопировать — выдели текст вручную";
-          card.querySelector(".rev-msg").hidden = false;
-        });
+        // Занятыми считаем и тему этого слота: иначе «другой вопрос» крутит
+        // человека внутри одной темы, а нужен именно уход в другую сторону.
+        const busy = new Set(slots.map((j) => POOL[j].topic));
+        const next = rand(inLang.filter((j) => !busy.has(POOL[j].topic)));
+        if (next === undefined) return;
+        slots[n] = next;
+        save();
+        render();
       });
-    }
-    if (pub) {
-      if (localStorage.getItem(KEY(n, "pub"))) { pub.checked = true; card.classList.add("is-pub"); }
-      pub.addEventListener("change", () => {
-        if (pub.checked) localStorage.setItem(KEY(n, "pub"), "1");
-        else localStorage.removeItem(KEY(n, "pub"));
-        card.classList.toggle("is-pub", pub.checked);
-        recount();
-      });
-    }
 
-    const fields = [...card.querySelectorAll(".asm-q textarea")];
-    const out = card.querySelector(".asm-out");
-    const note = card.querySelector(".asm-note");
-    const copyBtn = card.querySelector("[data-copy-review]");
-    const okMsg = card.querySelector(".asm-ok");
-    if (!fields.length) return;
-
-    const assemble = () => {
-      const parts = fields.map((f) => tidy(f.value)).filter(Boolean);
-      if (!parts.length) {
-        out.textContent = card.dataset.empty;
-        out.classList.add("is-empty");
-        note.textContent = "";
-        copyBtn.disabled = true;
-        return "";
-      }
-      // Первый ответ отдельным абзацем: он про то, что человек делал, и в
-      // магазине первая строка — это всё, что видно без разворачивания.
-      const text = parts.length > 1
-        ? parts[0] + "\\n\\n" + parts.slice(1).join(" ")
-        : parts[0];
-      out.textContent = text;
-      out.classList.remove("is-empty");
-      note.textContent = text.length < 80 ? card.dataset.short : text.length + " / 2000";
-      copyBtn.disabled = false;
-      return text;
-    };
-
-    fields.forEach((f) => {
+      // Ответ не стираем при смене вопроса: в отзыв попадают только ответы,
+      // вопросы — леса. Наблюдение остаётся верным, даже если спросили иначе.
       f.addEventListener("input", () => {
+        localStorage.setItem(K.ans(n), f.value);
+        if (f.value.trim().length >= THIN) wrap.classList.remove("is-thin");
         assemble();
-        localStorage.setItem(KEY(n, "a" + fields.indexOf(f)), f.value);
       });
-      const saved = localStorage.getItem(KEY(n, "a" + fields.indexOf(f)));
-      if (saved) f.value = saved;
-    });
+      f.addEventListener("blur", () => {
+        const v = f.value.trim();
+        wrap.classList.toggle("is-thin", v.length > 0 && v.length < THIN);
+      });
 
-    copyBtn.addEventListener("click", () => {
-      const text = assemble();
-      if (!text) return;
-      navigator.clipboard.writeText(text).then(() => {
-        okMsg.textContent = card.dataset.copied;
-      }).catch(() => {
+      host.appendChild(wrap);
+    });
+    assemble();
+  };
+
+  copyBtn.addEventListener("click", () => {
+    const text = assemble();
+    if (!text) return;
+    navigator.clipboard.writeText(text).then(() => { okMsg.textContent = t.copied; })
+      .catch(() => {
         const r = document.createRange();
         r.selectNodeContents(out);
         getSelection().removeAllRanges();
         getSelection().addRange(r);
       });
-    });
-
-    assemble();
   });
 
-  recount();
+  render();
 })();
 """
 
-TEMPLATE = """<!doctype html>
+GO_TEMPLATE = """<!doctype html>
 <html lang="ru">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>JSON Beautifier — обратная связь</title>
+<title>JSON Beautifier</title>
 <meta name="robots" content="noindex,nofollow">
 <link rel="icon" href="/favicon.ico" sizes="any">
 <link rel="stylesheet" href="/assets/fonts.css">
 <link rel="stylesheet" href="/assets/site.css">
 <style>__CSS__</style>
 </head>
-<body data-mode="__MODE__">
+<body>
 <main id="main">
   <section class="wrap section" style="max-width:820px">
-    <p class="eyebrow console-only">служебная страница · не индексируется · ниоткуда не слинкована</p>
-    <h1>__H1__</h1>
-    <p class="lead" data-intro>__INTRO__</p>
-    <p class="lead" data-lede>__LEDE__</p>
+    <h1>JSON Beautifier</h1>
+    <p class="lead" data-intro></p>
 
+    <div class="steps-box" data-steps="ru" hidden>__STEPS_RU__</div>
+    <div class="steps-box" data-steps="en" hidden>__STEPS_EN__</div>
 
-    <div class="steps-box visitor-only" data-steps="ru" hidden>__STEPS_RU__</div>
-    <div class="steps-box visitor-only" data-steps="en" hidden>__STEPS_EN__</div>
+    <p class="note-strip" style="margin-top:26px" data-strip></p>
 
-    <p class="note-strip" style="margin-top:22px" data-strip>__STRIP__</p>
+    <h2 class="asm-title" data-asm-title></h2>
+    <div class="pick"><button class="btn btn-sm btn-ghost" data-lang-switch></button></div>
 
-    <p class="rev-count console-only" style="margin-top:26px" data-count></p>
-    __CARDS__
+    <div class="card">
+      <p class="asm-hint" data-hint></p>
+      <div data-slots></div>
+      <span class="result-label" data-result-label></span>
+      <div class="asm-out is-empty"></div>
+      <div class="asm-foot">
+        <button class="btn btn-sm" data-copy-review disabled></button>
+        <span class="asm-ok"></span>
+        <span class="asm-note"></span>
+      </div>
+    </div>
   </section>
 </main>
 <script>__JS__</script>
@@ -514,99 +439,94 @@ TEMPLATE = """<!doctype html>
 </html>
 """
 
+CHAT_MSG = """Ребят, кто недавно запустился — предлагаю обмен тестированием. Я ставлю ваше расширение, полчаса гоняю по-настоящему и пишу разбор: что сломалось, что непонятно в листинге, где права выглядят подозрительно. Взамен прошу того же.
+
+Моё — JSON Beautifier, форматирует любой JSON-URL сразу при открытии:
+{store}
+
+Чтобы не гадать, на что смотреть, — вот страничка, она выдаст три вопроса про разные стороны и соберёт из ответов текст для стора. Слова твои, страница только расставляет точки:
+{go}
+
+Отзыв не обязателен и не в обмен: если не понравится — лучше напиши мне, починю."""
+
 
 def steps_html(lang):
     u = UI[lang]
-    items = "".join(
-        "<li>" + step.format(store=STORE, samples=SAMPLES) + "</li>" for step in u["steps"])
+    items = "".join("<li>" + s.format(store=STORE) + "</li>" for s in u["steps"])
     return f'<h2>{escape(u["steps_title"])}</h2><ol class="steps">{items}</ol>'
 
 
-def build():
-    cards = []
-    for i, (lang, angle, try_it, questions) in enumerate(CARDS, 1):
-        u = UI[lang]
-        tpl = MSG_RU if lang == "ru" else MSG_EN
-        msg = tpl.format(store=STORE, samples=SAMPLES, try_it=try_it,
-                         link=f"{PAGE}?c={i}",
-                         angle_low=angle[0].lower() + angle[1:])
-        qs = "".join(
-            f'<label class="asm-q"><span>{escape(q)}</span>'
-            f'<textarea rows="2" placeholder="{escape(u["ph"])}"></textarea></label>'
-            for q in questions)
-        cards.append(f"""
-<article class="rev" id="c{i}" data-n="{i}" data-lang="{lang}"
-  data-empty="{escape(u['empty'])}" data-short="{escape(u['short'])}"
-  data-copied="{escape(u['copied'])}" data-intro="{escape(u['intro'])}"
-  data-nope="{escape(u['nope'])}" data-nope-link="{escape(u['nope_link'])}"
-  data-another="{escape(u['another'])}" data-swap="{escape(u['swap'])}">
-
-  <h2 class="asm-title visitor-only">{escape(u['build'])}</h2>
-
-  <div class="topic">
-    <div class="rev-head">
-      <span class="num console-only">{i:02d}</span>
-      <span class="tag">{lang.upper()}</span>
-      <h3>{escape(angle)}</h3>
-    </div>
-    <p class="rev-try">{escape(try_it)}</p>
-    <div class="rev-act">
-      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-      <span class="rev-sent" hidden>Уже отправлен</span>
-      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-    </div>
-    <textarea class="rev-msg" hidden>{escape(msg)}</textarea>
-  </div>
-
-  <div class="pick visitor-only">
-    <button class="btn btn-sm btn-ghost" data-another>{escape(u['another'])}</button>
-    <button class="btn btn-sm btn-ghost" data-lang-switch>{escape(u['swap'])}</button>
-  </div>
-
-  <div class="card asm">
-    <p class="asm-hint">{escape(u['hint'])}</p>
-    {qs}
-    <p class="asm-q"><span>{escape(u['result'])}</span></p>
-    <div class="asm-out is-empty">{escape(u['empty'])}</div>
-    <div class="asm-foot">
-      <button class="btn btn-sm" data-copy-review disabled>{escape(u['copy'])}</button>
-      <span class="asm-ok"></span>
-      <span class="asm-note"></span>
-    </div>
-  </div>
-</article>""")
-
-    ru = sum(1 for c in CARDS if c[0] == "ru")
-    html = (TEMPLATE
+def build_go(pool):
+    html = (GO_TEMPLATE
             .replace("__CSS__", CSS)
-            .replace("__JS__", JS)
-            .replace("__H1__", "Работа с отзывами")
-            .replace("__INTRO__", "")
-            .replace("__LEDE__",
-                     f"Двадцать пять разных углов — по одному на человека. "
-                     f"{ru} на русском, {len(CARDS) - ru} на английском. Ссылка каждому "
-                     f"своя: <code>/reviewers/?c=N</code> открывает только его карточку, "
-                     f"без этих отметок.")
-            .replace("__STRIP__",
-                     "Кнопка копирует <b>письмо человеку</b>. Отзыв он пишет сам — "
-                     "сборщик внизу карточки только расставляет точки и абзац, "
-                     "ни одного слова от себя не добавляет.")
             .replace("__STEPS_RU__", steps_html("ru"))
             .replace("__STEPS_EN__", steps_html("en"))
-            .replace("__CARDS__", "".join(cards)))
+            .replace("__JS__", JS
+                     .replace("__POOL__", json.dumps(pool, ensure_ascii=False))
+                     .replace("__UI__", json.dumps(UI, ensure_ascii=False))))
+    (OUT / "go").mkdir(parents=True, exist_ok=True)
+    (OUT / "go" / "index.html").write_text(html, encoding="utf-8")
+    return len(html)
 
-    OUT.mkdir(exist_ok=True)
-    (OUT / "index.html").write_text(html.replace("__MODE__", "console"), encoding="utf-8")
 
-    # Общий вход. Отдельный адрес, а не параметр: ссылку кидают в чат, и там не
-    # должно быть ни отметок владельца, ни двадцати четырёх чужих углов.
-    (OUT / "go").mkdir(exist_ok=True)
-    (OUT / "go" / "index.html").write_text(html.replace("__MODE__", "visitor"), encoding="utf-8")
+def build_console(pool):
+    rows = []
+    for lang in ("ru", "en"):
+        items = []
+        for topic, tryit, qs in [(t[1], t[2], t[3]) for t in TOPICS if t[0] == lang]:
+            lis = "".join(f"<li>{escape(q)}</li>" for q in qs)
+            items.append(f"<div class='card' style='margin-bottom:14px'><h3>{escape(topic)}</h3>"
+                         f"<p style='color:var(--muted);margin:8px 0 10px'>{escape(tryit)}</p>"
+                         f"<ul style='margin:0;padding-left:20px;color:var(--muted)'>{lis}</ul></div>")
+        n = sum(1 for t in TOPICS if t[0] == lang)
+        combos = (n * (n - 1) * (n - 2) // 6) * 27
+        rows.append(f"<h2 style='margin-top:38px'>{lang.upper()} — {n} тем, "
+                    f"{n * 3} вопросов, {combos:,} наборов по три</h2>" + "".join(items))
 
-    print(f"  reviewers/index.html    консоль — {len(CARDS)} карточек "
-          f"({ru} ru / {len(CARDS) - ru} en)")
-    print(f"  reviewers/go/index.html общий вход — тема выдаётся сама")
+    html = f"""<!doctype html>
+<html lang="ru"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Пул вопросов — служебная страница</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="/assets/fonts.css"><link rel="stylesheet" href="/assets/site.css">
+</head><body><main><section class="wrap section" style="max-width:820px">
+<p class="eyebrow">служебная · не индексируется · ниоткуда не слинкована</p>
+<h1>Пул вопросов</h1>
+<p class="lead">Рабочая страница для людей — <a href="/reviewers/go/">/reviewers/go/</a>.
+Она выдаёт три вопроса из трёх разных тем; у каждого своя кнопка «другой вопрос».</p>
+<div class="card" style="margin-top:26px">
+  <h3>Сообщение для чата</h3>
+  <textarea id="chat" rows="12" style="width:100%;margin-top:12px;padding:12px;
+    border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);
+    color:var(--text);font:15px/1.55 var(--font-body)">{escape(CHAT_MSG.format(store=STORE, go=GO))}</textarea>
+  <p style="margin-top:12px"><button class="btn btn-sm" id="copy">Скопировать</button>
+  <span id="ok" style="margin-left:12px;color:var(--ok);font-weight:600"></span></p>
+</div>
+{"".join(rows)}
+</section></main>
+<script>
+document.getElementById("copy").addEventListener("click", () => {{
+  const t = document.getElementById("chat");
+  navigator.clipboard.writeText(t.value)
+    .then(() => {{ document.getElementById("ok").textContent = "Скопировано"; }})
+    .catch(() => t.select());
+}});
+</script>
+</body></html>
+"""
+    (OUT / "index.html").write_text(html, encoding="utf-8")
+
+
+def main():
+    pool = [{"lang": lang, "topic": topic, "try": tryit, "q": q}
+            for lang, topic, tryit, qs in TOPICS for q in qs]
+    size = build_go(pool)
+    build_console(pool)
+    ru = sum(1 for p in pool if p["lang"] == "ru")
+    print(f"  reviewers/go/index.html  {len(pool)} вопросов ({ru} ru / {len(pool) - ru} en) "
+          f"из {len(TOPICS)} тем, {size:,} B")
+    print(f"  reviewers/index.html     обзор пула + письмо для чата")
 
 
 if __name__ == "__main__":
-    build()
+    main()
