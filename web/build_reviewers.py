@@ -3,17 +3,22 @@
 Страница для работы с отзывами: /reviewers/ — служебная, noindex, ни с чего не
 слинкована.
 
-Что здесь НЕ лежит: готовых текстов отзывов. Двадцать пять отредактированных
-копий одного текста — это одно мнение в двадцати пяти редакциях, и видно это и
-читателю, и фильтрам стора. У людей, которые правда попробовали, совпадают
-выводы, но не формулировки и не то, ЧТО ИМЕННО они заметили.
+Готовых текстов отзывов здесь нет и не будет. Двадцать пять правок одного
+текста — это одно мнение в двадцати пяти редакциях, и видно это и читателю, и
+фильтрам стора. Отзыв — утверждение факта незнакомым людям, и наблюдения в нём
+должны приходить от того, кто наблюдал.
 
-Что лежит вместо: двадцать пять разных углов. Каждому человеку — свой, под его
-опыт: одному про большие файлы, другому про права доступа, третьему про то, как
-ведёт себя расширение на не-JSON страницах. Барьер «не знаю, с чего начать»
-снимается, а мнение остаётся его. Побочный эффект — двадцать пять человек
-напишут о двадцати пяти разных вещах, и это и честнее, и полезнее для листинга,
-чем двадцать пять раз «удобно и быстро».
+Вместо этого страница работает в двух режимах.
+
+  /reviewers/         консоль Кирилла: двадцать пять разных углов, письмо
+                      каждому человеку, отметки «отправлен» и «опубликован».
+  /reviewers/?c=N     то, что видит человек: только его карточка, три вопроса
+                      и сборщик.
+
+Сборщик складывает ответы в связный текст **механически** — расставляет точки,
+заглавные буквы и абзац, выкидывает пустые поля. Ни одного слова от себя он не
+добавляет: усилие для человека падает до трёх фраз о том, что он только что
+видел, а свидетельство остаётся его.
 
     python3 build_reviewers.py      # → reviewers/index.html
 """
@@ -26,8 +31,9 @@ OUT = HERE / "reviewers"
 
 STORE = "https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn"
 SAMPLES = "https://jsonbeautifier.dev/samples/"
+PAGE = "https://jsonbeautifier.dev/reviewers/"
 
-# (язык, угол, что попробовать, о чём спросить)
+# (язык, угол, что попробовать, три вопроса)
 CARDS = [
     ("ru", "Большие ответы API",
      "Открой /samples/large.json — 2.3 МБ в одну строку.",
@@ -90,7 +96,7 @@ CARDS = [
       "Быстро ли переключается туда-обратно?",
       "На большом файле ведёт себя так же?"]),
     ("ru", "Открытый код",
-     "Загляни в репозиторий: github.com/Zumelia/json-beautifier, файлы core/core.js и extension-chrome/src/.",
+     "Загляни в репозиторий github.com/Zumelia/json-beautifier — файлы core/core.js и extension-chrome/src/.",
      ["Проверяемо ли утверждение «нет сетевых запросов»?",
       "Читается ли код?",
       "Важна ли тебе как разработчику открытость в такой утилите?"]),
@@ -160,17 +166,18 @@ MSG_RU = """Привет! Я запустил своё первое расшир
 
 {store}
 
-Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: {angle_low}.
+Если будет пара минут, глянешь? Не «вообще» — мне интереснее одна конкретная вещь: {angle_low}.
 
 Что попробовать: {try_it}
 Файлы для этого: {samples}
 
-О чём было бы полезно услышать:
-{questions}
+Чтобы не тратить время на формулировки, сделал страничку: три вопроса, ответишь по фразе — там же сложится текст, который можно вставить в стор. Слова твои, страница только расставляет точки.
 
-Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+{link}
 
-Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+Честно про минусы: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!"""
 
@@ -178,146 +185,316 @@ MSG_EN = """Hi! I shipped my first extension — JSON Beautifier. It formats any
 
 {store}
 
-If you have a couple of minutes, would you take a look? No need to review it "in general" — I'm after one specific thing: {angle_low}.
+If you have a couple of minutes, would you take a look? Not "in general" — I'm after one specific thing: {angle_low}.
 
 What to try: {try_it}
 Files for it: {samples}
 
-What would be useful to hear:
-{questions}
+So you don't have to fight with wording, I made a page: three questions, a sentence each, and it assembles your answers into something you can paste into the store. The words stay yours — it only adds the full stops.
 
-The honest downsides, so you don't waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+{link}
 
-If you do leave a review, please use your own words, and only if you actually tried it. If you don't like it, tell me directly rather than the store — I'll fix it.
+The honest downsides: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you don't like it, tell me rather than the store — I'll fix it.
 
 Thanks!"""
+
+UI = {
+    "ru": {
+        "build": "Собери свой отзыв",
+        "hint": "Ответь на вопросы своими словами — по фразе. Ниже сложится текст: "
+                "слова твои, страница только расставляет точки и абзац. Правь как хочешь.",
+        "ph": "Своими словами",
+        "result": "Получилось",
+        "copy": "Скопировать отзыв",
+        "copied": "Скопировано",
+        "short": "Коротковато — две-три фразы читаются лучше",
+        "empty": "Ответь хотя бы на один вопрос — текст появится здесь.",
+        "intro": "Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую "
+                 "было бы полезно взглянуть, и три вопроса о ней.",
+        "nope": "Если расширение не понравилось — не пиши отзыв, напиши напрямую: ",
+        "nope_link": "форма обратной связи",
+    },
+    "en": {
+        "build": "Put your review together",
+        "hint": "Answer in your own words, a sentence each. The text below is assembled "
+                "from your answers — the page only adds the full stops and the paragraph "
+                "break. Edit it however you like.",
+        "ph": "In your own words",
+        "result": "Result",
+        "copy": "Copy review",
+        "copied": "Copied",
+        "short": "A bit short — two or three sentences read better",
+        "empty": "Answer at least one question and the text appears here.",
+        "intro": "Thanks for taking a look. Below is one specific thing worth "
+                 "checking, and three questions about it.",
+        "nope": "If you didn't like it, please don't review it — tell me instead: ",
+        "nope_link": "feedback form",
+    },
+}
+
+CSS = """
+  .rev { margin-bottom: 18px; }
+  .rev-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .rev-head h3 { margin: 0; font-size: 20px; }
+  .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em;
+         padding: 3px 8px; border-radius: var(--pill); background: var(--chip); color: var(--accent); }
+  .rev-try { margin: 12px 0 0; color: var(--muted); }
+  .rev-act { display: flex; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
+  .rev-sent { color: var(--ok); font-weight: 600; font-size: 14px; }
+  .rev-pub { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
+  .rev.is-pub { opacity: .55; }
+  .rev-count { font-family: var(--font-mono); color: var(--faint); font-size: 14px; }
+
+  .asm { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border-soft); }
+  .asm h4 { margin: 0 0 6px; font-size: 16px; }
+  .asm-hint { margin: 0 0 22px; color: var(--muted); font-size: 14.5px; }
+  .asm-q { display: block; margin-bottom: 14px; }
+  .asm-q span { display: block; margin-bottom: 6px; font-weight: 600; font-size: 15px; }
+  .asm-q textarea { width: 100%; min-height: 60px; padding: 11px 13px; resize: vertical;
+                    border: 1px solid var(--border); border-radius: var(--radius-sm);
+                    background: var(--surface-2); color: var(--text);
+                    font: 15px/1.55 var(--font-body); }
+  .asm-out { margin-top: 6px; padding: 16px 18px; border: 1px solid var(--border);
+             border-radius: var(--radius); background: var(--surface-2);
+             white-space: pre-wrap; min-height: 60px; }
+  .asm-out.is-empty { color: var(--faint); }
+  .asm-foot { display: flex; align-items: center; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
+  .asm-note { color: var(--faint); font-size: 13.5px; }
+  .asm-ok { color: var(--ok); font-weight: 600; font-size: 14px; }
+  body.one-card .rev-act, body.one-card .rev-count, body.one-card .console-only { display: none; }
+"""
+
+JS = """
+(() => {
+  "use strict";
+  const KEY = (n, k) => "jb-rev-" + n + "-" + k;
+  const only = new URLSearchParams(location.search).get("c");
+  const cards = [...document.querySelectorAll(".rev")];
+  const counter = document.querySelector("[data-count]");
+
+  // Режим одной карточки — то, что видит приглашённый человек: без отметок
+  // Кирилла и без чужих углов.
+  if (only) {
+    document.body.classList.add("one-card");
+    cards.forEach((c) => { if (c.dataset.n !== only) c.remove(); });
+    const card = document.querySelector(".rev");
+    const intro = document.querySelector("[data-intro]");
+    if (card && intro) {
+      // «Работа с отзывами» — заголовок для владельца страницы; человеку,
+      // пришедшему по ссылке, он ничего не говорит.
+      document.querySelector("h1").textContent = "JSON Beautifier";
+      document.title = "JSON Beautifier";
+      document.documentElement.lang = card.dataset.lang;
+      intro.textContent = card.dataset.intro;
+      document.querySelector("[data-lede]").remove();
+      document.querySelector("[data-strip]").innerHTML =
+        card.dataset.nope + '<a href="/feedback/">' + card.dataset.nopeLink + "</a>.";
+    }
+  }
+
+  const recount = () => {
+    if (!counter) return;
+    const sent = cards.filter((c) => localStorage.getItem(KEY(c.dataset.n, "sent"))).length;
+    const pub = cards.filter((c) => localStorage.getItem(KEY(c.dataset.n, "pub"))).length;
+    counter.textContent = "отправлено " + sent + " из " + cards.length + " · опубликовано " + pub;
+  };
+
+  // Склейка чисто механическая: обрезали, поставили заглавную, закрыли точкой,
+  // выкинули пустые. Ни одного своего слова — иначе это уже не его отзыв.
+  const tidy = (s) => {
+    s = s.trim().replace(/\\s+/g, " ");
+    if (!s) return "";
+    s = s[0].toUpperCase() + s.slice(1);
+    return /[.!?…]$/.test(s) ? s : s + ".";
+  };
+
+  document.querySelectorAll(".rev").forEach((card) => {
+    const n = card.dataset.n;
+
+    const btn = card.querySelector("[data-copy]");
+    const sent = card.querySelector(".rev-sent");
+    const pub = card.querySelector("[data-pub]");
+    if (btn) {
+      const markSent = () => { btn.disabled = true; sent.hidden = false; };
+      if (localStorage.getItem(KEY(n, "sent"))) markSent();
+      btn.addEventListener("click", () => {
+        const text = card.querySelector(".rev-msg").value;
+        navigator.clipboard.writeText(text).then(() => {
+          localStorage.setItem(KEY(n, "sent"), "1");
+          markSent();
+          recount();
+        }).catch(() => {
+          btn.textContent = "Не удалось скопировать — выдели текст вручную";
+          card.querySelector(".rev-msg").hidden = false;
+        });
+      });
+    }
+    if (pub) {
+      if (localStorage.getItem(KEY(n, "pub"))) { pub.checked = true; card.classList.add("is-pub"); }
+      pub.addEventListener("change", () => {
+        if (pub.checked) localStorage.setItem(KEY(n, "pub"), "1");
+        else localStorage.removeItem(KEY(n, "pub"));
+        card.classList.toggle("is-pub", pub.checked);
+        recount();
+      });
+    }
+
+    const fields = [...card.querySelectorAll(".asm-q textarea")];
+    const out = card.querySelector(".asm-out");
+    const note = card.querySelector(".asm-note");
+    const copyBtn = card.querySelector("[data-copy-review]");
+    const okMsg = card.querySelector(".asm-ok");
+    if (!fields.length) return;
+
+    const assemble = () => {
+      const parts = fields.map((f) => tidy(f.value)).filter(Boolean);
+      if (!parts.length) {
+        out.textContent = card.dataset.empty;
+        out.classList.add("is-empty");
+        note.textContent = "";
+        copyBtn.disabled = true;
+        return "";
+      }
+      // Первый ответ отдельным абзацем: он про то, что человек делал, и в
+      // магазине первая строка — это всё, что видно без разворачивания.
+      const text = parts.length > 1
+        ? parts[0] + "\\n\\n" + parts.slice(1).join(" ")
+        : parts[0];
+      out.textContent = text;
+      out.classList.remove("is-empty");
+      note.textContent = text.length < 80 ? card.dataset.short : text.length + " / 2000";
+      copyBtn.disabled = false;
+      return text;
+    };
+
+    fields.forEach((f) => {
+      f.addEventListener("input", () => {
+        assemble();
+        localStorage.setItem(KEY(n, "a" + fields.indexOf(f)), f.value);
+      });
+      const saved = localStorage.getItem(KEY(n, "a" + fields.indexOf(f)));
+      if (saved) f.value = saved;
+    });
+
+    copyBtn.addEventListener("click", () => {
+      const text = assemble();
+      if (!text) return;
+      navigator.clipboard.writeText(text).then(() => {
+        okMsg.textContent = card.dataset.copied;
+      }).catch(() => {
+        const r = document.createRange();
+        r.selectNodeContents(out);
+        getSelection().removeAllRanges();
+        getSelection().addRange(r);
+      });
+    });
+
+    assemble();
+  });
+
+  recount();
+})();
+"""
+
+TEMPLATE = """<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JSON Beautifier — обратная связь</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="stylesheet" href="/assets/fonts.css">
+<link rel="stylesheet" href="/assets/site.css">
+<style>__CSS__</style>
+</head>
+<body>
+<main id="main">
+  <section class="wrap section" style="max-width:820px">
+    <p class="eyebrow console-only">служебная страница · не индексируется · ниоткуда не слинкована</p>
+    <h1>__H1__</h1>
+    <p class="lead" data-intro>__INTRO__</p>
+    <p class="lead" data-lede>__LEDE__</p>
+
+    <p class="note-strip" style="margin-top:22px" data-strip>__STRIP__</p>
+
+    <p class="rev-count console-only" style="margin-top:26px" data-count></p>
+    __CARDS__
+  </section>
+</main>
+<script>__JS__</script>
+</body>
+</html>
+"""
 
 
 def build():
     cards = []
     for i, (lang, angle, try_it, questions) in enumerate(CARDS, 1):
+        u = UI[lang]
         tpl = MSG_RU if lang == "ru" else MSG_EN
         msg = tpl.format(store=STORE, samples=SAMPLES, try_it=try_it,
-                         angle_low=angle[0].lower() + angle[1:],
-                         questions="\n".join("— " + q for q in questions))
-        qs = "".join(f"<li>{escape(q)}</li>" for q in questions)
+                         link=f"{PAGE}?c={i}",
+                         angle_low=angle[0].lower() + angle[1:])
+        qs = "".join(
+            f'<label class="asm-q"><span>{escape(q)}</span>'
+            f'<textarea rows="2" placeholder="{escape(u["ph"])}"></textarea></label>'
+            for q in questions)
         cards.append(f"""
-<article class="card rev" data-n="{i}">
+<article class="card rev" id="c{i}" data-n="{i}" data-lang="{lang}"
+  data-empty="{escape(u['empty'])}" data-short="{escape(u['short'])}"
+  data-copied="{escape(u['copied'])}" data-intro="{escape(u['intro'])}"
+  data-nope="{escape(u['nope'])}" data-nope-link="{escape(u['nope_link'])}">
   <div class="rev-head">
-    <span class="num">{i:02d}</span>
+    <span class="num console-only">{i:02d}</span>
     <span class="tag">{lang.upper()}</span>
     <h3>{escape(angle)}</h3>
   </div>
   <p class="rev-try">{escape(try_it)}</p>
-  <ul class="rev-q">{qs}</ul>
   <div class="rev-act">
     <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
     <span class="rev-sent" hidden>Уже отправлен</span>
     <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
   </div>
   <textarea class="rev-msg" hidden>{escape(msg)}</textarea>
+
+  <div class="asm">
+    <h4>{escape(u['build'])}</h4>
+    <p class="asm-hint">{escape(u['hint'])}</p>
+    {qs}
+    <p class="asm-q"><span>{escape(u['result'])}</span></p>
+    <div class="asm-out is-empty">{escape(u['empty'])}</div>
+    <div class="asm-foot">
+      <button class="btn btn-sm" data-copy-review disabled>{escape(u['copy'])}</button>
+      <span class="asm-ok"></span>
+      <span class="asm-note"></span>
+    </div>
+  </div>
 </article>""")
 
     ru = sum(1 for c in CARDS if c[0] == "ru")
-    html = f"""<!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Работа с отзывами — служебная страница</title>
-<meta name="robots" content="noindex,nofollow">
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="stylesheet" href="/assets/fonts.css">
-<link rel="stylesheet" href="/assets/site.css">
-<style>
-  .rev {{ margin-bottom: 18px; }}
-  .rev-head {{ display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }}
-  .rev-head h3 {{ margin: 0; font-size: 20px; }}
-  .tag {{ font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em;
-          padding: 3px 8px; border-radius: var(--pill); background: var(--chip); color: var(--accent); }}
-  .rev-try {{ margin: 12px 0 0; color: var(--muted); }}
-  .rev-q {{ margin: 10px 0 0; padding-left: 20px; color: var(--muted); font-size: 15px; }}
-  .rev-q li {{ margin-bottom: 4px; }}
-  .rev-act {{ display: flex; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }}
-  .rev-sent {{ color: var(--ok); font-weight: 600; font-size: 14px; }}
-  .rev-pub {{ display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }}
-  .rev.is-pub {{ opacity: .55; }}
-  .rev-count {{ font-family: var(--font-mono); color: var(--faint); font-size: 14px; }}
-</style>
-</head>
-<body>
-<main id="main">
-  <section class="wrap section" style="max-width:820px">
-    <p class="eyebrow">служебная страница · не индексируется · ниоткуда не слинкована</p>
-    <h1>Работа с отзывами</h1>
-    <p class="lead">Двадцать пять разных углов — по одному на человека. Каждому достаётся
-      своя тема, поэтому люди пишут о разном, а не пересказывают один и тот же текст.
-      {ru} на русском, {len(CARDS) - ru} на английском.</p>
+    html = (TEMPLATE
+            .replace("__CSS__", CSS)
+            .replace("__JS__", JS)
+            .replace("__H1__", "Работа с отзывами")
+            .replace("__INTRO__", "")
+            .replace("__LEDE__",
+                     f"Двадцать пять разных углов — по одному на человека. "
+                     f"{ru} на русском, {len(CARDS) - ru} на английском. Ссылка каждому "
+                     f"своя: <code>/reviewers/?c=N</code> открывает только его карточку, "
+                     f"без этих отметок.")
+            .replace("__STRIP__",
+                     "Кнопка копирует <b>письмо человеку</b>. Отзыв он пишет сам — "
+                     "сборщик внизу карточки только расставляет точки и абзац, "
+                     "ни одного слова от себя не добавляет.")
+            .replace("__CARDS__", "".join(cards)))
 
-    <p class="note-strip" style="margin-top:22px">Кнопка копирует <b>письмо человеку</b>, а не
-      текст отзыва. Отзыв он пишет сам — иначе это не двадцать пять мнений, а одно
-      в двадцати пяти редакциях, что видно и читателю, и стору.</p>
-
-    <p class="rev-count" style="margin-top:26px" data-count></p>
-    {"".join(cards)}
-  </section>
-</main>
-
-<script>
-(() => {{
-  "use strict";
-  const KEY = (n, k) => `jb-rev-${{n}}-${{k}}`;
-  const cards = [...document.querySelectorAll(".rev")];
-  const counter = document.querySelector("[data-count]");
-
-  const recount = () => {{
-    const sent = cards.filter(c => localStorage.getItem(KEY(c.dataset.n, "sent"))).length;
-    const pub = cards.filter(c => localStorage.getItem(KEY(c.dataset.n, "pub"))).length;
-    counter.textContent = `отправлено ${{sent}} из ${{cards.length}} · опубликовано ${{pub}}`;
-  }};
-
-  cards.forEach((card) => {{
-    const n = card.dataset.n;
-    const btn = card.querySelector("[data-copy]");
-    const sent = card.querySelector(".rev-sent");
-    const pub = card.querySelector("[data-pub]");
-
-    const markSent = () => {{ btn.disabled = true; sent.hidden = false; }};
-    if (localStorage.getItem(KEY(n, "sent"))) markSent();
-    if (localStorage.getItem(KEY(n, "pub"))) {{ pub.checked = true; card.classList.add("is-pub"); }}
-
-    btn.addEventListener("click", () => {{
-      const text = card.querySelector(".rev-msg").value;
-      // Состояние ставим только после реального успеха: пометить отправленным
-      // письмо, которое не попало в буфер, — верный способ пропустить человека.
-      navigator.clipboard.writeText(text).then(() => {{
-        localStorage.setItem(KEY(n, "sent"), "1");
-        markSent();
-        recount();
-      }}).catch(() => {{
-        btn.textContent = "Не удалось скопировать — выдели текст вручную";
-        card.querySelector(".rev-msg").hidden = false;
-      }});
-    }});
-
-    pub.addEventListener("change", () => {{
-      if (pub.checked) localStorage.setItem(KEY(n, "pub"), "1");
-      else localStorage.removeItem(KEY(n, "pub"));
-      card.classList.toggle("is-pub", pub.checked);
-      recount();
-    }});
-  }});
-
-  recount();
-}})();
-</script>
-</body>
-</html>
-"""
     OUT.mkdir(exist_ok=True)
     (OUT / "index.html").write_text(html, encoding="utf-8")
-    print(f"  reviewers/index.html — {len(CARDS)} карточек ({ru} ru / {len(CARDS) - ru} en), "
-          f"{len(html):,} B")
+    print(f"  reviewers/index.html — {len(CARDS)} карточек "
+          f"({ru} ru / {len(CARDS) - ru} en), {len(html):,} B")
 
 
 if __name__ == "__main__":
