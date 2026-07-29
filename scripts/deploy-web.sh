@@ -26,6 +26,13 @@ mkdir -p "$ROOT/assets"
 cp -R assets/. "$ROOT/assets/"
 cp index.html 404.html "$ROOT/"
 cp favicon.ico favicon.png apple-touch-icon.png "$ROOT/"
+# Файл подтверждения Search Console, если он заведён. Лежит в репозитории, а не
+# кладётся руками в вебрут: подтверждение проверяется повторно и молча слетает,
+# если файл однажды не переживёт выкладку. Забытая верификация не падает с
+# ошибкой — сайт просто перестаёт числиться нашим.
+for v in google*.html; do
+  [ -e "$v" ] && cp "$v" "$ROOT/"
+done
 for dir in */; do
   [ -f "$dir/index.html" ] || continue
   mkdir -p "$ROOT/$dir"
