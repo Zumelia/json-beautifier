@@ -34,10 +34,12 @@ cp favicon.ico favicon.png apple-touch-icon.png "$ROOT/"
 for v in google*.html; do
   [ -e "$v" ] && cp "$v" "$ROOT/"
 done
-for dir in */; do
-  [ -f "$dir/index.html" ] || continue
+# find, а не */: страницы бывают и на втором уровне (reviewers/go/), а прежний
+# цикл их молча пропускал — каталог на сервере просто не появлялся.
+find . -mindepth 2 -maxdepth 3 -name index.html -not -path "./assets/*" | while read -r page; do
+  dir=$(dirname "${page#./}")
   mkdir -p "$ROOT/$dir"
-  cp "$dir/index.html" "$ROOT/$dir"
+  cp "$page" "$ROOT/$dir/"
 done
 # Образцы: large.json в git не хранится, генерируется на месте
 if [ -d samples ]; then

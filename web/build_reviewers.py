@@ -215,6 +215,8 @@ UI = {
                  "было бы полезно взглянуть, и три вопроса о ней.",
         "nope": "Если расширение не понравилось — не пиши отзыв, напиши напрямую: ",
         "nope_link": "форма обратной связи",
+        "another": "Другая тема",
+        "swap": "In English",
     },
     "en": {
         "build": "Put your review together",
@@ -231,6 +233,8 @@ UI = {
                  "checking, and three questions about it.",
         "nope": "If you didn't like it, please don't review it — tell me instead: ",
         "nope_link": "feedback form",
+        "another": "Another topic",
+        "swap": "По-русски",
     },
 }
 
@@ -264,6 +268,7 @@ CSS = """
   .asm-note { color: var(--faint); font-size: 13.5px; }
   .asm-ok { color: var(--ok); font-weight: 600; font-size: 14px; }
   body.one-card .rev-act, body.one-card .rev-count, body.one-card .console-only { display: none; }
+  .pick { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
 """
 
 JS = """
@@ -274,12 +279,39 @@ JS = """
   const cards = [...document.querySelectorAll(".rev")];
   const counter = document.querySelector("[data-count]");
 
-  // Режим одной карточки — то, что видит приглашённый человек: без отметок
-  // Кирилла и без чужих углов.
-  if (only) {
+  const visitor = document.body.dataset.mode === "visitor";
+
+  // Общий вход: одна ссылка на всех. Тему страница выдаёт сама и запоминает —
+  // иначе перезагрузка меняла бы вопросы и стирала уже написанные ответы.
+  // Совпадения у разных людей возможны, поэтому рядом кнопка «другая тема».
+  const PICK = "jb-rev-pick";
+  const byLang = (lang) => cards.filter((c) => c.dataset.lang === lang).map((c) => c.dataset.n);
+  // Скобки здесь не косметика: `a || b ? x : y` — это `(a || b) ? x : y`, и
+  // сохранённый «en» как непустая строка отправлял бы всех обратно в русский.
+  const prefLang = () => {
+    const saved = localStorage.getItem("jb-rev-lang");
+    if (saved) return saved;
+    return (navigator.language || "en").toLowerCase().startsWith("ru") ? "ru" : "en";
+  };
+  const draw = (lang, avoid) => {
+    const pool = byLang(lang).filter((n) => n !== avoid);
+    return pool[Math.floor(Math.random() * pool.length)];
+  };
+
+  let assigned = null;
+  if (visitor) {
+    assigned = localStorage.getItem(PICK);
+    if (!assigned || !document.getElementById("c" + assigned)) {
+      assigned = draw(prefLang(), null);
+      localStorage.setItem(PICK, assigned);
+    }
+  }
+
+  if (only || visitor) {
+    const pickOne = only || assigned;
+    cards.forEach((c) => { if (c.dataset.n !== pickOne) c.hidden = true; });
     document.body.classList.add("one-card");
-    cards.forEach((c) => { if (c.dataset.n !== only) c.remove(); });
-    const card = document.querySelector(".rev");
+    const card = document.getElementById("c" + pickOne);
     const intro = document.querySelector("[data-intro]");
     if (card && intro) {
       // «Работа с отзывами» — заголовок для владельца страницы; человеку,
@@ -291,6 +323,24 @@ JS = """
       document.querySelector("[data-lede]").remove();
       document.querySelector("[data-strip]").innerHTML =
         card.dataset.nope + '<a href="/feedback/">' + card.dataset.nopeLink + "</a>.";
+    }
+
+    if (visitor && card) {
+      const panel = document.querySelector("[data-pick]");
+      const another = panel.querySelector("[data-another]");
+      const swap = panel.querySelector("[data-lang-switch]");
+      panel.hidden = false;
+      another.textContent = card.dataset.another;
+      swap.textContent = card.dataset.swap;
+      const take = (lang, avoid) => {
+        const n = draw(lang, avoid);
+        if (!n) return;
+        localStorage.setItem(PICK, n);
+        localStorage.setItem("jb-rev-lang", lang);
+        location.reload();
+      };
+      another.addEventListener("click", () => take(card.dataset.lang, card.dataset.n));
+      swap.addEventListener("click", () => take(card.dataset.lang === "ru" ? "en" : "ru", null));
     }
   }
 
@@ -410,7 +460,7 @@ TEMPLATE = """<!doctype html>
 <link rel="stylesheet" href="/assets/site.css">
 <style>__CSS__</style>
 </head>
-<body>
+<body data-mode="__MODE__">
 <main id="main">
   <section class="wrap section" style="max-width:820px">
     <p class="eyebrow console-only">служебная страница · не индексируется · ниоткуда не слинкована</p>
@@ -419,6 +469,11 @@ TEMPLATE = """<!doctype html>
     <p class="lead" data-lede>__LEDE__</p>
 
     <p class="note-strip" style="margin-top:22px" data-strip>__STRIP__</p>
+
+    <div class="pick" hidden data-pick>
+      <button class="btn btn-sm btn-ghost" data-another></button>
+      <button class="btn btn-sm btn-ghost" data-lang-switch></button>
+    </div>
 
     <p class="rev-count console-only" style="margin-top:26px" data-count></p>
     __CARDS__
@@ -446,7 +501,8 @@ def build():
 <article class="card rev" id="c{i}" data-n="{i}" data-lang="{lang}"
   data-empty="{escape(u['empty'])}" data-short="{escape(u['short'])}"
   data-copied="{escape(u['copied'])}" data-intro="{escape(u['intro'])}"
-  data-nope="{escape(u['nope'])}" data-nope-link="{escape(u['nope_link'])}">
+  data-nope="{escape(u['nope'])}" data-nope-link="{escape(u['nope_link'])}"
+  data-another="{escape(u['another'])}" data-swap="{escape(u['swap'])}">
   <div class="rev-head">
     <span class="num console-only">{i:02d}</span>
     <span class="tag">{lang.upper()}</span>
@@ -492,9 +548,16 @@ def build():
             .replace("__CARDS__", "".join(cards)))
 
     OUT.mkdir(exist_ok=True)
-    (OUT / "index.html").write_text(html, encoding="utf-8")
-    print(f"  reviewers/index.html — {len(CARDS)} карточек "
-          f"({ru} ru / {len(CARDS) - ru} en), {len(html):,} B")
+    (OUT / "index.html").write_text(html.replace("__MODE__", "console"), encoding="utf-8")
+
+    # Общий вход. Отдельный адрес, а не параметр: ссылку кидают в чат, и там не
+    # должно быть ни отметок владельца, ни двадцати четырёх чужих углов.
+    (OUT / "go").mkdir(exist_ok=True)
+    (OUT / "go" / "index.html").write_text(html.replace("__MODE__", "visitor"), encoding="utf-8")
+
+    print(f"  reviewers/index.html    консоль — {len(CARDS)} карточек "
+          f"({ru} ru / {len(CARDS) - ru} en)")
+    print(f"  reviewers/go/index.html общий вход — тема выдаётся сама")
 
 
 if __name__ == "__main__":
