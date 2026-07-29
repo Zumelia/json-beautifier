@@ -38,7 +38,20 @@
   .asm-note { color: var(--faint); font-size: 13.5px; }
   .asm-ok { color: var(--ok); font-weight: 600; font-size: 14px; }
   body.one-card .rev-act, body.one-card .rev-count, body.one-card .console-only { display: none; }
-  .pick { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+
+  /* Тема и кнопки живут прямо на песочном фоне страницы, в белую карточку
+     завёрнуты только вопросы: белое пятно = «здесь надо что-то делать». */
+  .asm-title { margin: 34px 0 0; font-size: clamp(24px, 3vw, 30px); }
+  .topic { margin: 18px 0 14px; }
+  .topic h3 { margin: 8px 0 0; font-size: 21px; }
+  .pick { display: flex; gap: 10px; margin: 0 0 16px; flex-wrap: wrap; }
+  .steps { margin: 24px 0 0; padding-left: 22px; }
+  .steps li { margin-bottom: 9px; }
+  .steps-box { margin-top: 30px; }
+  .steps-box h2 { font-size: clamp(22px, 2.6vw, 26px); margin: 0; }
+  .visitor-only { display: none; }
+  body.one-card .visitor-only { display: block; }
+  body.one-card .pick.visitor-only { display: flex; }
 </style>
 </head>
 <body data-mode="console">
@@ -49,32 +62,35 @@
     <p class="lead" data-intro></p>
     <p class="lead" data-lede>Двадцать пять разных углов — по одному на человека. 15 на русском, 10 на английском. Ссылка каждому своя: <code>/reviewers/?c=N</code> открывает только его карточку, без этих отметок.</p>
 
-    <p class="note-strip" style="margin-top:22px" data-strip>Кнопка копирует <b>письмо человеку</b>. Отзыв он пишет сам — сборщик внизу карточки только расставляет точки и абзац, ни одного слова от себя не добавляет.</p>
 
-    <div class="pick" hidden data-pick>
-      <button class="btn btn-sm btn-ghost" data-another></button>
-      <button class="btn btn-sm btn-ghost" data-lang-switch></button>
-    </div>
+    <div class="steps-box visitor-only" data-steps="ru" hidden><h2>Как оставить отзыв</h2><ol class="steps"><li>Поставь расширение: <a href="https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn" target="_blank" rel="noopener">Chrome Web Store</a></li><li>Открой любой из примеров — <a href="/samples/">jsonbeautifier.dev/samples/</a> — или свой JSON-URL</li><li>Посмотри на то, о чём спрашивают вопросы ниже</li><li>Ответь на три вопроса — текст соберётся сам, скопируй его</li><li>Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, вставь и отправь</li><li>Для взаимного отзыва напиши в тг <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a></li></ol></div>
+    <div class="steps-box visitor-only" data-steps="en" hidden><h2>How to leave a review</h2><ol class="steps"><li>Install it: <a href="https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn" target="_blank" rel="noopener">Chrome Web Store</a></li><li>Open one of the samples — <a href="/samples/">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own</li><li>Look at whatever the questions below ask about</li><li>Answer the three questions — the text assembles itself, then copy it</li><li>Back on the store page: <b>Reviews</b> → <b>Write a review</b>, paste and send</li><li>For a review in return, message <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> on Telegram</li></ol></div>
+
+    <p class="note-strip" style="margin-top:22px" data-strip>Кнопка копирует <b>письмо человеку</b>. Отзыв он пишет сам — сборщик внизу карточки только расставляет точки и абзац, ни одного слова от себя не добавляет.</p>
 
     <p class="rev-count console-only" style="margin-top:26px" data-count></p>
     
-<article class="card rev" id="c1" data-n="1" data-lang="ru"
+<article class="rev" id="c1" data-n="1" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">01</span>
-    <span class="tag">RU</span>
-    <h3>Большие ответы API</h3>
-  </div>
-  <p class="rev-try">Открой /samples/large.json — 2.3 МБ в одну строку.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">01</span>
+      <span class="tag">RU</span>
+      <h3>Большие ответы API</h3>
+    </div>
+    <p class="rev-try">Открой /samples/large.json — 2.3 МБ в одну строку.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -92,9 +108,14 @@ https://jsonbeautifier.dev/reviewers/?c=1
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Вкладка осталась отзывчивой или подтормаживала?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Сколько ждал до появления дерева?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Сворачивание веток на таком объёме работает так же быстро?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -106,23 +127,27 @@ https://jsonbeautifier.dev/reviewers/?c=1
     </div>
   </div>
 </article>
-<article class="card rev" id="c2" data-n="2" data-lang="ru"
+<article class="rev" id="c2" data-n="2" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">02</span>
-    <span class="tag">RU</span>
-    <h3>Сломанный JSON</h3>
-  </div>
-  <p class="rev-try">Открой /samples/broken.json — там нет запятой на 7-й строке.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">02</span>
+      <span class="tag">RU</span>
+      <h3>Сломанный JSON</h3>
+    </div>
+    <p class="rev-try">Открой /samples/broken.json — там нет запятой на 7-й строке.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -140,9 +165,14 @@ https://jsonbeautifier.dev/reviewers/?c=2
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Понятно ли из сообщения, где именно ошибка?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Помогла ли кнопка перехода к строке?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Что показывали другие вьюеры в такой ситуации?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -154,23 +184,27 @@ https://jsonbeautifier.dev/reviewers/?c=2
     </div>
   </div>
 </article>
-<article class="card rev" id="c3" data-n="3" data-lang="ru"
+<article class="rev" id="c3" data-n="3" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">03</span>
-    <span class="tag">RU</span>
-    <h3>Поиск по свёрнутым веткам</h3>
-  </div>
-  <p class="rev-try">На /samples/orders.json сверни всё и найди «url».</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">03</span>
+      <span class="tag">RU</span>
+      <h3>Поиск по свёрнутым веткам</h3>
+    </div>
+    <p class="rev-try">На /samples/orders.json сверни всё и найди «url».</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -188,9 +222,14 @@ https://jsonbeautifier.dev/reviewers/?c=3
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Нашлись ли совпадения внутри свёрнутых веток?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Раскрылось ли до нужного места само?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Хватает ли перехода между совпадениями?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -202,23 +241,27 @@ https://jsonbeautifier.dev/reviewers/?c=3
     </div>
   </div>
 </article>
-<article class="card rev" id="c4" data-n="4" data-lang="ru"
+<article class="rev" id="c4" data-n="4" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">04</span>
-    <span class="tag">RU</span>
-    <h3>Тёмная тема</h3>
-  </div>
-  <p class="rev-try">Переключи тему в попапе и посмотри дерево и сам попап.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">04</span>
+      <span class="tag">RU</span>
+      <h3>Тёмная тема</h3>
+    </div>
+    <p class="rev-try">Переключи тему в попапе и посмотри дерево и сам попап.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -236,9 +279,14 @@ https://jsonbeautifier.dev/reviewers/?c=4
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Это настоящая тёмная тема или инверсия светлой?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Читаются ли цвета типов на тёмном?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Не слепит ли что-нибудь?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -250,23 +298,27 @@ https://jsonbeautifier.dev/reviewers/?c=4
     </div>
   </div>
 </article>
-<article class="card rev" id="c5" data-n="5" data-lang="ru"
+<article class="rev" id="c5" data-n="5" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">05</span>
-    <span class="tag">RU</span>
-    <h3>Номера строк</h3>
-  </div>
-  <p class="rev-try">Открой любой JSON — номера включены по умолчанию, выключаются в попапе.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">05</span>
+      <span class="tag">RU</span>
+      <h3>Номера строк</h3>
+    </div>
+    <p class="rev-try">Открой любой JSON — номера включены по умолчанию, выключаются в попапе.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -284,9 +336,14 @@ https://jsonbeautifier.dev/reviewers/?c=5
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Мешают или помогают?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Не съезжают ли при сворачивании веток?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Заметно ли влияние на скорость?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -298,23 +355,27 @@ https://jsonbeautifier.dev/reviewers/?c=5
     </div>
   </div>
 </article>
-<article class="card rev" id="c6" data-n="6" data-lang="ru"
+<article class="rev" id="c6" data-n="6" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">06</span>
-    <span class="tag">RU</span>
-    <h3>Взгляд разработчика расширений: права</h3>
-  </div>
-  <p class="rev-try">Посмотри список прав на странице расширения и в /privacy/.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">06</span>
+      <span class="tag">RU</span>
+      <h3>Взгляд разработчика расширений: права</h3>
+    </div>
+    <p class="rev-try">Посмотри список прав на странице расширения и в /privacy/.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -332,9 +393,14 @@ https://jsonbeautifier.dev/reviewers/?c=6
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Оправдан ли доступ ко всем страницам тем, что расширение делает?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Понятно ли из описания, зачем каждое право?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Что бы ты спросил на месте пользователя?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -346,23 +412,27 @@ https://jsonbeautifier.dev/reviewers/?c=6
     </div>
   </div>
 </article>
-<article class="card rev" id="c7" data-n="7" data-lang="ru"
+<article class="rev" id="c7" data-n="7" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">07</span>
-    <span class="tag">RU</span>
-    <h3>Не-JSON страницы</h3>
-  </div>
-  <p class="rev-try">Походи по обычным сайтам с включённым расширением.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">07</span>
+      <span class="tag">RU</span>
+      <h3>Не-JSON страницы</h3>
+    </div>
+    <p class="rev-try">Походи по обычным сайтам с включённым расширением.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -380,9 +450,14 @@ https://jsonbeautifier.dev/reviewers/?c=7
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Что-нибудь сломалось или подтормозило?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Замечал ли ты его вообще там, где оно не нужно?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Были ли ложные срабатывания?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -394,23 +469,27 @@ https://jsonbeautifier.dev/reviewers/?c=7
     </div>
   </div>
 </article>
-<article class="card rev" id="c8" data-n="8" data-lang="ru"
+<article class="rev" id="c8" data-n="8" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">08</span>
-    <span class="tag">RU</span>
-    <h3>Юникод и экранирование</h3>
-  </div>
-  <p class="rev-try">На /samples/orders.json найди японский текст, эмодзи и escape-последовательности.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">08</span>
+      <span class="tag">RU</span>
+      <h3>Юникод и экранирование</h3>
+    </div>
+    <p class="rev-try">На /samples/orders.json найди японский текст, эмодзи и escape-последовательности.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -428,9 +507,14 @@ https://jsonbeautifier.dev/reviewers/?c=8
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Всё отрисовалось верно?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Не поехала ли вёрстка на длинных строках?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Как показаны спецсимволы?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -442,23 +526,27 @@ https://jsonbeautifier.dev/reviewers/?c=8
     </div>
   </div>
 </article>
-<article class="card rev" id="c9" data-n="9" data-lang="ru"
+<article class="rev" id="c9" data-n="9" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">09</span>
-    <span class="tag">RU</span>
-    <h3>Копирование</h3>
-  </div>
-  <p class="rev-try">Кликни по значению, попробуй «Copy JSON».</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">09</span>
+      <span class="tag">RU</span>
+      <h3>Копирование</h3>
+    </div>
+    <p class="rev-try">Кликни по значению, попробуй «Copy JSON».</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -476,9 +564,14 @@ https://jsonbeautifier.dev/reviewers/?c=9
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Копируется то, что ожидаешь?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Хватает ли способов достать кусок наружу?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Чего не хватило?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -490,23 +583,27 @@ https://jsonbeautifier.dev/reviewers/?c=9
     </div>
   </div>
 </article>
-<article class="card rev" id="c10" data-n="10" data-lang="ru"
+<article class="rev" id="c10" data-n="10" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">10</span>
-    <span class="tag">RU</span>
-    <h3>Настройки</h3>
-  </div>
-  <p class="rev-try">Открой попап: тема, отступ, глубина раскрытия, сортировка ключей, номера строк.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">10</span>
+      <span class="tag">RU</span>
+      <h3>Настройки</h3>
+    </div>
+    <p class="rev-try">Открой попап: тема, отступ, глубина раскрытия, сортировка ключей, номера строк.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -524,9 +621,14 @@ https://jsonbeautifier.dev/reviewers/?c=10
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Применяются ли изменения к уже открытой вкладке?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Каких настроек не хватает?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Есть ли лишние?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -538,23 +640,27 @@ https://jsonbeautifier.dev/reviewers/?c=10
     </div>
   </div>
 </article>
-<article class="card rev" id="c11" data-n="11" data-lang="ru"
+<article class="rev" id="c11" data-n="11" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">11</span>
-    <span class="tag">RU</span>
-    <h3>Сортировка ключей</h3>
-  </div>
-  <p class="rev-try">Включи «Sort object keys» на /samples/orders.json.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">11</span>
+      <span class="tag">RU</span>
+      <h3>Сортировка ключей</h3>
+    </div>
+    <p class="rev-try">Включи «Sort object keys» на /samples/orders.json.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -572,9 +678,14 @@ https://jsonbeautifier.dev/reviewers/?c=11
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Полезно ли для сравнения ответов?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Не путает ли, что порядок больше не как в исходнике?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Пользовался бы постоянно или точечно?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -586,23 +697,27 @@ https://jsonbeautifier.dev/reviewers/?c=11
     </div>
   </div>
 </article>
-<article class="card rev" id="c12" data-n="12" data-lang="ru"
+<article class="rev" id="c12" data-n="12" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">12</span>
-    <span class="tag">RU</span>
-    <h3>Raw-режим</h3>
-  </div>
-  <p class="rev-try">Нажми Raw и вернись обратно.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">12</span>
+      <span class="tag">RU</span>
+      <h3>Raw-режим</h3>
+    </div>
+    <p class="rev-try">Нажми Raw и вернись обратно.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -620,9 +735,14 @@ https://jsonbeautifier.dev/reviewers/?c=12
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Показывает исходник как есть, без переформатирования?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Быстро ли переключается туда-обратно?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>На большом файле ведёт себя так же?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -634,23 +754,27 @@ https://jsonbeautifier.dev/reviewers/?c=12
     </div>
   </div>
 </article>
-<article class="card rev" id="c13" data-n="13" data-lang="ru"
+<article class="rev" id="c13" data-n="13" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">13</span>
-    <span class="tag">RU</span>
-    <h3>Открытый код</h3>
-  </div>
-  <p class="rev-try">Загляни в репозиторий github.com/Zumelia/json-beautifier — файлы core/core.js и extension-chrome/src/.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">13</span>
+      <span class="tag">RU</span>
+      <h3>Открытый код</h3>
+    </div>
+    <p class="rev-try">Загляни в репозиторий github.com/Zumelia/json-beautifier — файлы core/core.js и extension-chrome/src/.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -668,9 +792,14 @@ https://jsonbeautifier.dev/reviewers/?c=13
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Проверяемо ли утверждение «нет сетевых запросов»?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Читается ли код?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Важна ли тебе как разработчику открытость в такой утилите?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -682,23 +811,27 @@ https://jsonbeautifier.dev/reviewers/?c=13
     </div>
   </div>
 </article>
-<article class="card rev" id="c14" data-n="14" data-lang="ru"
+<article class="rev" id="c14" data-n="14" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">14</span>
-    <span class="tag">RU</span>
-    <h3>Первое впечатление</h3>
-  </div>
-  <p class="rev-try">Вспомни момент установки: страница приветствия, первый открытый JSON.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">14</span>
+      <span class="tag">RU</span>
+      <h3>Первое впечатление</h3>
+    </div>
+    <p class="rev-try">Вспомни момент установки: страница приветствия, первый открытый JSON.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -716,9 +849,14 @@ https://jsonbeautifier.dev/reviewers/?c=14
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Понятно ли было, что делать дальше?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Сработало ли на первом же файле без настройки?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Что показалось лишним?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -730,23 +868,27 @@ https://jsonbeautifier.dev/reviewers/?c=14
     </div>
   </div>
 </article>
-<article class="card rev" id="c15" data-n="15" data-lang="ru"
+<article class="rev" id="c15" data-n="15" data-lang="ru"
   data-empty="Ответь хотя бы на один вопрос — текст появится здесь." data-short="Коротковато — две-три фразы читаются лучше"
   data-copied="Скопировано" data-intro="Спасибо, что смотришь. Ниже — одна конкретная вещь, на которую было бы полезно взглянуть, и три вопроса о ней."
   data-nope="Если расширение не понравилось — не пиши отзыв, напиши напрямую: " data-nope-link="форма обратной связи"
-  data-another="Другая тема" data-swap="In English">
-  <div class="rev-head">
-    <span class="num console-only">15</span>
-    <span class="tag">RU</span>
-    <h3>Чего не хватает</h3>
-  </div>
-  <p class="rev-try">Поработай с расширением на своих задачах пару дней.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+  data-another="Другие вопросы для отзыва" data-swap="In English">
+
+  <h2 class="asm-title visitor-only">Собери свой отзыв</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">15</span>
+      <span class="tag">RU</span>
+      <h3>Чего не хватает</h3>
+    </div>
+    <p class="rev-try">Поработай с расширением на своих задачах пару дней.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -764,9 +906,14 @@ https://jsonbeautifier.dev/reviewers/?c=15
 Если расширение не понравится — напиши лучше мне, а не в стор, починю.
 
 Спасибо!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Собери свой отзыв</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Другие вопросы для отзыва</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>In English</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Ответь на вопросы своими словами — по фразе. Ниже сложится текст: слова твои, страница только расставляет точки и абзац. Правь как хочешь.</p>
     <label class="asm-q"><span>Чего не хватило в реальной работе?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Что бы добавил первым?</span><textarea rows="2" placeholder="Своими словами"></textarea></label><label class="asm-q"><span>Есть ли то, что раздражает?</span><textarea rows="2" placeholder="Своими словами"></textarea></label>
     <p class="asm-q"><span>Получилось</span></p>
@@ -778,23 +925,27 @@ https://jsonbeautifier.dev/reviewers/?c=15
     </div>
   </div>
 </article>
-<article class="card rev" id="c16" data-n="16" data-lang="en"
+<article class="rev" id="c16" data-n="16" data-lang="en"
   data-empty="Answer at least one question and the text appears here." data-short="A bit short — two or three sentences read better"
   data-copied="Copied" data-intro="Thanks for taking a look. Below is one specific thing worth checking, and three questions about it."
   data-nope="If you didn&#x27;t like it, please don&#x27;t review it — tell me instead: " data-nope-link="feedback form"
-  data-another="Another topic" data-swap="По-русски">
-  <div class="rev-head">
-    <span class="num console-only">16</span>
-    <span class="tag">EN</span>
-    <h3>Deeply nested structures</h3>
-  </div>
-  <p class="rev-try">Open /samples/orders.json — six levels deep in places.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+  data-another="Different questions" data-swap="По-русски">
+
+  <h2 class="asm-title visitor-only">Put your review together</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">16</span>
+      <span class="tag">EN</span>
+      <h3>Deeply nested structures</h3>
+    </div>
+    <p class="rev-try">Open /samples/orders.json — six levels deep in places.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -812,9 +963,14 @@ The honest downsides: no Firefox (its own JSON viewer gets there first), no keyb
 If you don&#x27;t like it, tell me rather than the store — I&#x27;ll fix it.
 
 Thanks!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Put your review together</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Different questions</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>По-русски</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Answer in your own words, a sentence each. The text below is assembled from your answers — the page only adds the full stops and the paragraph break. Edit it however you like.</p>
     <label class="asm-q"><span>Is the indentation readable that deep?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Do the collapse controls stay usable?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Do the item and key counters help you navigate?</span><textarea rows="2" placeholder="In your own words"></textarea></label>
     <p class="asm-q"><span>Result</span></p>
@@ -826,23 +982,27 @@ Thanks!</textarea>
     </div>
   </div>
 </article>
-<article class="card rev" id="c17" data-n="17" data-lang="en"
+<article class="rev" id="c17" data-n="17" data-lang="en"
   data-empty="Answer at least one question and the text appears here." data-short="A bit short — two or three sentences read better"
   data-copied="Copied" data-intro="Thanks for taking a look. Below is one specific thing worth checking, and three questions about it."
   data-nope="If you didn&#x27;t like it, please don&#x27;t review it — tell me instead: " data-nope-link="feedback form"
-  data-another="Another topic" data-swap="По-русски">
-  <div class="rev-head">
-    <span class="num console-only">17</span>
-    <span class="tag">EN</span>
-    <h3>Coming from another viewer</h3>
-  </div>
-  <p class="rev-try">Compare it against whatever you used before.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+  data-another="Different questions" data-swap="По-русски">
+
+  <h2 class="asm-title visitor-only">Put your review together</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">17</span>
+      <span class="tag">EN</span>
+      <h3>Coming from another viewer</h3>
+    </div>
+    <p class="rev-try">Compare it against whatever you used before.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -860,9 +1020,14 @@ The honest downsides: no Firefox (its own JSON viewer gets there first), no keyb
 If you don&#x27;t like it, tell me rather than the store — I&#x27;ll fix it.
 
 Thanks!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Put your review together</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Different questions</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>По-русски</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Answer in your own words, a sentence each. The text below is assembled from your answers — the page only adds the full stops and the paragraph break. Edit it however you like.</p>
     <label class="asm-q"><span>What does this one do better?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>What does the old one still do better?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Would you actually switch?</span><textarea rows="2" placeholder="In your own words"></textarea></label>
     <p class="asm-q"><span>Result</span></p>
@@ -874,23 +1039,27 @@ Thanks!</textarea>
     </div>
   </div>
 </article>
-<article class="card rev" id="c18" data-n="18" data-lang="en"
+<article class="rev" id="c18" data-n="18" data-lang="en"
   data-empty="Answer at least one question and the text appears here." data-short="A bit short — two or three sentences read better"
   data-copied="Copied" data-intro="Thanks for taking a look. Below is one specific thing worth checking, and three questions about it."
   data-nope="If you didn&#x27;t like it, please don&#x27;t review it — tell me instead: " data-nope-link="feedback form"
-  data-another="Another topic" data-swap="По-русски">
-  <div class="rev-head">
-    <span class="num console-only">18</span>
-    <span class="tag">EN</span>
-    <h3>No network requests</h3>
-  </div>
-  <p class="rev-try">Open DevTools → Network with the extension active on a JSON page.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+  data-another="Different questions" data-swap="По-русски">
+
+  <h2 class="asm-title visitor-only">Put your review together</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">18</span>
+      <span class="tag">EN</span>
+      <h3>No network requests</h3>
+    </div>
+    <p class="rev-try">Open DevTools → Network with the extension active on a JSON page.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -908,9 +1077,14 @@ The honest downsides: no Firefox (its own JSON viewer gets there first), no keyb
 If you don&#x27;t like it, tell me rather than the store — I&#x27;ll fix it.
 
 Thanks!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Put your review together</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Different questions</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>По-русски</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Answer in your own words, a sentence each. The text below is assembled from your answers — the page only adds the full stops and the paragraph break. Edit it however you like.</p>
     <label class="asm-q"><span>Does the extension make any request at all?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Does that matter to you for a tool that reads every page?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Would you have checked if nobody suggested it?</span><textarea rows="2" placeholder="In your own words"></textarea></label>
     <p class="asm-q"><span>Result</span></p>
@@ -922,23 +1096,27 @@ Thanks!</textarea>
     </div>
   </div>
 </article>
-<article class="card rev" id="c19" data-n="19" data-lang="en"
+<article class="rev" id="c19" data-n="19" data-lang="en"
   data-empty="Answer at least one question and the text appears here." data-short="A bit short — two or three sentences read better"
   data-copied="Copied" data-intro="Thanks for taking a look. Below is one specific thing worth checking, and three questions about it."
   data-nope="If you didn&#x27;t like it, please don&#x27;t review it — tell me instead: " data-nope-link="feedback form"
-  data-another="Another topic" data-swap="По-русски">
-  <div class="rev-head">
-    <span class="num console-only">19</span>
-    <span class="tag">EN</span>
-    <h3>Edge-case values</h3>
-  </div>
-  <p class="rev-try">In /samples/orders.json look at empty objects, empty arrays, null, exponents, negative numbers.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+  data-another="Different questions" data-swap="По-русски">
+
+  <h2 class="asm-title visitor-only">Put your review together</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">19</span>
+      <span class="tag">EN</span>
+      <h3>Edge-case values</h3>
+    </div>
+    <p class="rev-try">In /samples/orders.json look at empty objects, empty arrays, null, exponents, negative numbers.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -956,9 +1134,14 @@ The honest downsides: no Firefox (its own JSON viewer gets there first), no keyb
 If you don&#x27;t like it, tell me rather than the store — I&#x27;ll fix it.
 
 Thanks!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Put your review together</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Different questions</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>По-русски</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Answer in your own words, a sentence each. The text below is assembled from your answers — the page only adds the full stops and the paragraph break. Edit it however you like.</p>
     <label class="asm-q"><span>Is each type visually distinct?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Is null distinguishable from the string &quot;null&quot;?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Anything rendered confusingly?</span><textarea rows="2" placeholder="In your own words"></textarea></label>
     <p class="asm-q"><span>Result</span></p>
@@ -970,23 +1153,27 @@ Thanks!</textarea>
     </div>
   </div>
 </article>
-<article class="card rev" id="c20" data-n="20" data-lang="en"
+<article class="rev" id="c20" data-n="20" data-lang="en"
   data-empty="Answer at least one question and the text appears here." data-short="A bit short — two or three sentences read better"
   data-copied="Copied" data-intro="Thanks for taking a look. Below is one specific thing worth checking, and three questions about it."
   data-nope="If you didn&#x27;t like it, please don&#x27;t review it — tell me instead: " data-nope-link="feedback form"
-  data-another="Another topic" data-swap="По-русски">
-  <div class="rev-head">
-    <span class="num console-only">20</span>
-    <span class="tag">EN</span>
-    <h3>Speed on a busy machine</h3>
-  </div>
-  <p class="rev-try">Use it during a normal working day, with your usual tabs open.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+  data-another="Different questions" data-swap="По-русски">
+
+  <h2 class="asm-title visitor-only">Put your review together</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">20</span>
+      <span class="tag">EN</span>
+      <h3>Speed on a busy machine</h3>
+    </div>
+    <p class="rev-try">Use it during a normal working day, with your usual tabs open.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -1004,9 +1191,14 @@ The honest downsides: no Firefox (its own JSON viewer gets there first), no keyb
 If you don&#x27;t like it, tell me rather than the store — I&#x27;ll fix it.
 
 Thanks!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Put your review together</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Different questions</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>По-русски</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Answer in your own words, a sentence each. The text below is assembled from your answers — the page only adds the full stops and the paragraph break. Edit it however you like.</p>
     <label class="asm-q"><span>Did you notice any slowdown?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>How long from opening a JSON URL to a usable tree?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Did it ever get in the way?</span><textarea rows="2" placeholder="In your own words"></textarea></label>
     <p class="asm-q"><span>Result</span></p>
@@ -1018,23 +1210,27 @@ Thanks!</textarea>
     </div>
   </div>
 </article>
-<article class="card rev" id="c21" data-n="21" data-lang="en"
+<article class="rev" id="c21" data-n="21" data-lang="en"
   data-empty="Answer at least one question and the text appears here." data-short="A bit short — two or three sentences read better"
   data-copied="Copied" data-intro="Thanks for taking a look. Below is one specific thing worth checking, and three questions about it."
   data-nope="If you didn&#x27;t like it, please don&#x27;t review it — tell me instead: " data-nope-link="feedback form"
-  data-another="Another topic" data-swap="По-русски">
-  <div class="rev-head">
-    <span class="num console-only">21</span>
-    <span class="tag">EN</span>
-    <h3>The online tools</h3>
-  </div>
-  <p class="rev-try">Try jsonbeautifier.dev/json-formatter/ next to the extension.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+  data-another="Different questions" data-swap="По-русски">
+
+  <h2 class="asm-title visitor-only">Put your review together</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">21</span>
+      <span class="tag">EN</span>
+      <h3>The online tools</h3>
+    </div>
+    <p class="rev-try">Try jsonbeautifier.dev/json-formatter/ next to the extension.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -1052,9 +1248,14 @@ The honest downsides: no Firefox (its own JSON viewer gets there first), no keyb
 If you don&#x27;t like it, tell me rather than the store — I&#x27;ll fix it.
 
 Thanks!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Put your review together</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Different questions</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>По-русски</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Answer in your own words, a sentence each. The text below is assembled from your answers — the page only adds the full stops and the paragraph break. Edit it however you like.</p>
     <label class="asm-q"><span>When would you use the site instead of the extension?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Does the extension actually save you steps?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Is the difference between them clear?</span><textarea rows="2" placeholder="In your own words"></textarea></label>
     <p class="asm-q"><span>Result</span></p>
@@ -1066,23 +1267,27 @@ Thanks!</textarea>
     </div>
   </div>
 </article>
-<article class="card rev" id="c22" data-n="22" data-lang="en"
+<article class="rev" id="c22" data-n="22" data-lang="en"
   data-empty="Answer at least one question and the text appears here." data-short="A bit short — two or three sentences read better"
   data-copied="Copied" data-intro="Thanks for taking a look. Below is one specific thing worth checking, and three questions about it."
   data-nope="If you didn&#x27;t like it, please don&#x27;t review it — tell me instead: " data-nope-link="feedback form"
-  data-another="Another topic" data-swap="По-русски">
-  <div class="rev-head">
-    <span class="num console-only">22</span>
-    <span class="tag">EN</span>
-    <h3>Copying a path</h3>
-  </div>
-  <p class="rev-try">Click a nested value and copy its path.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+  data-another="Different questions" data-swap="По-русски">
+
+  <h2 class="asm-title visitor-only">Put your review together</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">22</span>
+      <span class="tag">EN</span>
+      <h3>Copying a path</h3>
+    </div>
+    <p class="rev-try">Click a nested value and copy its path.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -1100,9 +1305,14 @@ The honest downsides: no Firefox (its own JSON viewer gets there first), no keyb
 If you don&#x27;t like it, tell me rather than the store — I&#x27;ll fix it.
 
 Thanks!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Put your review together</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Different questions</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>По-русски</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Answer in your own words, a sentence each. The text below is assembled from your answers — the page only adds the full stops and the paragraph break. Edit it however you like.</p>
     <label class="asm-q"><span>Is the path in a form you can paste into code?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Does it save you time versus counting brackets?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>What format would you have expected?</span><textarea rows="2" placeholder="In your own words"></textarea></label>
     <p class="asm-q"><span>Result</span></p>
@@ -1114,23 +1324,27 @@ Thanks!</textarea>
     </div>
   </div>
 </article>
-<article class="card rev" id="c23" data-n="23" data-lang="en"
+<article class="rev" id="c23" data-n="23" data-lang="en"
   data-empty="Answer at least one question and the text appears here." data-short="A bit short — two or three sentences read better"
   data-copied="Copied" data-intro="Thanks for taking a look. Below is one specific thing worth checking, and three questions about it."
   data-nope="If you didn&#x27;t like it, please don&#x27;t review it — tell me instead: " data-nope-link="feedback form"
-  data-another="Another topic" data-swap="По-русски">
-  <div class="rev-head">
-    <span class="num console-only">23</span>
-    <span class="tag">EN</span>
-    <h3>Auto-expand depth</h3>
-  </div>
-  <p class="rev-try">Change the depth setting in the popup and reopen a file.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+  data-another="Different questions" data-swap="По-русски">
+
+  <h2 class="asm-title visitor-only">Put your review together</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">23</span>
+      <span class="tag">EN</span>
+      <h3>Auto-expand depth</h3>
+    </div>
+    <p class="rev-try">Change the depth setting in the popup and reopen a file.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -1148,9 +1362,14 @@ The honest downsides: no Firefox (its own JSON viewer gets there first), no keyb
 If you don&#x27;t like it, tell me rather than the store — I&#x27;ll fix it.
 
 Thanks!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Put your review together</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Different questions</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>По-русски</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Answer in your own words, a sentence each. The text below is assembled from your answers — the page only adds the full stops and the paragraph break. Edit it however you like.</p>
     <label class="asm-q"><span>Which depth turned out right for your data?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Should the default be different?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Does it apply to the tab you already had open?</span><textarea rows="2" placeholder="In your own words"></textarea></label>
     <p class="asm-q"><span>Result</span></p>
@@ -1162,23 +1381,27 @@ Thanks!</textarea>
     </div>
   </div>
 </article>
-<article class="card rev" id="c24" data-n="24" data-lang="en"
+<article class="rev" id="c24" data-n="24" data-lang="en"
   data-empty="Answer at least one question and the text appears here." data-short="A bit short — two or three sentences read better"
   data-copied="Copied" data-intro="Thanks for taking a look. Below is one specific thing worth checking, and three questions about it."
   data-nope="If you didn&#x27;t like it, please don&#x27;t review it — tell me instead: " data-nope-link="feedback form"
-  data-another="Another topic" data-swap="По-русски">
-  <div class="rev-head">
-    <span class="num console-only">24</span>
-    <span class="tag">EN</span>
-    <h3>Error recovery</h3>
-  </div>
-  <p class="rev-try">Open /samples/broken.json, then fix nothing and just read the message.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+  data-another="Different questions" data-swap="По-русски">
+
+  <h2 class="asm-title visitor-only">Put your review together</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">24</span>
+      <span class="tag">EN</span>
+      <h3>Error recovery</h3>
+    </div>
+    <p class="rev-try">Open /samples/broken.json, then fix nothing and just read the message.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -1196,9 +1419,14 @@ The honest downsides: no Firefox (its own JSON viewer gets there first), no keyb
 If you don&#x27;t like it, tell me rather than the store — I&#x27;ll fix it.
 
 Thanks!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Put your review together</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Different questions</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>По-русски</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Answer in your own words, a sentence each. The text below is assembled from your answers — the page only adds the full stops and the paragraph break. Edit it however you like.</p>
     <label class="asm-q"><span>Could you find the problem from the message alone?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>Is line-and-column enough, or do you want more?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>How do the tools you use compare?</span><textarea rows="2" placeholder="In your own words"></textarea></label>
     <p class="asm-q"><span>Result</span></p>
@@ -1210,23 +1438,27 @@ Thanks!</textarea>
     </div>
   </div>
 </article>
-<article class="card rev" id="c25" data-n="25" data-lang="en"
+<article class="rev" id="c25" data-n="25" data-lang="en"
   data-empty="Answer at least one question and the text appears here." data-short="A bit short — two or three sentences read better"
   data-copied="Copied" data-intro="Thanks for taking a look. Below is one specific thing worth checking, and three questions about it."
   data-nope="If you didn&#x27;t like it, please don&#x27;t review it — tell me instead: " data-nope-link="feedback form"
-  data-another="Another topic" data-swap="По-русски">
-  <div class="rev-head">
-    <span class="num console-only">25</span>
-    <span class="tag">EN</span>
-    <h3>Honest downside</h3>
-  </div>
-  <p class="rev-try">Use it for a couple of days on real work.</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+  data-another="Different questions" data-swap="По-русски">
+
+  <h2 class="asm-title visitor-only">Put your review together</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">25</span>
+      <span class="tag">EN</span>
+      <h3>Honest downside</h3>
+    </div>
+    <p class="rev-try">Use it for a couple of days on real work.</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
 
 https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
 
@@ -1244,9 +1476,14 @@ The honest downsides: no Firefox (its own JSON viewer gets there first), no keyb
 If you don&#x27;t like it, tell me rather than the store — I&#x27;ll fix it.
 
 Thanks!</textarea>
+  </div>
 
-  <div class="asm">
-    <h4>Put your review together</h4>
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>Different questions</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>По-русски</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">Answer in your own words, a sentence each. The text below is assembled from your answers — the page only adds the full stops and the paragraph break. Edit it however you like.</p>
     <label class="asm-q"><span>What is the weakest part?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>What would stop you recommending it?</span><textarea rows="2" placeholder="In your own words"></textarea></label><label class="asm-q"><span>What is missing that you expected?</span><textarea rows="2" placeholder="In your own words"></textarea></label>
     <p class="asm-q"><span>Result</span></p>
@@ -1314,13 +1551,13 @@ Thanks!</textarea>
         card.dataset.nope + '<a href="/feedback/">' + card.dataset.nopeLink + "</a>.";
     }
 
+    // Инструкция — на языке выданной карточки.
+    const steps = document.querySelector('[data-steps="' + card.dataset.lang + '"]');
+    if (steps) steps.hidden = false;
+
     if (visitor && card) {
-      const panel = document.querySelector("[data-pick]");
-      const another = panel.querySelector("[data-another]");
-      const swap = panel.querySelector("[data-lang-switch]");
-      panel.hidden = false;
-      another.textContent = card.dataset.another;
-      swap.textContent = card.dataset.swap;
+      const another = card.querySelector("[data-another]");
+      const swap = card.querySelector("[data-lang-switch]");
       const take = (lang, avoid) => {
         const n = draw(lang, avoid);
         if (!n) return;

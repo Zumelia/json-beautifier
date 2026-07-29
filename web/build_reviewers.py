@@ -215,8 +215,17 @@ UI = {
                  "было бы полезно взглянуть, и три вопроса о ней.",
         "nope": "Если расширение не понравилось — не пиши отзыв, напиши напрямую: ",
         "nope_link": "форма обратной связи",
-        "another": "Другая тема",
+        "another": "Другие вопросы для отзыва",
         "swap": "In English",
+        "steps_title": "Как оставить отзыв",
+        "steps": [
+            'Поставь расширение: <a href="{store}" target="_blank" rel="noopener">Chrome Web Store</a>',
+            'Открой любой из примеров — <a href="/samples/">jsonbeautifier.dev/samples/</a> — или свой JSON-URL',
+            "Посмотри на то, о чём спрашивают вопросы ниже",
+            "Ответь на три вопроса — текст соберётся сам, скопируй его",
+            'Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, вставь и отправь',
+            'Для взаимного отзыва напиши в тг <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a>',
+        ],
     },
     "en": {
         "build": "Put your review together",
@@ -233,8 +242,17 @@ UI = {
                  "checking, and three questions about it.",
         "nope": "If you didn't like it, please don't review it — tell me instead: ",
         "nope_link": "feedback form",
-        "another": "Another topic",
+        "another": "Different questions",
         "swap": "По-русски",
+        "steps_title": "How to leave a review",
+        "steps": [
+            'Install it: <a href="{store}" target="_blank" rel="noopener">Chrome Web Store</a>',
+            'Open one of the samples — <a href="/samples/">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own',
+            "Look at whatever the questions below ask about",
+            "Answer the three questions — the text assembles itself, then copy it",
+            'Back on the store page: <b>Reviews</b> → <b>Write a review</b>, paste and send',
+            'For a review in return, message <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> on Telegram',
+        ],
     },
 }
 
@@ -268,7 +286,20 @@ CSS = """
   .asm-note { color: var(--faint); font-size: 13.5px; }
   .asm-ok { color: var(--ok); font-weight: 600; font-size: 14px; }
   body.one-card .rev-act, body.one-card .rev-count, body.one-card .console-only { display: none; }
-  .pick { display: flex; gap: 10px; margin-top: 22px; flex-wrap: wrap; }
+
+  /* Тема и кнопки живут прямо на песочном фоне страницы, в белую карточку
+     завёрнуты только вопросы: белое пятно = «здесь надо что-то делать». */
+  .asm-title { margin: 34px 0 0; font-size: clamp(24px, 3vw, 30px); }
+  .topic { margin: 18px 0 14px; }
+  .topic h3 { margin: 8px 0 0; font-size: 21px; }
+  .pick { display: flex; gap: 10px; margin: 0 0 16px; flex-wrap: wrap; }
+  .steps { margin: 24px 0 0; padding-left: 22px; }
+  .steps li { margin-bottom: 9px; }
+  .steps-box { margin-top: 30px; }
+  .steps-box h2 { font-size: clamp(22px, 2.6vw, 26px); margin: 0; }
+  .visitor-only { display: none; }
+  body.one-card .visitor-only { display: block; }
+  body.one-card .pick.visitor-only { display: flex; }
 """
 
 JS = """
@@ -325,13 +356,13 @@ JS = """
         card.dataset.nope + '<a href="/feedback/">' + card.dataset.nopeLink + "</a>.";
     }
 
+    // Инструкция — на языке выданной карточки.
+    const steps = document.querySelector('[data-steps="' + card.dataset.lang + '"]');
+    if (steps) steps.hidden = false;
+
     if (visitor && card) {
-      const panel = document.querySelector("[data-pick]");
-      const another = panel.querySelector("[data-another]");
-      const swap = panel.querySelector("[data-lang-switch]");
-      panel.hidden = false;
-      another.textContent = card.dataset.another;
-      swap.textContent = card.dataset.swap;
+      const another = card.querySelector("[data-another]");
+      const swap = card.querySelector("[data-lang-switch]");
       const take = (lang, avoid) => {
         const n = draw(lang, avoid);
         if (!n) return;
@@ -468,12 +499,11 @@ TEMPLATE = """<!doctype html>
     <p class="lead" data-intro>__INTRO__</p>
     <p class="lead" data-lede>__LEDE__</p>
 
-    <p class="note-strip" style="margin-top:22px" data-strip>__STRIP__</p>
 
-    <div class="pick" hidden data-pick>
-      <button class="btn btn-sm btn-ghost" data-another></button>
-      <button class="btn btn-sm btn-ghost" data-lang-switch></button>
-    </div>
+    <div class="steps-box visitor-only" data-steps="ru" hidden>__STEPS_RU__</div>
+    <div class="steps-box visitor-only" data-steps="en" hidden>__STEPS_EN__</div>
+
+    <p class="note-strip" style="margin-top:22px" data-strip>__STRIP__</p>
 
     <p class="rev-count console-only" style="margin-top:26px" data-count></p>
     __CARDS__
@@ -483,6 +513,13 @@ TEMPLATE = """<!doctype html>
 </body>
 </html>
 """
+
+
+def steps_html(lang):
+    u = UI[lang]
+    items = "".join(
+        "<li>" + step.format(store=STORE, samples=SAMPLES) + "</li>" for step in u["steps"])
+    return f'<h2>{escape(u["steps_title"])}</h2><ol class="steps">{items}</ol>'
 
 
 def build():
@@ -498,26 +535,35 @@ def build():
             f'<textarea rows="2" placeholder="{escape(u["ph"])}"></textarea></label>'
             for q in questions)
         cards.append(f"""
-<article class="card rev" id="c{i}" data-n="{i}" data-lang="{lang}"
+<article class="rev" id="c{i}" data-n="{i}" data-lang="{lang}"
   data-empty="{escape(u['empty'])}" data-short="{escape(u['short'])}"
   data-copied="{escape(u['copied'])}" data-intro="{escape(u['intro'])}"
   data-nope="{escape(u['nope'])}" data-nope-link="{escape(u['nope_link'])}"
   data-another="{escape(u['another'])}" data-swap="{escape(u['swap'])}">
-  <div class="rev-head">
-    <span class="num console-only">{i:02d}</span>
-    <span class="tag">{lang.upper()}</span>
-    <h3>{escape(angle)}</h3>
-  </div>
-  <p class="rev-try">{escape(try_it)}</p>
-  <div class="rev-act">
-    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
-    <span class="rev-sent" hidden>Уже отправлен</span>
-    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
-  </div>
-  <textarea class="rev-msg" hidden>{escape(msg)}</textarea>
 
-  <div class="asm">
-    <h4>{escape(u['build'])}</h4>
+  <h2 class="asm-title visitor-only">{escape(u['build'])}</h2>
+
+  <div class="topic">
+    <div class="rev-head">
+      <span class="num console-only">{i:02d}</span>
+      <span class="tag">{lang.upper()}</span>
+      <h3>{escape(angle)}</h3>
+    </div>
+    <p class="rev-try">{escape(try_it)}</p>
+    <div class="rev-act">
+      <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+      <span class="rev-sent" hidden>Уже отправлен</span>
+      <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+    </div>
+    <textarea class="rev-msg" hidden>{escape(msg)}</textarea>
+  </div>
+
+  <div class="pick visitor-only">
+    <button class="btn btn-sm btn-ghost" data-another>{escape(u['another'])}</button>
+    <button class="btn btn-sm btn-ghost" data-lang-switch>{escape(u['swap'])}</button>
+  </div>
+
+  <div class="card asm">
     <p class="asm-hint">{escape(u['hint'])}</p>
     {qs}
     <p class="asm-q"><span>{escape(u['result'])}</span></p>
@@ -545,6 +591,8 @@ def build():
                      "Кнопка копирует <b>письмо человеку</b>. Отзыв он пишет сам — "
                      "сборщик внизу карточки только расставляет точки и абзац, "
                      "ни одного слова от себя не добавляет.")
+            .replace("__STEPS_RU__", steps_html("ru"))
+            .replace("__STEPS_EN__", steps_html("en"))
             .replace("__CARDS__", "".join(cards)))
 
     OUT.mkdir(exist_ok=True)
