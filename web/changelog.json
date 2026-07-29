@@ -2,6 +2,18 @@
   "_about": "Данные для /changelog/. Записи выведены из истории git, но написаны для людей, а не скопированы из заголовков коммитов: пользователю нужно знать, что изменилось в продукте, а не что мы переставляли в репозитории. Сверять с `git log v0.2.7..HEAD -- extension-chrome core`.",
   "releases": [
     {
+      "version": "0.3.1",
+      "date": null,
+      "status": "In development",
+      "note": "Not in the store yet. 0.3.0 is still in review.",
+      "groups": {
+        "Fixed": [
+          "Search no longer piles up expanded branches. Typing a query letter by letter meant every intermediate word — \"R\" before \"Rotterdam\" — expanded everything it matched, and none of it collapsed again: a document that should show eighty rows showed a thousand, with the match lost among them.",
+          "Search only scrolls when the first match is off screen, instead of tugging the page towards a line that is already in front of you."
+        ]
+      }
+    },
+    {
       "version": "0.3.0",
       "date": null,
       "status": "In development",

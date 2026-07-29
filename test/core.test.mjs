@@ -245,6 +245,43 @@ const host = () => window.document.getElementById("host");
 }
 
 console.log("");
+// ---- 14. Регрессия: поиск не должен накапливать раскрытое -------------------
+// Пока человек печатает «Rotterdam», промежуточный запрос «R» успевает раскрыть
+// пол-документа, и обратно оно не сворачивалось: на нашем же образце дерево
+// росло с 80 строк до 1087, а найденная строка тонула среди чужих.
+{
+  const h = core.renderTree(
+    host(),
+    { a: { deep: { x: "Rotterdam" } }, b: { other: { y: "Rome" } }, c: { third: { z: "Riga" } } },
+    { treeId: "t-search-collapse", expandDepth: 1 }
+  );
+  // Считаем ВИДИМЫЕ строки. Свёрнутый узел остаётся в DOM со скрытыми детьми,
+  // а дети сохраняют своё состояние — поэтому ни счёт .jsoneat-line, ни
+  // отсутствие класса collapsed не отражают того, что человек видит на экране.
+  const open = () =>
+    [...h.element.querySelectorAll(".jsoneat-line")].filter((l) => {
+      for (let n = l.parentElement; n && n !== h.element; n = n.parentElement)
+        if (n.style && n.style.display === "none") return false;
+      return true;
+    }).length;
+  const base = open();
+
+  h.search("R");
+  const wide = open();
+  check("поиск: широкий запрос раскрывает ветки", wide > base, `${base} → ${wide}`);
+
+  h.search("Rotterdam");
+  const narrow = open();
+  check("поиск: сужение запроса сворачивает лишнее", narrow < wide, `${wide} → ${narrow}`);
+  check("поиск: подсвечено ровно одно совпадение",
+    h.element.querySelectorAll(".jsoneat-hit").length === 1,
+    String(h.element.querySelectorAll(".jsoneat-hit").length));
+
+  h.search("");
+  check("поиск: пустой запрос возвращает исходный вид", open() === base, `${open()} vs ${base}`);
+  h.destroy();
+}
+
 for (const [m, n, d] of results) console.log(`  ${m} ${n}${d ? "  — " + d : ""}`);
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail ? 1 : 0);

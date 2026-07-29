@@ -374,6 +374,9 @@
           const idx =
             type === "array" ? Number(rawKey) : entries.findIndex((e) => e[0] === rawKey);
           if (idx < 0 || idx >= entries.length) return null;
+          // Запоминаем только те ветки, которые открыл поиск: свои пользователь
+          // раскрывал сам, и захлопывать их за него — грубость.
+          if (row.classList.contains("jsoneat-collapsed")) openedBySearch.add(row);
           setOpen(true);
           let guard = 0;
           while (renderedCount <= idx && guard++ < 100000) renderChunk();
@@ -393,8 +396,17 @@
       return row;
     }
 
+    // Ветки, раскрытые предыдущим запросом. Без этого набора поиск только
+    // накапливал: пока человек печатает «Rotterdam», запрос «R» успевает
+    // раскрыть пол-документа, и обратно оно уже не сворачивается — на нашем
+    // же образце дерево росло с 80 строк до 1087, а найденная строка тонула
+    // среди тысячи чужих.
+    const openedBySearch = new Set();
+
     /** Search the DATA MODEL, then expand exactly the branches that matched. */
     function search(query) {
+      openedBySearch.forEach((row) => row._toggle && row._toggle(true));
+      openedBySearch.clear();
       tree.querySelectorAll(".jsoneat-hit").forEach((n) => n.classList.remove("jsoneat-hit"));
       const q = String(query || "").trim().toLowerCase();
       if (!q || data === undefined) return 0;
@@ -443,8 +455,14 @@
           }
         }
       }
-      if (firstHit && typeof firstHit.scrollIntoView === "function")
-        firstHit.scrollIntoView({ block: "center", behavior: "smooth" });
+      // Прокручиваем, только если первое совпадение вне экрана. Иначе каждый
+      // набранный символ дёргает страницу к строке, которая уже перед глазами.
+      if (firstHit && typeof firstHit.scrollIntoView === "function") {
+        const box = firstHit.getBoundingClientRect();
+        const vh = globalThis.innerHeight || 0;
+        if (box.bottom < 0 || box.top > vh)
+          firstHit.scrollIntoView({ block: "center", behavior: "smooth" });
+      }
       return hits;
     }
 
