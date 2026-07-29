@@ -5,7 +5,7 @@
       "version": "0.3.0",
       "date": null,
       "status": "In development",
-      "note": "Not in the store yet. Built from the repository, verified in Chrome by hand.",
+      "note": "Not in the store yet. Built from the repository; the site is running this code, the extension build has not been through a manual pass.",
       "groups": {
         "Added": [
           "Line numbers in the formatted tree, and a setting to switch them off.",
