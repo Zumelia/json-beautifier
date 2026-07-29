@@ -17,6 +17,7 @@ echo "1. генерация"
 python3 build.py
 python3 build_pages.py
 python3 build_docs.py
+python3 build_reviewers.py
 
 echo "2. версии ассетов"
 python3 stamp.py

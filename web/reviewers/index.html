@@ -1,0 +1,919 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Работа с отзывами — служебная страница</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="icon" href="/favicon.ico?v=401245cf" sizes="any">
+<link rel="stylesheet" href="/assets/fonts.css?v=80febac9">
+<link rel="stylesheet" href="/assets/site.css?v=d4ec496c">
+<style>
+  .rev { margin-bottom: 18px; }
+  .rev-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .rev-head h3 { margin: 0; font-size: 20px; }
+  .tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em;
+          padding: 3px 8px; border-radius: var(--pill); background: var(--chip); color: var(--accent); }
+  .rev-try { margin: 12px 0 0; color: var(--muted); }
+  .rev-q { margin: 10px 0 0; padding-left: 20px; color: var(--muted); font-size: 15px; }
+  .rev-q li { margin-bottom: 4px; }
+  .rev-act { display: flex; align-items: center; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
+  .rev-sent { color: var(--ok); font-weight: 600; font-size: 14px; }
+  .rev-pub { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
+  .rev.is-pub { opacity: .55; }
+  .rev-count { font-family: var(--font-mono); color: var(--faint); font-size: 14px; }
+</style>
+</head>
+<body>
+<main id="main">
+  <section class="wrap section" style="max-width:820px">
+    <p class="eyebrow">служебная страница · не индексируется · ниоткуда не слинкована</p>
+    <h1>Работа с отзывами</h1>
+    <p class="lead">Двадцать пять разных углов — по одному на человека. Каждому достаётся
+      своя тема, поэтому люди пишут о разном, а не пересказывают один и тот же текст.
+      15 на русском, 10 на английском.</p>
+
+    <p class="note-strip" style="margin-top:22px">Кнопка копирует <b>письмо человеку</b>, а не
+      текст отзыва. Отзыв он пишет сам — иначе это не двадцать пять мнений, а одно
+      в двадцати пяти редакциях, что видно и читателю, и стору.</p>
+
+    <p class="rev-count" style="margin-top:26px" data-count></p>
+    
+<article class="card rev" data-n="1">
+  <div class="rev-head">
+    <span class="num">01</span>
+    <span class="tag">RU</span>
+    <h3>Большие ответы API</h3>
+  </div>
+  <p class="rev-try">Открой /samples/large.json — 2.3 МБ в одну строку.</p>
+  <ul class="rev-q"><li>Вкладка осталась отзывчивой или подтормаживала?</li><li>Сколько ждал до появления дерева?</li><li>Сворачивание веток на таком объёме работает так же быстро?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: большие ответы API.
+
+Что попробовать: Открой /samples/large.json — 2.3 МБ в одну строку.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Вкладка осталась отзывчивой или подтормаживала?
+— Сколько ждал до появления дерева?
+— Сворачивание веток на таком объёме работает так же быстро?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="2">
+  <div class="rev-head">
+    <span class="num">02</span>
+    <span class="tag">RU</span>
+    <h3>Сломанный JSON</h3>
+  </div>
+  <p class="rev-try">Открой /samples/broken.json — там нет запятой на 7-й строке.</p>
+  <ul class="rev-q"><li>Понятно ли из сообщения, где именно ошибка?</li><li>Помогла ли кнопка перехода к строке?</li><li>Что показывали другие вьюеры в такой ситуации?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: сломанный JSON.
+
+Что попробовать: Открой /samples/broken.json — там нет запятой на 7-й строке.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Понятно ли из сообщения, где именно ошибка?
+— Помогла ли кнопка перехода к строке?
+— Что показывали другие вьюеры в такой ситуации?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="3">
+  <div class="rev-head">
+    <span class="num">03</span>
+    <span class="tag">RU</span>
+    <h3>Поиск по свёрнутым веткам</h3>
+  </div>
+  <p class="rev-try">На /samples/orders.json сверни всё и найди «url».</p>
+  <ul class="rev-q"><li>Нашлись ли совпадения внутри свёрнутых веток?</li><li>Раскрылось ли до нужного места само?</li><li>Хватает ли перехода между совпадениями?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: поиск по свёрнутым веткам.
+
+Что попробовать: На /samples/orders.json сверни всё и найди «url».
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Нашлись ли совпадения внутри свёрнутых веток?
+— Раскрылось ли до нужного места само?
+— Хватает ли перехода между совпадениями?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="4">
+  <div class="rev-head">
+    <span class="num">04</span>
+    <span class="tag">RU</span>
+    <h3>Тёмная тема</h3>
+  </div>
+  <p class="rev-try">Переключи тему в попапе и посмотри дерево и сам попап.</p>
+  <ul class="rev-q"><li>Это настоящая тёмная тема или инверсия светлой?</li><li>Читаются ли цвета типов на тёмном?</li><li>Не слепит ли что-нибудь?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: тёмная тема.
+
+Что попробовать: Переключи тему в попапе и посмотри дерево и сам попап.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Это настоящая тёмная тема или инверсия светлой?
+— Читаются ли цвета типов на тёмном?
+— Не слепит ли что-нибудь?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="5">
+  <div class="rev-head">
+    <span class="num">05</span>
+    <span class="tag">RU</span>
+    <h3>Номера строк</h3>
+  </div>
+  <p class="rev-try">Открой любой JSON — номера включены по умолчанию, выключаются в попапе.</p>
+  <ul class="rev-q"><li>Мешают или помогают?</li><li>Не съезжают ли при сворачивании веток?</li><li>Заметно ли влияние на скорость?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: номера строк.
+
+Что попробовать: Открой любой JSON — номера включены по умолчанию, выключаются в попапе.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Мешают или помогают?
+— Не съезжают ли при сворачивании веток?
+— Заметно ли влияние на скорость?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="6">
+  <div class="rev-head">
+    <span class="num">06</span>
+    <span class="tag">RU</span>
+    <h3>Взгляд разработчика расширений: права</h3>
+  </div>
+  <p class="rev-try">Посмотри список прав на странице расширения и в /privacy/.</p>
+  <ul class="rev-q"><li>Оправдан ли доступ ко всем страницам тем, что расширение делает?</li><li>Понятно ли из описания, зачем каждое право?</li><li>Что бы ты спросил на месте пользователя?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: взгляд разработчика расширений: права.
+
+Что попробовать: Посмотри список прав на странице расширения и в /privacy/.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Оправдан ли доступ ко всем страницам тем, что расширение делает?
+— Понятно ли из описания, зачем каждое право?
+— Что бы ты спросил на месте пользователя?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="7">
+  <div class="rev-head">
+    <span class="num">07</span>
+    <span class="tag">RU</span>
+    <h3>Не-JSON страницы</h3>
+  </div>
+  <p class="rev-try">Походи по обычным сайтам с включённым расширением.</p>
+  <ul class="rev-q"><li>Что-нибудь сломалось или подтормозило?</li><li>Замечал ли ты его вообще там, где оно не нужно?</li><li>Были ли ложные срабатывания?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: не-JSON страницы.
+
+Что попробовать: Походи по обычным сайтам с включённым расширением.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Что-нибудь сломалось или подтормозило?
+— Замечал ли ты его вообще там, где оно не нужно?
+— Были ли ложные срабатывания?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="8">
+  <div class="rev-head">
+    <span class="num">08</span>
+    <span class="tag">RU</span>
+    <h3>Юникод и экранирование</h3>
+  </div>
+  <p class="rev-try">На /samples/orders.json найди японский текст, эмодзи и escape-последовательности.</p>
+  <ul class="rev-q"><li>Всё отрисовалось верно?</li><li>Не поехала ли вёрстка на длинных строках?</li><li>Как показаны спецсимволы?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: юникод и экранирование.
+
+Что попробовать: На /samples/orders.json найди японский текст, эмодзи и escape-последовательности.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Всё отрисовалось верно?
+— Не поехала ли вёрстка на длинных строках?
+— Как показаны спецсимволы?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="9">
+  <div class="rev-head">
+    <span class="num">09</span>
+    <span class="tag">RU</span>
+    <h3>Копирование</h3>
+  </div>
+  <p class="rev-try">Кликни по значению, попробуй «Copy JSON».</p>
+  <ul class="rev-q"><li>Копируется то, что ожидаешь?</li><li>Хватает ли способов достать кусок наружу?</li><li>Чего не хватило?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: копирование.
+
+Что попробовать: Кликни по значению, попробуй «Copy JSON».
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Копируется то, что ожидаешь?
+— Хватает ли способов достать кусок наружу?
+— Чего не хватило?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="10">
+  <div class="rev-head">
+    <span class="num">10</span>
+    <span class="tag">RU</span>
+    <h3>Настройки</h3>
+  </div>
+  <p class="rev-try">Открой попап: тема, отступ, глубина раскрытия, сортировка ключей, номера строк.</p>
+  <ul class="rev-q"><li>Применяются ли изменения к уже открытой вкладке?</li><li>Каких настроек не хватает?</li><li>Есть ли лишние?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: настройки.
+
+Что попробовать: Открой попап: тема, отступ, глубина раскрытия, сортировка ключей, номера строк.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Применяются ли изменения к уже открытой вкладке?
+— Каких настроек не хватает?
+— Есть ли лишние?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="11">
+  <div class="rev-head">
+    <span class="num">11</span>
+    <span class="tag">RU</span>
+    <h3>Сортировка ключей</h3>
+  </div>
+  <p class="rev-try">Включи «Sort object keys» на /samples/orders.json.</p>
+  <ul class="rev-q"><li>Полезно ли для сравнения ответов?</li><li>Не путает ли, что порядок больше не как в исходнике?</li><li>Пользовался бы постоянно или точечно?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: сортировка ключей.
+
+Что попробовать: Включи «Sort object keys» на /samples/orders.json.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Полезно ли для сравнения ответов?
+— Не путает ли, что порядок больше не как в исходнике?
+— Пользовался бы постоянно или точечно?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="12">
+  <div class="rev-head">
+    <span class="num">12</span>
+    <span class="tag">RU</span>
+    <h3>Raw-режим</h3>
+  </div>
+  <p class="rev-try">Нажми Raw и вернись обратно.</p>
+  <ul class="rev-q"><li>Показывает исходник как есть, без переформатирования?</li><li>Быстро ли переключается туда-обратно?</li><li>На большом файле ведёт себя так же?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: raw-режим.
+
+Что попробовать: Нажми Raw и вернись обратно.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Показывает исходник как есть, без переформатирования?
+— Быстро ли переключается туда-обратно?
+— На большом файле ведёт себя так же?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="13">
+  <div class="rev-head">
+    <span class="num">13</span>
+    <span class="tag">RU</span>
+    <h3>Открытый код</h3>
+  </div>
+  <p class="rev-try">Загляни в репозиторий: github.com/Zumelia/json-beautifier, файлы core/core.js и extension-chrome/src/.</p>
+  <ul class="rev-q"><li>Проверяемо ли утверждение «нет сетевых запросов»?</li><li>Читается ли код?</li><li>Важна ли тебе как разработчику открытость в такой утилите?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: открытый код.
+
+Что попробовать: Загляни в репозиторий: github.com/Zumelia/json-beautifier, файлы core/core.js и extension-chrome/src/.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Проверяемо ли утверждение «нет сетевых запросов»?
+— Читается ли код?
+— Важна ли тебе как разработчику открытость в такой утилите?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="14">
+  <div class="rev-head">
+    <span class="num">14</span>
+    <span class="tag">RU</span>
+    <h3>Первое впечатление</h3>
+  </div>
+  <p class="rev-try">Вспомни момент установки: страница приветствия, первый открытый JSON.</p>
+  <ul class="rev-q"><li>Понятно ли было, что делать дальше?</li><li>Сработало ли на первом же файле без настройки?</li><li>Что показалось лишним?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: первое впечатление.
+
+Что попробовать: Вспомни момент установки: страница приветствия, первый открытый JSON.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Понятно ли было, что делать дальше?
+— Сработало ли на первом же файле без настройки?
+— Что показалось лишним?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="15">
+  <div class="rev-head">
+    <span class="num">15</span>
+    <span class="tag">RU</span>
+    <h3>Чего не хватает</h3>
+  </div>
+  <p class="rev-try">Поработай с расширением на своих задачах пару дней.</p>
+  <ul class="rev-q"><li>Чего не хватило в реальной работе?</li><li>Что бы добавил первым?</li><li>Есть ли то, что раздражает?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Привет! Я запустил своё первое расширение — JSON Beautifier, форматирует любой JSON-URL сразу при открытии.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+Если будет пара минут, глянешь? Не нужно писать «вообще» — мне интереснее одна конкретная вещь: чего не хватает.
+
+Что попробовать: Поработай с расширением на своих задачах пару дней.
+Файлы для этого: https://jsonbeautifier.dev/samples/
+
+О чём было бы полезно услышать:
+— Чего не хватило в реальной работе?
+— Что бы добавил первым?
+— Есть ли то, что раздражает?
+
+Честно про минусы, чтобы не тратил время: Firefox не поддерживается (мешает его собственный просмотрщик JSON), горячих клавиш нет.
+
+Если решишь оставить отзыв в сторе — только своими словами и только если правда попробовал. Если не понравится, напиши лучше мне напрямую, а не в стор: починю.
+
+Спасибо!</textarea>
+</article>
+<article class="card rev" data-n="16">
+  <div class="rev-head">
+    <span class="num">16</span>
+    <span class="tag">EN</span>
+    <h3>Deeply nested structures</h3>
+  </div>
+  <p class="rev-try">Open /samples/orders.json — six levels deep in places.</p>
+  <ul class="rev-q"><li>Is the indentation readable that deep?</li><li>Do the collapse controls stay usable?</li><li>Do the item and key counters help you navigate?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+If you have a couple of minutes, would you take a look? No need to review it &quot;in general&quot; — I&#x27;m after one specific thing: deeply nested structures.
+
+What to try: Open /samples/orders.json — six levels deep in places.
+Files for it: https://jsonbeautifier.dev/samples/
+
+What would be useful to hear:
+— Is the indentation readable that deep?
+— Do the collapse controls stay usable?
+— Do the item and key counters help you navigate?
+
+The honest downsides, so you don&#x27;t waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you do leave a review, please use your own words, and only if you actually tried it. If you don&#x27;t like it, tell me directly rather than the store — I&#x27;ll fix it.
+
+Thanks!</textarea>
+</article>
+<article class="card rev" data-n="17">
+  <div class="rev-head">
+    <span class="num">17</span>
+    <span class="tag">EN</span>
+    <h3>Coming from another viewer</h3>
+  </div>
+  <p class="rev-try">Compare it against whatever you used before.</p>
+  <ul class="rev-q"><li>What does this one do better?</li><li>What does the old one still do better?</li><li>Would you actually switch?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+If you have a couple of minutes, would you take a look? No need to review it &quot;in general&quot; — I&#x27;m after one specific thing: coming from another viewer.
+
+What to try: Compare it against whatever you used before.
+Files for it: https://jsonbeautifier.dev/samples/
+
+What would be useful to hear:
+— What does this one do better?
+— What does the old one still do better?
+— Would you actually switch?
+
+The honest downsides, so you don&#x27;t waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you do leave a review, please use your own words, and only if you actually tried it. If you don&#x27;t like it, tell me directly rather than the store — I&#x27;ll fix it.
+
+Thanks!</textarea>
+</article>
+<article class="card rev" data-n="18">
+  <div class="rev-head">
+    <span class="num">18</span>
+    <span class="tag">EN</span>
+    <h3>No network requests</h3>
+  </div>
+  <p class="rev-try">Open DevTools → Network with the extension active on a JSON page.</p>
+  <ul class="rev-q"><li>Does the extension make any request at all?</li><li>Does that matter to you for a tool that reads every page?</li><li>Would you have checked if nobody suggested it?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+If you have a couple of minutes, would you take a look? No need to review it &quot;in general&quot; — I&#x27;m after one specific thing: no network requests.
+
+What to try: Open DevTools → Network with the extension active on a JSON page.
+Files for it: https://jsonbeautifier.dev/samples/
+
+What would be useful to hear:
+— Does the extension make any request at all?
+— Does that matter to you for a tool that reads every page?
+— Would you have checked if nobody suggested it?
+
+The honest downsides, so you don&#x27;t waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you do leave a review, please use your own words, and only if you actually tried it. If you don&#x27;t like it, tell me directly rather than the store — I&#x27;ll fix it.
+
+Thanks!</textarea>
+</article>
+<article class="card rev" data-n="19">
+  <div class="rev-head">
+    <span class="num">19</span>
+    <span class="tag">EN</span>
+    <h3>Edge-case values</h3>
+  </div>
+  <p class="rev-try">In /samples/orders.json look at empty objects, empty arrays, null, exponents, negative numbers.</p>
+  <ul class="rev-q"><li>Is each type visually distinct?</li><li>Is null distinguishable from the string &quot;null&quot;?</li><li>Anything rendered confusingly?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+If you have a couple of minutes, would you take a look? No need to review it &quot;in general&quot; — I&#x27;m after one specific thing: edge-case values.
+
+What to try: In /samples/orders.json look at empty objects, empty arrays, null, exponents, negative numbers.
+Files for it: https://jsonbeautifier.dev/samples/
+
+What would be useful to hear:
+— Is each type visually distinct?
+— Is null distinguishable from the string &quot;null&quot;?
+— Anything rendered confusingly?
+
+The honest downsides, so you don&#x27;t waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you do leave a review, please use your own words, and only if you actually tried it. If you don&#x27;t like it, tell me directly rather than the store — I&#x27;ll fix it.
+
+Thanks!</textarea>
+</article>
+<article class="card rev" data-n="20">
+  <div class="rev-head">
+    <span class="num">20</span>
+    <span class="tag">EN</span>
+    <h3>Speed on a busy machine</h3>
+  </div>
+  <p class="rev-try">Use it during a normal working day, with your usual tabs open.</p>
+  <ul class="rev-q"><li>Did you notice any slowdown?</li><li>How long from opening a JSON URL to a usable tree?</li><li>Did it ever get in the way?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+If you have a couple of minutes, would you take a look? No need to review it &quot;in general&quot; — I&#x27;m after one specific thing: speed on a busy machine.
+
+What to try: Use it during a normal working day, with your usual tabs open.
+Files for it: https://jsonbeautifier.dev/samples/
+
+What would be useful to hear:
+— Did you notice any slowdown?
+— How long from opening a JSON URL to a usable tree?
+— Did it ever get in the way?
+
+The honest downsides, so you don&#x27;t waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you do leave a review, please use your own words, and only if you actually tried it. If you don&#x27;t like it, tell me directly rather than the store — I&#x27;ll fix it.
+
+Thanks!</textarea>
+</article>
+<article class="card rev" data-n="21">
+  <div class="rev-head">
+    <span class="num">21</span>
+    <span class="tag">EN</span>
+    <h3>The online tools</h3>
+  </div>
+  <p class="rev-try">Try jsonbeautifier.dev/json-formatter/ next to the extension.</p>
+  <ul class="rev-q"><li>When would you use the site instead of the extension?</li><li>Does the extension actually save you steps?</li><li>Is the difference between them clear?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+If you have a couple of minutes, would you take a look? No need to review it &quot;in general&quot; — I&#x27;m after one specific thing: the online tools.
+
+What to try: Try jsonbeautifier.dev/json-formatter/ next to the extension.
+Files for it: https://jsonbeautifier.dev/samples/
+
+What would be useful to hear:
+— When would you use the site instead of the extension?
+— Does the extension actually save you steps?
+— Is the difference between them clear?
+
+The honest downsides, so you don&#x27;t waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you do leave a review, please use your own words, and only if you actually tried it. If you don&#x27;t like it, tell me directly rather than the store — I&#x27;ll fix it.
+
+Thanks!</textarea>
+</article>
+<article class="card rev" data-n="22">
+  <div class="rev-head">
+    <span class="num">22</span>
+    <span class="tag">EN</span>
+    <h3>Copying a path</h3>
+  </div>
+  <p class="rev-try">Click a nested value and copy its path.</p>
+  <ul class="rev-q"><li>Is the path in a form you can paste into code?</li><li>Does it save you time versus counting brackets?</li><li>What format would you have expected?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+If you have a couple of minutes, would you take a look? No need to review it &quot;in general&quot; — I&#x27;m after one specific thing: copying a path.
+
+What to try: Click a nested value and copy its path.
+Files for it: https://jsonbeautifier.dev/samples/
+
+What would be useful to hear:
+— Is the path in a form you can paste into code?
+— Does it save you time versus counting brackets?
+— What format would you have expected?
+
+The honest downsides, so you don&#x27;t waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you do leave a review, please use your own words, and only if you actually tried it. If you don&#x27;t like it, tell me directly rather than the store — I&#x27;ll fix it.
+
+Thanks!</textarea>
+</article>
+<article class="card rev" data-n="23">
+  <div class="rev-head">
+    <span class="num">23</span>
+    <span class="tag">EN</span>
+    <h3>Auto-expand depth</h3>
+  </div>
+  <p class="rev-try">Change the depth setting in the popup and reopen a file.</p>
+  <ul class="rev-q"><li>Which depth turned out right for your data?</li><li>Should the default be different?</li><li>Does it apply to the tab you already had open?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+If you have a couple of minutes, would you take a look? No need to review it &quot;in general&quot; — I&#x27;m after one specific thing: auto-expand depth.
+
+What to try: Change the depth setting in the popup and reopen a file.
+Files for it: https://jsonbeautifier.dev/samples/
+
+What would be useful to hear:
+— Which depth turned out right for your data?
+— Should the default be different?
+— Does it apply to the tab you already had open?
+
+The honest downsides, so you don&#x27;t waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you do leave a review, please use your own words, and only if you actually tried it. If you don&#x27;t like it, tell me directly rather than the store — I&#x27;ll fix it.
+
+Thanks!</textarea>
+</article>
+<article class="card rev" data-n="24">
+  <div class="rev-head">
+    <span class="num">24</span>
+    <span class="tag">EN</span>
+    <h3>Error recovery</h3>
+  </div>
+  <p class="rev-try">Open /samples/broken.json, then fix nothing and just read the message.</p>
+  <ul class="rev-q"><li>Could you find the problem from the message alone?</li><li>Is line-and-column enough, or do you want more?</li><li>How do the tools you use compare?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+If you have a couple of minutes, would you take a look? No need to review it &quot;in general&quot; — I&#x27;m after one specific thing: error recovery.
+
+What to try: Open /samples/broken.json, then fix nothing and just read the message.
+Files for it: https://jsonbeautifier.dev/samples/
+
+What would be useful to hear:
+— Could you find the problem from the message alone?
+— Is line-and-column enough, or do you want more?
+— How do the tools you use compare?
+
+The honest downsides, so you don&#x27;t waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you do leave a review, please use your own words, and only if you actually tried it. If you don&#x27;t like it, tell me directly rather than the store — I&#x27;ll fix it.
+
+Thanks!</textarea>
+</article>
+<article class="card rev" data-n="25">
+  <div class="rev-head">
+    <span class="num">25</span>
+    <span class="tag">EN</span>
+    <h3>Honest downside</h3>
+  </div>
+  <p class="rev-try">Use it for a couple of days on real work.</p>
+  <ul class="rev-q"><li>What is the weakest part?</li><li>What would stop you recommending it?</li><li>What is missing that you expected?</li></ul>
+  <div class="rev-act">
+    <button class="btn btn-sm" data-copy>Скопировать и отметить отправленным</button>
+    <span class="rev-sent" hidden>Уже отправлен</span>
+    <label class="rev-pub"><input type="checkbox" data-pub> отзыв опубликован</label>
+  </div>
+  <textarea class="rev-msg" hidden>Hi! I shipped my first extension — JSON Beautifier. It formats any JSON URL the moment you open it.
+
+https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn
+
+If you have a couple of minutes, would you take a look? No need to review it &quot;in general&quot; — I&#x27;m after one specific thing: honest downside.
+
+What to try: Use it for a couple of days on real work.
+Files for it: https://jsonbeautifier.dev/samples/
+
+What would be useful to hear:
+— What is the weakest part?
+— What would stop you recommending it?
+— What is missing that you expected?
+
+The honest downsides, so you don&#x27;t waste time: no Firefox (its own JSON viewer gets there first), no keyboard shortcuts.
+
+If you do leave a review, please use your own words, and only if you actually tried it. If you don&#x27;t like it, tell me directly rather than the store — I&#x27;ll fix it.
+
+Thanks!</textarea>
+</article>
+  </section>
+</main>
+
+<script>
+(() => {
+  "use strict";
+  const KEY = (n, k) => `jb-rev-${n}-${k}`;
+  const cards = [...document.querySelectorAll(".rev")];
+  const counter = document.querySelector("[data-count]");
+
+  const recount = () => {
+    const sent = cards.filter(c => localStorage.getItem(KEY(c.dataset.n, "sent"))).length;
+    const pub = cards.filter(c => localStorage.getItem(KEY(c.dataset.n, "pub"))).length;
+    counter.textContent = `отправлено ${sent} из ${cards.length} · опубликовано ${pub}`;
+  };
+
+  cards.forEach((card) => {
+    const n = card.dataset.n;
+    const btn = card.querySelector("[data-copy]");
+    const sent = card.querySelector(".rev-sent");
+    const pub = card.querySelector("[data-pub]");
+
+    const markSent = () => { btn.disabled = true; sent.hidden = false; };
+    if (localStorage.getItem(KEY(n, "sent"))) markSent();
+    if (localStorage.getItem(KEY(n, "pub"))) { pub.checked = true; card.classList.add("is-pub"); }
+
+    btn.addEventListener("click", () => {
+      const text = card.querySelector(".rev-msg").value;
+      // Состояние ставим только после реального успеха: пометить отправленным
+      // письмо, которое не попало в буфер, — верный способ пропустить человека.
+      navigator.clipboard.writeText(text).then(() => {
+        localStorage.setItem(KEY(n, "sent"), "1");
+        markSent();
+        recount();
+      }).catch(() => {
+        btn.textContent = "Не удалось скопировать — выдели текст вручную";
+        card.querySelector(".rev-msg").hidden = false;
+      });
+    });
+
+    pub.addEventListener("change", () => {
+      if (pub.checked) localStorage.setItem(KEY(n, "pub"), "1");
+      else localStorage.removeItem(KEY(n, "pub"));
+      card.classList.toggle("is-pub", pub.checked);
+      recount();
+    });
+  });
+
+  recount();
+})();
+</script>
+</body>
+</html>
