@@ -148,7 +148,7 @@ UI = {
             'Открой любой из примеров — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — или свой JSON-URL',
             "Ниже есть список вопросов для вдохновения для отзыва",
             'Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, напиши своими словами и отправь',
-            'Для взаимного отзыва напиши в тг <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a>',
+            'Для взаимного отзыва напиши в тг <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> — и сюда же, если нашёл баг :)',
         ],
     },
     "en": {
@@ -165,7 +165,7 @@ UI = {
             'Open one of the samples — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own',
             "Below is a list of questions to give you something to write about",
             'Back on the store page: <b>Reviews</b> → <b>Write a review</b>, write it in your own words and send',
-            'For a review in return, message <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> on Telegram',
+            'For a review in return, message <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> on Telegram — and the same place if you found a bug :)',
         ],
     },
 }
