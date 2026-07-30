@@ -5,7 +5,7 @@
       "version": "0.3.1",
       "date": null,
       "status": "In development",
-      "note": "Not in the store yet. 0.3.0 is still in review.",
+      "note": "Not in the store yet. Ready to submit.",
       "groups": {
         "Fixed": [
           "Search no longer piles up expanded branches. Typing a query letter by letter meant every intermediate word — \"R\" before \"Rotterdam\" — expanded everything it matched, and none of it collapsed again: a document that should show eighty rows showed a thousand, with the match lost among them.",
@@ -15,9 +15,7 @@
     },
     {
       "version": "0.3.0",
-      "date": null,
-      "status": "In development",
-      "note": "Not in the store yet. Built from the repository; the site is running this code, the extension build has not been through a manual pass.",
+      "date": "2026-07-30",
       "groups": {
         "Added": [
           "Line numbers in the formatted tree, and a setting to switch them off.",
