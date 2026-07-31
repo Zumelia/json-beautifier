@@ -30,6 +30,12 @@ OUT = HERE / ".fonts-ttf"
 # и все они попадают в диапазоны U+0000-00FF и U+2000-206F.
 BUILDS = [
     ("bricolage-grotesque-latin.woff2", "bricolage-700.ttf", {"wght": 700, "opsz": 58}),
+    # Пара весов одного кегля — для заголовков на скриншотах листинга: у платных
+    # лидеров акцент в заголовке ставится весом, а не цветом (см.
+    # marketing/store_graphics_research.md, пункт 10). Значит нужен не только
+    # жирный, но и спокойный, и оба на одном оптическом размере.
+    ("bricolage-grotesque-latin.woff2", "bricolage-44-400.ttf", {"wght": 400, "opsz": 44}),
+    ("bricolage-grotesque-latin.woff2", "bricolage-44-700.ttf", {"wght": 700, "opsz": 44}),
     ("plus-jakarta-sans-latin.woff2", "jakarta-600.ttf", {"wght": 600}),
     ("plus-jakarta-sans-latin.woff2", "jakarta-700.ttf", {"wght": 700}),
     ("ibm-plex-mono-latin.woff2", "plexmono-400.ttf", {}),
