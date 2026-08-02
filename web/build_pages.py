@@ -299,13 +299,21 @@ def changelog_body():
                 '      <ul class="cl-list">\n' + lis + "\n      </ul>"
             )
         anchor = "v" + rel["version"].replace(".", "-")
+        # status и note есть только у записей, которые ещё не вышли: у них надо
+        # объяснить, почему версии нет в сторе. У вышедшего релиза объяснять
+        # нечего — дата и есть весь статус, а пустая строка «· » выглядит
+        # обрывом. Раньше поля были обязательными, и сборка падала на первом же
+        # релизе, с которого сняли черновую пометку.
+        status = rel.get("status")
+        note = rel.get("note")
         blocks.append(
             '    <article class="card cl-item" id="' + anchor + '">\n'
             '      <header class="cl-head">\n'
             "        <h2>" + rel["version"] + badge + "</h2>\n"
-            '        <p class="cl-meta"><time>' + when + "</time> &middot; " + rel["status"] + "</p>\n"
+            '        <p class="cl-meta"><time>' + when + "</time>"
+            + (" &middot; " + status if status else "") + "</p>\n"
             "      </header>\n"
-            '      <p class="cl-note">' + rel["note"] + "</p>\n"
+            + ('      <p class="cl-note">' + note + "</p>\n" if note else "")
             + "\n".join(groups) + "\n    </article>"
         )
     return (
