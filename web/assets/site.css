@@ -766,36 +766,12 @@ td.us {
   border-radius: var(--radius-card);
   background: var(--surface);
 }
-.stars {
-  display: inline-flex;
-  gap: 6px;
-  margin: 18px 0 6px;
-}
-.star {
-  width: 44px;
-  height: 44px;
-  border: 0;
-  background: transparent;
-  color: var(--gutter);
-  font-size: 30px;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0;
-}
-.star[data-on="1"] {
-  color: var(--sun);
-}
 .rate-actions {
   display: flex;
   justify-content: center;
   gap: 12px;
-  margin-top: 16px;
+  margin-top: 22px;
   flex-wrap: wrap;
-}
-.rate-label {
-  min-height: 24px;
-  color: var(--muted);
-  font-size: 14px;
 }
 
 /* ---------- FAQ ---------- */

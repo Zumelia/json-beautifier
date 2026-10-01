@@ -249,30 +249,26 @@ FEEDBACK = f"""  <section class="wrap section" style="max-width:780px">
   </section>"""
 
 
-RATE = """  <section class="wrap section">
+# Оценка и жалоба на одной странице, одинаково для всех: кнопка в стор и сразу
+# под ней раскрытая форма. Без звёзд и без развилки «4–5 в стор, 1–3 в форму» —
+# это review gating (решение 2026-10-01). Форма — та же, что на /feedback/.
+_FORM = FEEDBACK[FEEDBACK.index("    <form"):FEEDBACK.index('    <p style="margin-top:26px')]
+_FORM = _FORM.replace("jsonbeautifier.dev: Feedback", "jsonbeautifier.dev: Rate page")
+RATE = f"""  <section class="wrap section">
     <div class="rate" style="max-width:780px;margin:0 auto">
       <h1>Using the extension? Rate it.</h1>
-      <p class="lead" style="margin-inline:auto;max-width:52ch">Four or five stars go to the
-        Chrome Web Store. One to three come to us privately, where a fix can actually happen.</p>
-      <div id="rate-widget">
-        <div class="stars" role="radiogroup" aria-label="Rate JSON Beautifier">
-          <button class="star" data-rate-star="1" role="radio" aria-checked="false" aria-label="1 star">★</button>
-          <button class="star" data-rate-star="2" role="radio" aria-checked="false" aria-label="2 stars">★</button>
-          <button class="star" data-rate-star="3" role="radio" aria-checked="false" aria-label="3 stars">★</button>
-          <button class="star" data-rate-star="4" role="radio" aria-checked="false" aria-label="4 stars">★</button>
-          <button class="star" data-rate-star="5" role="radio" aria-checked="false" aria-label="5 stars">★</button>
-        </div>
-        <p class="rate-label" id="rate-label"></p>
-        <div class="rate-actions" id="rate-actions" hidden>
-          <a class="btn" id="rate-store" href="#" rel="noopener" hidden>Rate on the Chrome Web Store →</a>
-          <a class="btn btn-ghost" id="rate-form" href="/feedback/" hidden>Tell us what's wrong →</a>
-        </div>
+      <p class="lead" style="margin-inline:auto;max-width:52ch">A rating on the Chrome Web Store helps other developers find it, whatever the number
+        of stars.</p>
+      <div class="rate-actions">
+          <a class="btn" data-rate-store href="https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn/reviews" target="_blank" rel="noopener">Rate on the Chrome Web Store →</a>
       </div>
-      <p id="rate-done" hidden></p>
-      <p style="margin-top:26px;color:var(--muted);font-size:14.5px">Not ready to rate?
-        <a href="/feedback/">Tell us why</a> instead.</p>
     </div>
-  </section>"""
+  </section>
+  <section class="wrap section" style="max-width:780px;padding-top:0">
+    <h2>Something wrong? Tell us here</h2>
+    <p class="lead">A bug, a missing feature, a complaint. It goes straight to the person
+      who wrote the code, and you can still rate it on the store as well.</p>
+{_FORM}  </section>"""
 
 
 def changelog_body():
@@ -457,8 +453,8 @@ def main():
                             "Every release of JSON Beautifier: what was added, what changed, what was fixed.",
                             changelog_body())),
         ("rate", shell("rate/", "Rate JSON Beautifier",
-                       "Four or five stars go to the Chrome Web Store, one to three come to us privately.",
-                       RATE, noindex=True)),
+                       "Rate JSON Beautifier on the Chrome Web Store, or tell us what is broken.",
+                       RATE, noindex=True, scripts=FORM_JS)),
     ]
     Path(HERE / "404.html").write_text(
         shell("404.html", "Page not found — JSON Beautifier",

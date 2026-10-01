@@ -382,57 +382,6 @@
     run();
   }
 
-  // ---- виджет оценки --------------------------------------------------------
-  // Строгая развилка, и она проговорена пользователю в тексте блока: четыре-пять
-  // звёзд ведут в стор, одна-три — в приватную форму. Ничего не агрегируем и
-  // никакого «среднего по сайту» не показываем.
-  const stars = $$("[data-rate-star]");
-  if (stars.length) {
-    const label = $("#rate-label");
-    const actions = $("#rate-actions");
-    const done = $("#rate-done");
-    const toStore = $("#rate-store");
-    const toForm = $("#rate-form");
-    const WORDS = ["", "Not great", "It has problems", "It's fine", "Good", "Love it"];
-    let picked = 0;
-
-    const paint = (n) => stars.forEach((s, i) => s.setAttribute("data-on", i < n ? "1" : "0"));
-
-    try {
-      const saved = JSON.parse(localStorage.getItem("jb.rated") || "null");
-      if (saved && saved.stars) {
-        done.textContent = `Thanks! You rated us ${saved.stars} ★`;
-        done.hidden = false;
-        $("#rate-widget").hidden = true;
-      }
-    } catch (_) {}
-
-    stars.forEach((s, i) => {
-      s.addEventListener("mouseenter", () => {
-        paint(i + 1);
-        label.textContent = WORDS[i + 1];
-      });
-      s.addEventListener("focus", () => paint(i + 1));
-      s.addEventListener("click", () => {
-        picked = i + 1;
-        paint(picked);
-        label.textContent = WORDS[picked];
-        actions.hidden = false;
-        toStore.hidden = picked < 4;
-        toForm.hidden = picked >= 4;
-        toStore.href = cfg.REVIEWS_URL;
-        toForm.href = `/feedback/?stars=${picked}`;
-        try {
-          localStorage.setItem("jb.rated", JSON.stringify({ stars: picked, ts: Date.now() }));
-        } catch (_) {}
-      });
-    });
-    $("#rate-widget").addEventListener("mouseleave", () => {
-      paint(picked);
-      label.textContent = picked ? WORDS[picked] : "";
-    });
-  }
-
   const SAMPLE =
     '{"order":{"id":"ord_8123","status":"shipped","placed_at":"2026-07-28T09:14:02.118Z",' +
     '"customer":{"name":"Ada Sample","city":"Rotterdam","vip":false},' +

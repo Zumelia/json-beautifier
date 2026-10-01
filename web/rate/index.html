@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Rate JSON Beautifier</title>
-<meta name="description" content="Four or five stars go to the Chrome Web Store, one to three come to us privately.">
+<meta name="description" content="Rate JSON Beautifier on the Chrome Web Store, or tell us what is broken.">
 <link rel="canonical" href="https://jsonbeautifier.dev/rate/">
 <meta name="robots" content="noindex,follow">
 <meta property="og:title" content="Rate JSON Beautifier">
-<meta property="og:description" content="Four or five stars go to the Chrome Web Store, one to three come to us privately.">
+<meta property="og:description" content="Rate JSON Beautifier on the Chrome Web Store, or tell us what is broken.">
 <meta property="og:image" content="https://jsonbeautifier.dev/assets/og/default.png?v=cb9ed878">
 <meta property="og:site_name" content="JSON Beautifier">
 <meta name="twitter:card" content="summary_large_image">
@@ -16,7 +16,7 @@
 <link rel="icon" href="/favicon.png?v=dba67b2e" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=aae33ec2">
 <link rel="stylesheet" href="/assets/fonts.css?v=80febac9">
-<link rel="stylesheet" href="/assets/site.css?v=d4ec496c">
+<link rel="stylesheet" href="/assets/site.css?v=20ce65b2">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -62,26 +62,63 @@
   <section class="wrap section">
     <div class="rate" style="max-width:780px;margin:0 auto">
       <h1>Using the extension? Rate it.</h1>
-      <p class="lead" style="margin-inline:auto;max-width:52ch">Four or five stars go to the
-        Chrome Web Store. One to three come to us privately, where a fix can actually happen.</p>
-      <div id="rate-widget">
-        <div class="stars" role="radiogroup" aria-label="Rate JSON Beautifier">
-          <button class="star" data-rate-star="1" role="radio" aria-checked="false" aria-label="1 star">★</button>
-          <button class="star" data-rate-star="2" role="radio" aria-checked="false" aria-label="2 stars">★</button>
-          <button class="star" data-rate-star="3" role="radio" aria-checked="false" aria-label="3 stars">★</button>
-          <button class="star" data-rate-star="4" role="radio" aria-checked="false" aria-label="4 stars">★</button>
-          <button class="star" data-rate-star="5" role="radio" aria-checked="false" aria-label="5 stars">★</button>
-        </div>
-        <p class="rate-label" id="rate-label"></p>
-        <div class="rate-actions" id="rate-actions" hidden>
-          <a class="btn" id="rate-store" href="#" rel="noopener" hidden>Rate on the Chrome Web Store →</a>
-          <a class="btn btn-ghost" id="rate-form" href="/feedback/" hidden>Tell us what's wrong →</a>
-        </div>
+      <p class="lead" style="margin-inline:auto;max-width:52ch">A rating on the Chrome Web Store helps other developers find it, whatever the number
+        of stars.</p>
+      <div class="rate-actions">
+          <a class="btn" data-rate-store href="https://chromewebstore.google.com/detail/mpeomjgcmddedcglokpmeideoelaidbn/reviews" target="_blank" rel="noopener">Rate on the Chrome Web Store →</a>
       </div>
-      <p id="rate-done" hidden></p>
-      <p style="margin-top:26px;color:var(--muted);font-size:14.5px">Not ready to rate?
-        <a href="/feedback/">Tell us why</a> instead.</p>
     </div>
+  </section>
+  <section class="wrap section" style="max-width:780px;padding-top:0">
+    <h2>Something wrong? Tell us here</h2>
+    <p class="lead">A bug, a missing feature, a complaint. It goes straight to the person
+      who wrote the code, and you can still rate it on the store as well.</p>
+    <form class="form" data-form action="https://formspree.io/f/mwvgrkov" method="post" style="margin-top:28px">
+      <input type="hidden" name="_subject" value="jsonbeautifier.dev: Rate page">
+      <input type="hidden" name="Page" value="">
+      <input type="hidden" name="Browser" value="">
+      <input type="hidden" name="Extension version" value="">
+      <input type="hidden" name="Rating" value="">
+
+      <div class="form-row">
+        <label for="f-type">What is it?</label>
+        <select id="f-type" name="Type" class="field">
+          <option>Bug</option>
+          <option>Feature request</option>
+          <option>Question</option>
+          <option>Something else</option>
+        </select>
+      </div>
+
+      <div class="form-row">
+        <label for="f-msg">What happened?</label>
+        <textarea id="f-msg" name="Message" rows="6" class="field" required
+          placeholder="What you did, what you expected, what happened instead. A URL helps if the page is public."></textarea>
+      </div>
+
+      <div class="form-row">
+        <label for="f-email">Email <span class="opt-note">optional</span></label>
+        <input id="f-email" type="email" name="email" class="field" placeholder="you@example.com">
+      </div>
+
+      <div class="form-row">
+        <label class="row-check"><input type="checkbox" name="May we reply" value="yes"> You may reply to me</label>
+      </div>
+
+      <div class="form-foot">
+        <button class="btn" type="submit">Send</button>
+        <span class="hintline">No account, no ticket number.</span>
+      </div>
+    </form>
+
+    <div class="form-ok" id="form-ok" tabindex="-1" hidden style="margin-top:28px">
+      <h2 style="font-size:24px">Sent — this actually gets read.</h2>
+      <p style="color:var(--muted)">If it's a bug, it usually turns into a line in the
+        <a href="/changelog/">changelog</a>.</p>
+    </div>
+    <p class="warn" id="form-fail" hidden>Couldn't send that — your text is still here.
+      Try again, or open an issue on <a href="#" data-href="github" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
+
   </section>
 </main>
 
@@ -125,7 +162,7 @@
 </footer>
 
 <script src="/assets/site-config.js?v=7413362f"></script>
-<script src="/assets/site.js?v=bab25b1d" defer></script>
-
+<script src="/assets/site.js?v=976f7787" defer></script>
+<script src="/assets/forms.js?v=55867135" defer></script>
 </body>
 </html>
