@@ -138,9 +138,9 @@ UI = {
         "title": "Вопросы для вдохновения",
         "sub": "Отвечать на все не надо — выбери то, что зацепило, и напиши своими словами.",
         "swap": "In English",
-        "intro": "Спасибо, что смотришь. Поставь, погоняй на своих задачах — а ниже "
-                 "вопросы на случай, если не знаешь, с чего начать отзыв.",
-        "nope": "Если расширение не понравилось — не пиши отзыв, напиши напрямую: ",
+        "intro": "Спасибо, что пользуешься. Ниже — как оставить отзыв в сторе и "
+                 "вопросы на случай, если не знаешь, с чего начать.",
+        "nope": "Нашёл баг или чего-то не хватает? Напиши напрямую, починю: ",
         "nope_link": "форма обратной связи",
         "steps_title": "Как оставить отзыв",
         "steps": [
@@ -148,16 +148,15 @@ UI = {
             'Открой любой из примеров — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — или свой JSON-URL',
             "Ниже есть список вопросов для вдохновения для отзыва",
             'Вернись на страницу расширения в сторе: вкладка <b>Reviews</b> → <b>Write a review</b>, напиши своими словами и отправь',
-            'Для взаимного отзыва напиши в тг <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> — и сюда же, если нашёл баг :)',
         ],
     },
     "en": {
         "title": "Questions for inspiration",
         "sub": "No need to answer them all — pick whatever struck you and write it your way.",
         "swap": "По-русски",
-        "intro": "Thanks for taking a look. Install it, use it on your own work — the "
-                 "questions below are there in case you don't know where to start.",
-        "nope": "If you didn't like it, please don't review it — tell me instead: ",
+        "intro": "Thanks for using it. Below: how to leave a review on the store, and "
+                 "some questions in case you don't know where to start.",
+        "nope": "Found a bug or something missing? Tell me directly and I'll fix it: ",
         "nope_link": "feedback form",
         "steps_title": "How to leave a review",
         "steps": [
@@ -165,7 +164,6 @@ UI = {
             'Open one of the samples — <a href="/samples/" target="_blank" rel="noopener">jsonbeautifier.dev/samples/</a> — or any JSON URL of your own',
             "Below is a list of questions to give you something to write about",
             'Back on the store page: <b>Reviews</b> → <b>Write a review</b>, write it in your own words and send',
-            'For a review in return, message <a href="https://t.me/minisol" target="_blank" rel="noopener">@minisol</a> on Telegram — and the same place if you found a bug :)',
         ],
     },
 }
@@ -292,15 +290,15 @@ GO_TEMPLATE = """<!doctype html>
 </html>
 """
 
-CHAT_MSG = """Ребят, кто недавно запустился — предлагаю обмен тестированием. Я ставлю ваше расширение, полчаса гоняю по-настоящему и пишу разбор: что сломалось, что непонятно в листинге, где права выглядят подозрительно. Взамен прошу того же.
+CHAT_MSG = """Ребят, кто работает с JSON в браузере: буду благодарен за честный отзыв о JSON Beautifier в сторе, любой, в том числе критичный. Ничего взамен не прошу и не предлагаю — обмен отзывами правила стора запрещают.
 
-Моё — JSON Beautifier, форматирует любой JSON-URL сразу при открытии:
+Расширение (форматирует любой JSON-URL сразу при открытии):
 {store}
 
-Если не знаешь, с чего начать отзыв, — вот страничка с вопросами для вдохновения:
+Как оставить отзыв и вопросы, если не знаешь, с чего начать:
 {go}
 
-Отзыв не обязателен и не в обмен: если не понравится — лучше напиши мне, починю."""
+Нашёл баг — напиши мне, починю."""
 
 
 def steps_html(lang):
